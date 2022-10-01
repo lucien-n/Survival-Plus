@@ -3,6 +3,9 @@ package me.scaffus.survivalplus.EventListeners;
 import me.scaffus.survivalplus.SkillsConfig;
 import me.scaffus.survivalplus.SurvivalPlus;
 import me.scaffus.survivalplus.sql.DatabaseGetterSetter;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -37,8 +40,10 @@ public class BlockBreakListener implements Listener {
             Player p = event.getPlayer();
             Double pointsGained = (Double) points.getOrDefault(material.toString(), 0.0);
             data.incrementPlayerSkill(p.getUniqueId(), "mining", pointsGained);
-            // TODO: Send to action bar
-            p.sendMessage(plugin.getConfig().getString("skills.mining.gained").replace("%amount%", String.valueOf(pointsGained)));
+            p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(
+                    plugin.getConfig().getString("skills.gained")
+                            .replace("%amount%", String.valueOf(pointsGained)
+                                    .replace("%skill%", "minage"))));
         }
     }
 }

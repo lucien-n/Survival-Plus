@@ -19,3 +19,15 @@ mining:
     DEEPSLATE_EMERALD_ORE: 6.5
     DIAMOND_ORE: 7.0
     DEEPSLATE_DIAMOND_ORE: 4.0
+
+points_for_levels:
+  1: 500
+  2: 1500
+  3: 3000
+  4: 4500
+  5: 7000
+  6: 8750
+  7: 11000
+  8: 15000
+  9: 19000
+  10: 25000

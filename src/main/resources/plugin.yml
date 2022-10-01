@@ -9,9 +9,9 @@ website: https://www.github.com/scaffus
 
 commands:
   banque:
-    aliases: [bal]
+    aliases: [bal, bank]
     description: Accéder à la banque
-    usage: /banque <deposer|recuperer> <montant>
+    usage: /banque
   level:
     aliases: [niveau]
     description: Renvois le niveau du joueurs des différents savoirs-faires

@@ -17,6 +17,7 @@ public final class SurvivalPlus extends JavaPlugin {
     private final DatabaseManager databaseManager = new DatabaseManager(this);
     public DatabaseGetterSetter data;
     public SkillsConfig skillsConfig = new SkillsConfig();
+    public Helper helper = new Helper();
 
     @Override
     public void onEnable() {
