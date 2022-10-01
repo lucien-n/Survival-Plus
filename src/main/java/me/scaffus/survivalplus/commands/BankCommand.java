@@ -4,36 +4,28 @@ import me.scaffus.survivalplus.Helper;
 import me.scaffus.survivalplus.SurvivalPlus;
 import me.scaffus.survivalplus.menus.BankMenu;
 import me.scaffus.survivalplus.sql.DatabaseGetterSetter;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 
-public class BankCommand implements CommandExecutor{
+public class BankCommand implements CommandExecutor {
     private SurvivalPlus plugin;
-    private DatabaseGetterSetter data;
-    private Helper helper;
 
 
     public BankCommand(SurvivalPlus plugin) {
         this.plugin = plugin;
-        this.data = plugin.data;
-        this.helper = plugin.helper;
         plugin.getCommand("banque").setExecutor(this);
     }
 
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player)) {
-            return false;
-        }
+        if (!(sender instanceof Player)) return false;
 
         Player p = (Player) sender;
         BankMenu menu = new BankMenu(plugin);
-        p.openInventory(menu.createMenu(p));
+        p.openInventory(menu.createBankMenu(p));
         return true;
 
 //        if (args.length >= 2) {

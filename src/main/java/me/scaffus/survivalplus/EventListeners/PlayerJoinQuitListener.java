@@ -18,5 +18,6 @@ public class PlayerJoinQuitListener implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         data.createPlayer(event.getPlayer());
+        event.setJoinMessage("§6§l" + event.getPlayer().getDisplayName() + "§e a rejoint.");
     }
 }

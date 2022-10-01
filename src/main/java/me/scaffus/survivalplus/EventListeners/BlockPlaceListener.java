@@ -8,36 +8,36 @@ import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 
 import java.util.Map;
 import java.util.Set;
 
-public class BlockBreakListener implements Listener {
+public class BlockPlaceListener implements Listener {
     private SurvivalPlus plugin;
-    private DatabaseGetterSetter data;
     private SkillsConfig skillsConfig;
+    private DatabaseGetterSetter data;
     private Helper helper;
-    private Set blocks;
+    private Set<String> blocks;
     private Map points;
 
-    public BlockBreakListener(SurvivalPlus plugin) {
+    public BlockPlaceListener(SurvivalPlus plugin) {
         this.plugin = plugin;
-        this.data = plugin.data;
         this.skillsConfig = plugin.skillsConfig;
+        this.data = plugin.data;
         this.helper = plugin.helper;
         blocks = skillsConfig.get().getConfigurationSection("mining.blocks").getKeys(false);
         points = skillsConfig.get().getConfigurationSection("mining.blocks").getValues(false);
     }
 
     @EventHandler
-    public void onBlockBreak(BlockBreakEvent event) {
+    public void onBlockPlace(BlockPlaceEvent event) {
         if (blocks.contains(event.getBlock().getType().toString())) {
-            Double pointsGained = helper.round((Double) points.get(event.getBlock().getType().toString()), 2);
-            data.incrementPlayerSkill(event.getPlayer().getUniqueId(), "mining", pointsGained);
-            event.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(
-                    plugin.getConfig().getString("skills.gained")
-                            .replace("%amount%", String.valueOf(pointsGained)).replace("%skill%", "minage")));
+            Double pointsLost = -helper.round((Double) points.get(event.getBlock().getType().toString()) * 1.1, 2);
+            data.incrementPlayerSkill(event.getPlayer().getUniqueId(), "mining", pointsLost);
+            event.getPlayer().spigot().sendMessage(
+                    ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(plugin.getConfig().getString("skills.gained")
+                            .replace("%amount%", String.valueOf(pointsLost)).replace("%skill%", "minage")));
         }
     }
 }

@@ -1,5 +1,6 @@
 package me.scaffus.survivalplus.sql;
 
+import me.scaffus.survivalplus.Helper;
 import org.bukkit.entity.Player;
 
 import java.sql.Connection;
@@ -11,6 +12,7 @@ import java.util.UUID;
 
 public class DatabaseGetterSetter {
     private Connection connection;
+    private Helper helper = new Helper();
 
     public DatabaseGetterSetter(Connection connection) {
         this.connection = connection;
@@ -126,7 +128,7 @@ public class DatabaseGetterSetter {
             pS.setString(1, uuid.toString());
             ResultSet result = pS.executeQuery();
             if (result.next()) {
-                return result.getDouble(skill);
+                return helper.round(result.getDouble(skill), 2);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);

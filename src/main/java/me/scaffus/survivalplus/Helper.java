@@ -10,19 +10,20 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Helper {
     private DatabaseGetterSetter data;
 
-    public boolean removeAmountOfItemFromInventory(Inventory inventory, Material material, int amount) {
-        if (amount <= 0) return false;
+    public void removeAmountOfItemFromInventory(Inventory inventory, Material material, int amount) {
+        if (amount <= 0) return;
         int size = inventory.getSize();
         for (int slot = 0; slot < size; slot++) {
             ItemStack item = inventory.getItem(slot);
-            if (item == null) return false;
-            if (material == item.getType()) {
+            if (item != null && material == item.getType()) {
                 int newAmount = item.getAmount() - amount;
                 if (newAmount > 0) {
                     item.setAmount(newAmount);
@@ -34,8 +35,6 @@ public class Helper {
                 }
             }
         }
-
-        return true;
     }
 
     public int getAmountOfItemInventory(Inventory inventory, Material material) {
@@ -64,12 +63,13 @@ public class Helper {
         return item;
     }
 
-    public Inventory createInventoryWithBackground(Player p, String inventoryName, int inventorySize, ItemStack backgroundItem) {
+    public Inventory createInventoryWithBackground(Player p, String inventoryName, int inventorySize, ItemStack backgroundItem, Boolean backButton) {
         Inventory inventory = Bukkit.createInventory(p, inventorySize, inventoryName);
         for (int i = 0; i < inventorySize; i++) {
             inventory.setItem(i, backgroundItem);
         }
-        inventory.setItem(inventorySize - 4, getItem(new ItemStack(Material.BARRIER), "§cFermer", ""));
+        if (backButton) inventory.setItem(inventorySize - 9, getItem(new ItemStack(Material.ARROW), "§fRetour", ""));
+        inventory.setItem(inventorySize - 1, getItem(new ItemStack(Material.BARRIER), "§cFermer", ""));
         return inventory;
     }
 
@@ -80,5 +80,13 @@ public class Helper {
         playerSkull.setOwningPlayer(p);
         skullItem.setItemMeta(playerSkull);
         return skullItem;
+    }
+
+    public Double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        BigDecimal bd = BigDecimal.valueOf(value);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
     }
 }
