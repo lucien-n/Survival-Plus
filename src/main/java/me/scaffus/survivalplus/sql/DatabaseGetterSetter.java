@@ -247,7 +247,6 @@ public class DatabaseGetterSetter {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
         return 0;
     }
 

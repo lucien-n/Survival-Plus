@@ -33,9 +33,12 @@ public class SurvivalData {
     public HashMap<UUID, Integer> playerTokens = new HashMap<>();
     public HashMap<UUID, Integer> playerBalance = new HashMap<>();
 
+    public String upgradeBought;
+
     public SurvivalData(SurvivalPlus plugin) {
         this.plugin = plugin;
         this.data = plugin.data;
+        this.upgradeBought = plugin.getConfig().getString("skills.upgrade_bought");
     }
 
     public void loadPlayerData(Player p) {
@@ -115,6 +118,11 @@ public class SurvivalData {
 
     public void incrementPlayerBalance(UUID uuid, Integer amount) {
         playerBalance.put(uuid, playerBalance.get(uuid) + amount);
+    }
+
+    public void setPlayerUpgrade(UUID uuid, String upgrade, Boolean status, HashMap playerUpgrade) {
+        data.setPlayerUpgrade(uuid, upgrade, status);
+        playerUpgrade.put(uuid, status);
     }
 
     public Double getPlayerSkillPoints(UUID uuid, String skill) {

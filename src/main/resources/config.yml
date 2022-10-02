@@ -20,5 +20,5 @@ skills:
   gained: "§eTu as gagné §6§l%amount%§e d'xp de §6§n%skill%"
   passed_level: "§eTu es passé niveau §6§l%level%§e"
   not_enough_tokens: "§eTu n'as pas assé de §6§njetons"
-  upgrade_bought: "§eTu as acheté §6§l%upgrade%§e pour §6§n%cost%§e"
+  upgrade_bought: "§eTu as acheté §6§l%upgrade%§e pour §6§n%cost%§e jeton(s)"
 # -2023974026108394531
