@@ -37,7 +37,7 @@ public class DatabaseGetterSetter {
                 psBank.setInt(2, 0);
                 psBank.executeUpdate();
 
-                PreparedStatement psSkills = ps("INSERT IGNORE INTO players_skills (UUID, FARMING, MINING, COMBAT, RUNNING, DEATH, ARCHERY, SWIMMING, FLYING) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                PreparedStatement psSkills = ps("INSERT IGNORE INTO players_points (UUID, FARMING, MINING, COMBAT, RUNNING, DEATH, ARCHERY, SWIMMING, FLYING) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
                 psSkills.setString(1, uuid.toString());
                 psSkills.setInt(2, 0);
                 psSkills.setInt(3, 0);
@@ -77,7 +77,7 @@ public class DatabaseGetterSetter {
 
     }
 
-    public boolean playerExists(UUID uuid) {
+    public Boolean playerExists(UUID uuid) {
         try {
             PreparedStatement pS = ps("SELECT * FROM players WHERE UUID=?");
             pS.setString(1, uuid.toString());
@@ -88,7 +88,8 @@ public class DatabaseGetterSetter {
         }
     }
 
-    public int getPlayerBalance(UUID uuid) {
+    public Integer getPlayerBalance(UUID uuid) {
+        if (uuid == null) return 0;
         try {
             PreparedStatement pS = ps("SELECT * FROM players_bank WHERE UUID=?");
             pS.setString(1, uuid.toString());
@@ -103,7 +104,8 @@ public class DatabaseGetterSetter {
         return 0;
     }
 
-    public boolean addPlayerBalance(UUID uuid, int amount) {
+    public Boolean addPlayerBalance(UUID uuid, Integer amount) {
+        if (uuid == null || amount == null) return false;
         try {
             PreparedStatement pS = ps("UPDATE players_bank SET balance = balance + ? WHERE UUID=?");
             pS.setInt(1, amount);
@@ -115,7 +117,8 @@ public class DatabaseGetterSetter {
         }
     }
 
-    public void setPlayerBalance(UUID uuid, int amount) {
+    public void setPlayerBalance(UUID uuid, Integer amount) {
+        if (uuid == null || amount == null) return;
         try {
             PreparedStatement pS = ps("UPDATE players_bank SET balance=? WHERE UUID=?");
             pS.setInt(1, amount);
@@ -127,8 +130,9 @@ public class DatabaseGetterSetter {
     }
 
     public void incrementPlayerSkillPoints(UUID uuid, String skill, Double amount) {
+        if (uuid == null || skill == null || amount == null) return;
         try {
-            PreparedStatement pS = ps("UPDATE players_skills SET " + skill + " = " + skill + " + ? WHERE UUID=?");
+            PreparedStatement pS = ps("UPDATE players_points SET " + skill + " = " + skill + " + ? WHERE UUID=?");
             pS.setDouble(1, amount);
             pS.setString(2, uuid.toString());
             pS.executeUpdate();
@@ -138,11 +142,11 @@ public class DatabaseGetterSetter {
     }
 
     public void setPlayerSkillPoints(UUID uuid, String skill, Double amount) {
+        if (uuid == null || skill == null || amount == null) return;
         try {
-            PreparedStatement pS = ps("UPDATE players_points SET ? = ? WHERE UUID=?");
-            pS.setString(1, skill);
-            pS.setDouble(2, amount);
-            pS.setString(3, uuid.toString());
+            PreparedStatement pS = ps("UPDATE players_points SET " + skill + " = ? WHERE UUID=?");
+            pS.setDouble(1, amount);
+            pS.setString(2, uuid.toString());
             pS.executeUpdate();
 
             incrementPlayerTokens(uuid, 1);
@@ -152,8 +156,9 @@ public class DatabaseGetterSetter {
     }
 
     public Double getPlayerSkillPoints(UUID uuid, String skill) {
+        if (uuid == null || skill == null) return 0.0;
         try {
-            PreparedStatement pS = ps("SELECT " + skill + " FROM players_skills WHERE UUID=?");
+            PreparedStatement pS = ps("SELECT " + skill + " FROM players_points WHERE UUID=?");
             pS.setString(1, uuid.toString());
             ResultSet result = pS.executeQuery();
             if (result.next()) {
@@ -166,8 +171,21 @@ public class DatabaseGetterSetter {
     }
 
     public void incrementPlayerSkillLevel(UUID uuid, String skill, Integer amount) {
+        if (uuid == null || skill == null || amount == null) return;
         try {
             PreparedStatement pS = ps("UPDATE players_levels SET " + skill + " = " + skill + " + ? WHERE UUID=?");
+            pS.setInt(1, amount);
+            pS.setString(2, uuid.toString());
+            pS.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void setPlayerSkillLevel(UUID uuid, String skill, Integer amount) {
+        if (uuid == null || skill == null || amount == null) return;
+        try {
+            PreparedStatement pS = ps("UPDATE players_levels SET " + skill + " = ? WHERE UUID=?");
             pS.setInt(1, amount);
             pS.setString(2, uuid.toString());
             pS.executeUpdate();
@@ -178,21 +196,8 @@ public class DatabaseGetterSetter {
         }
     }
 
-    public void setPlayerSkillLevel(UUID uuid, String skill, Integer amount) {
-        try {
-            PreparedStatement pS = ps("UPDATE players_levels SET ? = ? WHERE UUID=?");
-            pS.setString(1, skill);
-            pS.setInt(2, amount);
-            pS.setString(3, uuid.toString());
-            pS.executeUpdate();
-
-            incrementPlayerTokens(uuid, 1);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public Integer getPlayerSkillLevel(UUID uuid, String skill) {
+        if (uuid == null || skill == null) return 0;
         try {
             PreparedStatement pS = ps("SELECT " + skill + " FROM players_levels WHERE UUID=?");
             pS.setString(1, uuid.toString());
@@ -207,6 +212,7 @@ public class DatabaseGetterSetter {
     }
 
     public void incrementPlayerTokens(UUID uuid, Integer amount) {
+        if (uuid == null || amount == null) return;
         try {
             PreparedStatement pS = ps("UPDATE players_data SET tokens = tokens + ? WHERE UUID=?");
             pS.setInt(1, amount);
@@ -218,6 +224,7 @@ public class DatabaseGetterSetter {
     }
 
     public void setPlayerTokens(UUID uuid, Integer amount) {
+        if (uuid == null || amount == null) return;
         try {
             PreparedStatement pS = ps("UPDATE players_data SET tokens = ? WHERE UUID=?");
             pS.setInt(1, amount);
@@ -229,6 +236,7 @@ public class DatabaseGetterSetter {
     }
 
     public Integer getPlayerTokens(UUID uuid) {
+        if (uuid == null) return 0;
         try {
             PreparedStatement pS = ps("SELECT tokens FROM players_data WHERE UUID=?");
             pS.setString(1, uuid.toString());
@@ -244,11 +252,11 @@ public class DatabaseGetterSetter {
     }
 
     public void setPlayerUpgrade(UUID uuid, String upgradeName, Boolean status) {
+        if (uuid == null || upgradeName == null || status == null) return;
         try {
-            PreparedStatement pS = ps("UPDATE players_upgrades SET ? = ? WHERE UUID=?");
-            pS.setString(1, upgradeName);
-            pS.setBoolean(2, status);
-            pS.setString(3, uuid.toString());
+            PreparedStatement pS = ps("UPDATE players_upgrades SET " + upgradeName + "= ? WHERE UUID=?");
+            pS.setBoolean(1, status);
+            pS.setString(2, uuid.toString());
             pS.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -256,6 +264,7 @@ public class DatabaseGetterSetter {
     }
 
     public Boolean getPlayerUpgrade(UUID uuid, String upgradeName) {
+        if (uuid == null || upgradeName == null) return false;
         try {
             PreparedStatement pS = ps("SELECT ? FROM players_upgrades WHERE UUID=?");
             pS.setString(1, upgradeName);

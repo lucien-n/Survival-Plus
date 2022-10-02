@@ -50,6 +50,7 @@ public class FarmingSkillMenu implements Listener {
         }
 
         if (slot == event.getInventory().getSize() - 9) p.openInventory(skillsMenu.createSkillMenu(p));
+        if (slot == event.getInventory().getSize() - 1) p.closeInventory();
     }
 
 

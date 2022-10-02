@@ -42,12 +42,15 @@ public class BlockBreakListener implements Listener {
             Double pointsGained = helper.round((Double) points.get(event.getBlock().getType().toString()), 2);
             survivalData.incrementPlayerSkillPoints(p.getUniqueId(), "mining", pointsGained);
             p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(plugin.getConfig().getString("skills.gained").replace("%amount%", String.valueOf(pointsGained)).replace("%skill%", "minage")));
+
             // Levels
             int playerSkillLevel = survivalData.getPlayerSkillLevel(p.getUniqueId(), "mining");
             Double playerSkillPoints = survivalData.getPlayerSkillPoints(p.getUniqueId(), "mining");
             for (int i = 0; i <= levels.size(); i++) {
+                if (playerSkillLevel == levels.size()) return;
                 if (playerSkillLevel == i && playerSkillPoints >= (int) levels.get(i)) {
                     survivalData.incrementPlayerSkillLevel(p.getUniqueId(), "mining", 1);
+                    survivalData.incrementPlayerTokens(p.getUniqueId(), 1);
                     p.sendMessage(plugin.getConfig().getString("skills.passed_level").replace("%level%", String.valueOf(i+1)));
                 }
             }

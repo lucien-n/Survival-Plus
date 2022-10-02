@@ -33,7 +33,7 @@ public class DeathListener implements Listener {
 
     @EventHandler
     public void onEntityDeath(EntityDeathEvent event) {
-        if (!mobs.contains(event.getEntity().toString().replace("Craft", ""))) return;
+        if (!mobs.contains(event.getEntity().toString().replace("Craft", "")) || event.getEntity().getKiller() == null) return;
         Player p = event.getEntity().getKiller();
         Double pointsGained = helper.round((Double) points.get(event.getEntity().toString().replace("Craft", "")), 2);
         survivalData.incrementPlayerSkillPoints(p.getUniqueId(), "combat", pointsGained);

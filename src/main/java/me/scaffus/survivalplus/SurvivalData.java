@@ -1,11 +1,9 @@
 package me.scaffus.survivalplus;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import me.scaffus.survivalplus.sql.DatabaseGetterSetter;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.UUID;
 
 public class SurvivalData {
@@ -21,14 +19,14 @@ public class SurvivalData {
     public HashMap<UUID, Double> playerSkillPointsSwimming = new HashMap<>();
     public HashMap<UUID, Double> playerSkillPointsFlying = new HashMap<>();
 
-    public HashMap<UUID, Integer> playerSkillLevelsFarming = new HashMap<>();
-    public HashMap<UUID, Integer> playerSkillLevelsMining = new HashMap<>();
-    public HashMap<UUID, Integer> playerSkillLevelsCombat = new HashMap<>();
-    public HashMap<UUID, Integer> playerSkillLevelsRunning = new HashMap<>();
-    public HashMap<UUID, Integer> playerSkillLevelsDeath = new HashMap<>();
-    public HashMap<UUID, Integer> playerSkillLevelsArchery = new HashMap<>();
-    public HashMap<UUID, Integer> playerSkillLevelsSwimming = new HashMap<>();
-    public HashMap<UUID, Integer> playerSkillLevelsFlying = new HashMap<>();
+    public HashMap<UUID, Integer> playerSkillLevelFarming = new HashMap<>();
+    public HashMap<UUID, Integer> playerSkillLevelMining = new HashMap<>();
+    public HashMap<UUID, Integer> playerSkillLevelCombat = new HashMap<>();
+    public HashMap<UUID, Integer> playerSkillLevelRunning = new HashMap<>();
+    public HashMap<UUID, Integer> playerSkillLevelDeath = new HashMap<>();
+    public HashMap<UUID, Integer> playerSkillLevelArchery = new HashMap<>();
+    public HashMap<UUID, Integer> playerSkillLevelSwimming = new HashMap<>();
+    public HashMap<UUID, Integer> playerSkillLevelFlying = new HashMap<>();
 
     public HashMap<UUID, Boolean> playerHasUpgradeReplanter = new HashMap<>();
     public HashMap<UUID, Boolean> playerHasUpgradeReplanterFortune = new HashMap<>();
@@ -52,14 +50,14 @@ public class SurvivalData {
         playerSkillPointsSwimming.put(uuid, data.getPlayerSkillPoints(uuid, "swimming"));
         playerSkillPointsFlying.put(uuid, data.getPlayerSkillPoints(uuid, "flying"));
 
-        playerSkillLevelsFarming.put(uuid, data.getPlayerSkillLevel(uuid, "farming"));
-        playerSkillLevelsMining.put(uuid, data.getPlayerSkillLevel(uuid, "mining"));
-        playerSkillLevelsCombat.put(uuid, data.getPlayerSkillLevel(uuid, "combat"));
-        playerSkillLevelsRunning.put(uuid, data.getPlayerSkillLevel(uuid, "running"));
-        playerSkillLevelsDeath.put(uuid, data.getPlayerSkillLevel(uuid, "death"));
-        playerSkillLevelsArchery.put(uuid, data.getPlayerSkillLevel(uuid, "archery"));
-        playerSkillLevelsSwimming.put(uuid, data.getPlayerSkillLevel(uuid, "swimming"));
-        playerSkillLevelsFlying.put(uuid, data.getPlayerSkillLevel(uuid, "flying"));
+        playerSkillLevelFarming.put(uuid, data.getPlayerSkillLevel(uuid, "farming"));
+        playerSkillLevelMining.put(uuid, data.getPlayerSkillLevel(uuid, "mining"));
+        playerSkillLevelCombat.put(uuid, data.getPlayerSkillLevel(uuid, "combat"));
+        playerSkillLevelRunning.put(uuid, data.getPlayerSkillLevel(uuid, "running"));
+        playerSkillLevelDeath.put(uuid, data.getPlayerSkillLevel(uuid, "death"));
+        playerSkillLevelArchery.put(uuid, data.getPlayerSkillLevel(uuid, "archery"));
+        playerSkillLevelSwimming.put(uuid, data.getPlayerSkillLevel(uuid, "swimming"));
+        playerSkillLevelFlying.put(uuid, data.getPlayerSkillLevel(uuid, "flying"));
 
         playerHasUpgradeReplanter.put(uuid, data.getPlayerUpgrade(uuid, "replanter"));
         playerHasUpgradeReplanterFortune.put(uuid, data.getPlayerUpgrade(uuid, "replanter_fortune"));
@@ -70,23 +68,23 @@ public class SurvivalData {
 
     public void savePlayerData(Player p) {
         UUID uuid = p.getUniqueId();
-        data.setPlayerSkillLevel(uuid, "farming", playerSkillLevelsFarming.get(uuid));
-        data.setPlayerSkillLevel(uuid, "mining", playerSkillLevelsMining.get(uuid));
-        data.setPlayerSkillLevel(uuid, "combat", playerSkillLevelsCombat.get(uuid));
-        data.setPlayerSkillLevel(uuid, "running", playerSkillLevelsRunning.get(uuid));
-        data.setPlayerSkillLevel(uuid, "death", playerSkillLevelsDeath.get(uuid));
-        data.setPlayerSkillLevel(uuid, "archery", playerSkillLevelsArchery.get(uuid));
-        data.setPlayerSkillLevel(uuid, "swimming", playerSkillLevelsSwimming.get(uuid));
-        data.setPlayerSkillLevel(uuid, "flying", playerSkillLevelsFlying.get(uuid));
+        if (playerSkillLevelFarming.get(uuid) != 0) data.setPlayerSkillLevel(uuid, "farming", playerSkillLevelFarming.get(uuid));
+        if (playerSkillLevelMining.get(uuid) != 0) data.setPlayerSkillLevel(uuid, "mining", playerSkillLevelMining.get(uuid));
+        if (playerSkillLevelCombat.get(uuid) != 0) data.setPlayerSkillLevel(uuid, "combat", playerSkillLevelCombat.get(uuid));
+        if (playerSkillLevelRunning.get(uuid) != 0) data.setPlayerSkillLevel(uuid, "running", playerSkillLevelRunning.get(uuid));
+        if (playerSkillLevelDeath.get(uuid) != 0) data.setPlayerSkillLevel(uuid, "death", playerSkillLevelDeath.get(uuid));
+        if (playerSkillLevelArchery.get(uuid) != 0) data.setPlayerSkillLevel(uuid, "archery", playerSkillLevelArchery.get(uuid));
+        if (playerSkillLevelSwimming.get(uuid) != 0) data.setPlayerSkillLevel(uuid, "swimming", playerSkillLevelSwimming.get(uuid));
+        if (playerSkillLevelFlying.get(uuid) != 0) data.setPlayerSkillLevel(uuid, "flying", playerSkillLevelFlying.get(uuid));
 
-        data.setPlayerSkillPoints(uuid, "farming", playerSkillPointsFarming.get(uuid));
-        data.setPlayerSkillPoints(uuid, "mining", playerSkillPointsMining.get(uuid));
-        data.setPlayerSkillPoints(uuid, "combat", playerSkillPointsCombat.get(uuid));
-        data.setPlayerSkillPoints(uuid, "running", playerSkillPointsRunning.get(uuid));
-        data.setPlayerSkillPoints(uuid, "death", playerSkillPointsDeath.get(uuid));
-        data.setPlayerSkillPoints(uuid, "archery", playerSkillPointsArchery.get(uuid));
-        data.setPlayerSkillPoints(uuid, "swimming", playerSkillPointsSwimming.get(uuid));
-        data.setPlayerSkillPoints(uuid, "flying", playerSkillPointsFlying.get(uuid));
+        if (playerSkillPointsFarming.get(uuid) != 0) data.setPlayerSkillPoints(uuid, "farming", playerSkillPointsFarming.get(uuid));
+        if (playerSkillPointsMining.get(uuid) != 0) data.setPlayerSkillPoints(uuid, "mining", playerSkillPointsMining.get(uuid));
+        if (playerSkillPointsCombat.get(uuid) != 0) data.setPlayerSkillPoints(uuid, "combat", playerSkillPointsCombat.get(uuid));
+        if (playerSkillPointsRunning.get(uuid) != 0) data.setPlayerSkillPoints(uuid, "running", playerSkillPointsRunning.get(uuid));
+        if (playerSkillPointsDeath.get(uuid) != 0) data.setPlayerSkillPoints(uuid, "death", playerSkillPointsDeath.get(uuid));
+        if (playerSkillPointsArchery.get(uuid) != 0) data.setPlayerSkillPoints(uuid, "archery", playerSkillPointsArchery.get(uuid));
+        if (playerSkillPointsSwimming.get(uuid) != 0) data.setPlayerSkillPoints(uuid, "swimming", playerSkillPointsSwimming.get(uuid));
+        if (playerSkillPointsFlying.get(uuid) != 0) data.setPlayerSkillPoints(uuid, "flying", playerSkillPointsFlying.get(uuid));
 
         data.setPlayerUpgrade(uuid, "replanter", playerHasUpgradeReplanter.get(uuid));
         data.setPlayerUpgrade(uuid, "replanter_fortune", playerHasUpgradeReplanterFortune.get(uuid));
@@ -202,21 +200,21 @@ public class SurvivalData {
     public Integer getPlayerSkillLevel(UUID uuid, String skill) {
         switch (skill) {
             case "farming":
-                return playerSkillLevelsFarming.get(uuid);
+                return playerSkillLevelFarming.get(uuid);
             case "mining":
-                return playerSkillLevelsMining.get(uuid);
+                return playerSkillLevelMining.get(uuid);
             case "combat":
-                return playerSkillLevelsCombat.get(uuid);
+                return playerSkillLevelCombat.get(uuid);
             case "running":
-                return playerSkillLevelsRunning.get(uuid);
+                return playerSkillLevelRunning.get(uuid);
             case "death":
-                return playerSkillLevelsDeath.get(uuid);
+                return playerSkillLevelDeath.get(uuid);
             case "archery":
-                return playerSkillLevelsArchery.get(uuid);
+                return playerSkillLevelArchery.get(uuid);
             case "swimming":
-                return playerSkillLevelsSwimming.get(uuid);
+                return playerSkillLevelSwimming.get(uuid);
             case "flying":
-                return playerSkillLevelsFlying.get(uuid);
+                return playerSkillLevelFlying.get(uuid);
         }
         return 0;
     }
@@ -224,28 +222,28 @@ public class SurvivalData {
     public void setPlayerSkillLevel(UUID uuid, String skill, Integer amount) {
         switch (skill) {
             case "farming":
-                playerSkillLevelsFarming.put(uuid, amount);
+                playerSkillLevelFarming.put(uuid, amount);
                 break;
             case "mining":
-                playerSkillLevelsMining.put(uuid, amount);
+                playerSkillLevelMining.put(uuid, amount);
                 break;
             case "combat":
-                playerSkillLevelsCombat.put(uuid, amount);
+                playerSkillLevelCombat.put(uuid, amount);
                 break;
             case "running":
-                playerSkillLevelsRunning.put(uuid, amount);
+                playerSkillLevelRunning.put(uuid, amount);
                 break;
             case "death":
-                playerSkillLevelsDeath.put(uuid, amount);
+                playerSkillLevelDeath.put(uuid, amount);
                 break;
             case "archery":
-                playerSkillLevelsArchery.put(uuid, amount);
+                playerSkillLevelArchery.put(uuid, amount);
                 break;
             case "swimming":
-                playerSkillLevelsSwimming.put(uuid, amount);
+                playerSkillLevelSwimming.put(uuid, amount);
                 break;
             case "flying":
-                playerSkillLevelsFlying.put(uuid, amount);
+                playerSkillLevelFlying.put(uuid, amount);
                 break;
         }
     }
@@ -253,28 +251,28 @@ public class SurvivalData {
     public void incrementPlayerSkillLevel(UUID uuid, String skill, Integer amount) {
         switch (skill) {
             case "farming":
-                playerSkillLevelsFarming.put(uuid, playerSkillLevelsFarming.get(uuid) + amount);
+                playerSkillLevelFarming.put(uuid, playerSkillLevelFarming.get(uuid) + amount);
                 break;
             case "mining":
-                playerSkillLevelsMining.put(uuid, playerSkillLevelsMining.get(uuid) + amount);
+                playerSkillLevelMining.put(uuid, playerSkillLevelMining.get(uuid) + amount);
                 break;
             case "combat":
-                playerSkillLevelsCombat.put(uuid, playerSkillLevelsCombat.get(uuid) + amount);
+                playerSkillLevelCombat.put(uuid, playerSkillLevelCombat.get(uuid) + amount);
                 break;
             case "running":
-                playerSkillLevelsRunning.put(uuid, playerSkillLevelsRunning.get(uuid) + amount);
+                playerSkillLevelRunning.put(uuid, playerSkillLevelRunning.get(uuid) + amount);
                 break;
             case "death":
-                playerSkillLevelsDeath.put(uuid, playerSkillLevelsDeath.get(uuid) + amount);
+                playerSkillLevelDeath.put(uuid, playerSkillLevelDeath.get(uuid) + amount);
                 break;
             case "archery":
-                playerSkillLevelsArchery.put(uuid, playerSkillLevelsArchery.get(uuid) + amount);
+                playerSkillLevelArchery.put(uuid, playerSkillLevelArchery.get(uuid) + amount);
                 break;
             case "swimming":
-                playerSkillLevelsSwimming.put(uuid, playerSkillLevelsSwimming.get(uuid) + amount);
+                playerSkillLevelSwimming.put(uuid, playerSkillLevelSwimming.get(uuid) + amount);
                 break;
             case "flying":
-                playerSkillLevelsFlying.put(uuid, playerSkillLevelsFlying.get(uuid) + amount);
+                playerSkillLevelFlying.put(uuid, playerSkillLevelFlying.get(uuid) + amount);
                 break;
         }
     }
