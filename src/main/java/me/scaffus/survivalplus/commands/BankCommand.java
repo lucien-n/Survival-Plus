@@ -12,7 +12,6 @@ import org.bukkit.entity.Player;
 public class BankCommand implements CommandExecutor {
     private SurvivalPlus plugin;
 
-
     public BankCommand(SurvivalPlus plugin) {
         this.plugin = plugin;
         plugin.getCommand("banque").setExecutor(this);

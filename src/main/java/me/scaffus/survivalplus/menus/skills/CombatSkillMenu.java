@@ -1,9 +1,9 @@
 package me.scaffus.survivalplus.menus.skills;
 
 import me.scaffus.survivalplus.Helper;
+import me.scaffus.survivalplus.SurvivalData;
 import me.scaffus.survivalplus.SurvivalPlus;
 import me.scaffus.survivalplus.menus.SkillsMenu;
-import me.scaffus.survivalplus.sql.DatabaseGetterSetter;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -15,14 +15,14 @@ import org.bukkit.inventory.ItemStack;
 
 public class CombatSkillMenu implements Listener {
     private SurvivalPlus plugin;
-    private DatabaseGetterSetter data;
+    private SurvivalData survivalData;
     private Helper helper;
     private SkillsMenu skillsMenu;
     private String inventoryName = "§6§lCombat";
 
     public CombatSkillMenu(SurvivalPlus plugin, SkillsMenu skillsMenu) {
         this.plugin = plugin;
-        this.data = plugin.data;
+        this.survivalData = plugin.survivalData;
         this.helper = plugin.helper;
         this.skillsMenu = skillsMenu;
         Bukkit.getPluginManager().registerEvents(this, plugin);
@@ -43,7 +43,7 @@ public class CombatSkillMenu implements Listener {
         ItemStack backgroundItem = helper.getItem(new ItemStack(Material.GRAY_STAINED_GLASS_PANE), "", "");
         Inventory inventory = helper.createInventoryWithBackground(p, inventoryName, 54, backgroundItem, true);
 
-        inventory.setItem(49, helper.getHead(p, "§eJetons: §6" + data.getPlayerTokens(p.getUniqueId())));
+        inventory.setItem(49, helper.getHead(p, "§eJetons: §6" + survivalData.getPlayerTokens(p.getUniqueId())));
 
         return inventory;
     }

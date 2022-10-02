@@ -137,6 +137,20 @@ public class DatabaseGetterSetter {
         }
     }
 
+    public void setPlayerSkillPoints(UUID uuid, String skill, Double amount) {
+        try {
+            PreparedStatement pS = ps("UPDATE players_points SET ? = ? WHERE UUID=?");
+            pS.setString(1, skill);
+            pS.setDouble(2, amount);
+            pS.setString(3, uuid.toString());
+            pS.executeUpdate();
+
+            incrementPlayerTokens(uuid, 1);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public Double getPlayerSkillPoints(UUID uuid, String skill) {
         try {
             PreparedStatement pS = ps("SELECT " + skill + " FROM players_skills WHERE UUID=?");
@@ -149,17 +163,6 @@ public class DatabaseGetterSetter {
             throw new RuntimeException(e);
         }
         return 0.0;
-    }
-
-    public void incrementPlayerTokens(UUID uuid, Integer amount) {
-        try {
-            PreparedStatement pS = ps("UPDATE players_data SET tokens = tokens + ? WHERE UUID=?");
-            pS.setInt(1, amount);
-            pS.setString(2, uuid.toString());
-            pS.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     public void incrementPlayerSkillLevel(UUID uuid, String skill, Integer amount) {
@@ -175,7 +178,21 @@ public class DatabaseGetterSetter {
         }
     }
 
-    public Integer getPlayerSkillLevel(UUID uuid, Object skill) {
+    public void setPlayerSkillLevel(UUID uuid, String skill, Integer amount) {
+        try {
+            PreparedStatement pS = ps("UPDATE players_levels SET ? = ? WHERE UUID=?");
+            pS.setString(1, skill);
+            pS.setInt(2, amount);
+            pS.setString(3, uuid.toString());
+            pS.executeUpdate();
+
+            incrementPlayerTokens(uuid, 1);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Integer getPlayerSkillLevel(UUID uuid, String skill) {
         try {
             PreparedStatement pS = ps("SELECT " + skill + " FROM players_levels WHERE UUID=?");
             pS.setString(1, uuid.toString());
@@ -187,6 +204,28 @@ public class DatabaseGetterSetter {
             throw new RuntimeException(e);
         }
         return 0;
+    }
+
+    public void incrementPlayerTokens(UUID uuid, Integer amount) {
+        try {
+            PreparedStatement pS = ps("UPDATE players_data SET tokens = tokens + ? WHERE UUID=?");
+            pS.setInt(1, amount);
+            pS.setString(2, uuid.toString());
+            pS.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void setPlayerTokens(UUID uuid, Integer amount) {
+        try {
+            PreparedStatement pS = ps("UPDATE players_data SET tokens = ? WHERE UUID=?");
+            pS.setInt(1, amount);
+            pS.setString(2, uuid.toString());
+            pS.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public Integer getPlayerTokens(UUID uuid) {
