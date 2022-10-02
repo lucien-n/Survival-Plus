@@ -1,9 +1,9 @@
 package me.scaffus.survivalplus.menus.skills;
 
 import me.scaffus.survivalplus.Helper;
+import me.scaffus.survivalplus.SurvivalData;
 import me.scaffus.survivalplus.SurvivalPlus;
 import me.scaffus.survivalplus.menus.SkillsMenu;
-import me.scaffus.survivalplus.sql.DatabaseGetterSetter;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -17,7 +17,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class FarmingSkillMenu implements Listener {
     private SurvivalPlus plugin;
-    private DatabaseGetterSetter data;
+    private SurvivalData survivalData;
     private Helper helper;
     private SkillsMenu skillsMenu;
     private String inventoryName = "§6§lAgriculture";
@@ -26,7 +26,7 @@ public class FarmingSkillMenu implements Listener {
 
     public FarmingSkillMenu(SurvivalPlus plugin, SkillsMenu skillsMenu) {
         this.plugin = plugin;
-        this.data = plugin.data;
+        this.survivalData = plugin.survivalData;
         this.helper = plugin.helper;
         this.skillsMenu = skillsMenu;
         Bukkit.getPluginManager().registerEvents(this, plugin);
@@ -44,13 +44,13 @@ public class FarmingSkillMenu implements Listener {
             if (helper.buyUpgrade(p, "replanter", 1)) helper.sendUpgradeBoughtMessage(p, "replanteur", 1);
             else helper.sendNotEnoughTokensMessage(p);
         } else if (slot == 12) {
-            if (helper.buyUpgrade(p, "replanter_fortune", 1)) helper.sendUpgradeBoughtMessage(p, "fortune du replanteur", 1);
+            if (helper.buyUpgrade(p, "replanter_fortune", 1))
+                helper.sendUpgradeBoughtMessage(p, "fortune du replanteur", 1);
             else helper.sendNotEnoughTokensMessage(p);
         }
 
         if (slot == event.getInventory().getSize() - 9) p.openInventory(skillsMenu.createSkillMenu(p));
     }
-
 
 
     public Inventory createMenu(Player p) {
@@ -65,7 +65,7 @@ public class FarmingSkillMenu implements Listener {
         inventory.setItem(11, helper.getItem(new ItemStack(Material.PISTON), "§6§lReplanteur", "§ePrix: §6" + replanterPrice));
         inventory.setItem(15, replanterFortuneItem);
 
-        inventory.setItem(49, helper.getHead(p, "§eJetons: §6" + data.getPlayerTokens(p.getUniqueId())));
+        inventory.setItem(49, helper.getHead(p, "§eJetons: §6" + survivalData.getPlayerTokens(p.getUniqueId())));
 
         return inventory;
     }
