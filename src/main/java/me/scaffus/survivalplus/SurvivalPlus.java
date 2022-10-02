@@ -22,12 +22,12 @@ public final class SurvivalPlus extends JavaPlugin {
     public DatabaseGetterSetter data;
     public SkillsConfig skillsConfig = new SkillsConfig();
     public Helper helper = new Helper();
-    public HashMap<UUID, Integer> playerSelectedAmount;
-
+    public SurvivalData survivalData;
     @Override
     public void onEnable() {
         INSTANCE = this;
         this.data = new DatabaseGetterSetter(databaseManager.playerConnection.getConnection());
+        this.survivalData = new SurvivalData(this);
         saveDefaultConfig();
 
         skillsConfig.setup();

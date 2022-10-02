@@ -89,4 +89,21 @@ public class Helper {
         bd = bd.setScale(places, RoundingMode.HALF_UP);
         return bd.doubleValue();
     }
+
+    public boolean buyUpgrade(Player p, String upgrade, int upgradeCost) {
+        if (!(data.getPlayerTokens(p.getUniqueId()) > upgradeCost))
+            return false;
+
+        data.setPlayerUpgrade(p.getUniqueId(), upgrade, true);
+        data.incrementPlayerTokens(p.getUniqueId(), -upgradeCost);
+        return true;
+    }
+
+    public void sendUpgradeBoughtMessage(Player p, String upgrade, int cost) {
+        p.sendMessage(Bukkit.getPluginManager().getPlugin("SurvivalPlus").getConfig().getString("skills.upgrade_bought").replace("%upgrade%", upgrade).replace("%cost%", String.valueOf(cost)));
+    }
+
+    public void sendNotEnoughTokensMessage(Player p) {
+        p.sendMessage(Bukkit.getPluginManager().getPlugin("SurvivalPlus").getConfig().getString("skills.not_enough"));
+    }
 }

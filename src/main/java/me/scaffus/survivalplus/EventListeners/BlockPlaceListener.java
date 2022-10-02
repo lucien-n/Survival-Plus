@@ -34,7 +34,7 @@ public class BlockPlaceListener implements Listener {
     public void onBlockPlace(BlockPlaceEvent event) {
         if (blocks.contains(event.getBlock().getType().toString())) {
             Double pointsLost = -helper.round((Double) points.get(event.getBlock().getType().toString()), 2);
-            data.incrementPlayerSkill(event.getPlayer().getUniqueId(), "mining", pointsLost);
+            data.incrementPlayerSkillPoints(event.getPlayer().getUniqueId(), "mining", pointsLost);
             event.getPlayer().spigot().sendMessage(
                     ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(plugin.getConfig().getString("skills.gained")
                             .replace("%amount%", String.valueOf(pointsLost)).replace("%skill%", "minage")));

@@ -33,9 +33,10 @@ public class DeathListener implements Listener {
 
     @EventHandler
     public void onEntityDeath(EntityDeathEvent event) {
+        if (!mobs.contains(event.getEntity().toString().replace("Craft", ""))) return;
         Player p = event.getEntity().getKiller();
         Double pointsGained = helper.round((Double) points.get(event.getEntity().toString().replace("Craft", "")), 2);
-        data.incrementPlayerSkill(p.getUniqueId(), "combat", pointsGained);
+        data.incrementPlayerSkillPoints(p.getUniqueId(), "combat", pointsGained);
         p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(plugin.getConfig().getString("skills.gained")
                 .replace("%amount%", String.valueOf(pointsGained)).replace("%skill%", "combat")));
     }

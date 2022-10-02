@@ -1,7 +1,7 @@
 package me.scaffus.survivalplus.commands;
 
 import me.scaffus.survivalplus.SurvivalPlus;
-import me.scaffus.survivalplus.menus.SkillMenu;
+import me.scaffus.survivalplus.menus.SkillsMenu;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -20,7 +20,7 @@ public class SkillCommand implements CommandExecutor {
         if (!(sender instanceof Player)) return false;
 
         Player p = (Player) sender;
-        SkillMenu menu = new SkillMenu(plugin);
+        SkillsMenu menu = new SkillsMenu(plugin);
         p.openInventory(menu.createSkillMenu(p));
         return true;
     }
