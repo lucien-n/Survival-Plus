@@ -26,11 +26,12 @@ public class BlockBreakListener implements Listener {
     private final PlayersData pData;
     private final SkillsConfig skillsConfig;
     private final Helper helper;
+    private final List levels;
     private final Set ores;
     private final Map oresPoints;
+    private final List<String> miningTools;
     private final Set crops;
     private final Map cropsPoints;
-    private final List levels;
     private final List<String> farmingTools;
     private final List<String> replantableCrops;
     private final String skillsGainedXpMessage;
@@ -43,16 +44,19 @@ public class BlockBreakListener implements Listener {
 
     public BlockBreakListener(SurvivalPlus plugin) {
         this.plugin = plugin;
-        this.pData = plugin.playersData;
+        this.pData = plugin.pData;
         this.skillsConfig = plugin.skillsConfig;
         this.helper = plugin.helper;
 
+        levels = (List) skillsConfig.get().get("points_for_level");
+
         ores = skillsConfig.get().getConfigurationSection("mining.blocks").getKeys(false);
         oresPoints = skillsConfig.get().getConfigurationSection("mining.blocks").getValues(false);
+        miningTools = (List) skillsConfig.get().get("mining.tools");
+
         crops = skillsConfig.get().getConfigurationSection("farming.crops").getKeys(false);
         cropsPoints = skillsConfig.get().getConfigurationSection("farming.crops").getValues(false);
-        levels = (List) skillsConfig.get().get("points_for_level");
-        farmingTools = (List) skillsConfig.get().get("farming.hoes");
+        farmingTools = (List) skillsConfig.get().get("farming.tools");
         replantableCrops = (List) skillsConfig.get().get("farming.replantables");
 
         skillsGainedXpMessage = plugin.getConfig().getString("skills.gained");
@@ -78,7 +82,7 @@ public class BlockBreakListener implements Listener {
         Block block = event.getBlock();
 
         // MINING
-        if (ores.contains(block.getType().toString())) {
+        if (ores.contains(block.getType().toString()) && miningTools.contains(p.getInventory().getItemInMainHand().getType().toString())) {
             // Points
             Double pointsGained = helper.round((Double) oresPoints.get(block.getType().toString()), 2);
             pData.incrementPlayerSkillPoints(p.getUniqueId(), "mining", pointsGained);
@@ -88,12 +92,36 @@ public class BlockBreakListener implements Listener {
             int playerSkillLevel = pData.getPlayerSkillLevel(p.getUniqueId(), "mining");
             Double playerSkillPoints = pData.getPlayerSkillPoints(p.getUniqueId(), "mining");
             for (int i = 0; i <= levels.size(); i++) {
-                if (playerSkillLevel == levels.size()) return;
-                if (playerSkillLevel == i && playerSkillPoints >= (int) levels.get(i)) {
-                    pData.incrementPlayerSkillLevel(p.getUniqueId(), "mining", 1);
-                    pData.incrementPlayerTokens(p.getUniqueId(), 1);
-                    p.sendMessage(skillsPassedLevelMessage.replace("%level%", String.valueOf(i + 1)));
+                if (playerSkillLevel != levels.size()) {
+                    if (playerSkillLevel == i && playerSkillPoints >= (int) levels.get(i)) {
+                        pData.incrementPlayerSkillLevel(p.getUniqueId(), "mining", 1);
+                        pData.incrementPlayerTokens(p.getUniqueId(), 1);
+                        p.sendMessage(skillsPassedLevelMessage.replace("%level%", String.valueOf(i + 1)));
+                    }
                 }
+            }
+
+            // Autosmelt
+            if (pData.getPlayerUpgrade(uuid, "auto_smelt") > 0) {
+                Material resultItem = Material.AIR;
+                switch (block.getType()) {
+                    case IRON_ORE:
+                        resultItem = Material.IRON_INGOT;
+                        break;
+                    case GOLD_ORE:
+                        resultItem = Material.GOLD_INGOT;
+                        break;
+                    case COPPER_ORE:
+                        resultItem = Material.COPPER_INGOT;
+                        break;
+                    case ANCIENT_DEBRIS:
+                        resultItem = Material.NETHERITE_SCRAP;
+                        break;
+                }
+                event.setDropItems(false);
+                if (pData.getPlayerUpgrade(uuid, "ore_magnet") > 0) p.getInventory().addItem(new ItemStack(resultItem));
+                else p.getWorld().dropItem(block.getLocation(), new ItemStack(resultItem));
+                return;
             }
             return;
         }
@@ -125,6 +153,8 @@ public class BlockBreakListener implements Listener {
             // Replant
             if (pData.getPlayerUpgrade(uuid, "replanter") > 0 && replantableCrops.contains(block.getType().toString())) {
                 event.setCancelled(true);
+                Material blockType = block.getType();
+
                 // Apply fortune
                 Integer playerReplanterFortuneLevel = pData.getPlayerUpgrade(uuid, "replanter_fortune");
                 if (playerReplanterFortuneLevel > 0) {
@@ -140,7 +170,9 @@ public class BlockBreakListener implements Listener {
                             break;
                     }
                 } else block.breakNaturally();
-                placeBlockTask = new PlaceBlockTask(plugin, block.getLocation(), block.getType());
+
+                // Replant
+                placeBlockTask = new PlaceBlockTask(plugin, block.getLocation(), blockType);
                 placeBlockTask.runTaskLater(plugin, 20L);
             }
             return;

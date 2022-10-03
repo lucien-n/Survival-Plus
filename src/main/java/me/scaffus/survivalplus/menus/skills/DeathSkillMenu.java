@@ -22,7 +22,7 @@ public class DeathSkillMenu implements Listener {
 
     public DeathSkillMenu(SurvivalPlus plugin, SkillsMenu skillsMenu) {
         this.plugin = plugin;
-        this.playersData = plugin.playersData;
+        this.playersData = plugin.pData;
         this.helper = plugin.helper;
         this.skillsMenu = skillsMenu;
         Bukkit.getPluginManager().registerEvents(this, plugin);

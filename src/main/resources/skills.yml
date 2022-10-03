@@ -18,6 +18,13 @@ mining:
     DIAMOND_ORE: 7.0
     DEEPSLATE_DIAMOND_ORE: 4.0
     ANCIENT_DEBRIS: 35.0
+  tools:
+    - NETHERITE_PICKAXE
+    - DIAMOND_PICKAXE
+    - GOLDEN_PICKAXE
+    - IRON_PICKAXE
+    - STONE_PICKAXE
+    - WOODEN_PICKAXE
 
 combat:
   mobs:
@@ -70,7 +77,7 @@ farming:
     - CARROTS
     - NETHER_WART
     - BEETROOTS
-  hoes:
+  tools:
     - NETHERITE_HOE
     - DIAMOND_HOE
     - GOLDEN_HOE
@@ -105,3 +112,6 @@ upgrades:
   - replanter
   - wide_till
   - replanter_fortune
+  - auto_smelt
+  - vein_mine
+  - ore_magnet

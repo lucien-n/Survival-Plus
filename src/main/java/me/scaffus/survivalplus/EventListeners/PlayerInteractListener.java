@@ -10,6 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 import java.util.UUID;
@@ -24,9 +25,9 @@ public class PlayerInteractListener implements Listener {
 
     public PlayerInteractListener(SurvivalPlus plugin) {
         this.plugin = plugin;
-        this.pData = plugin.playersData;
+        this.pData = plugin.pData;
         this.skillsConfig = plugin.skillsConfig;
-        hoes = (List<String>) skillsConfig.get().get("farming.hoes");
+        hoes = (List<String>) skillsConfig.get().get("farming.tools");
         tillables = (List<String>) skillsConfig.get().get("farming.tillables");
     }
 
@@ -78,8 +79,10 @@ public class PlayerInteractListener implements Listener {
             if (tillables.contains(blockLoc.getBlock().getType().toString()))
                 blockLoc.getBlock().setType(Material.FARMLAND);
         }
-        assert p.getInventory().getItemInMainHand().getItemMeta() != null;
-        if (p.getInventory().getItemInMainHand().getItemMeta().getDisplayName().equalsIgnoreCase("§6§lInfoStick")) {
+
+        if (p.getInventory().getItemInOffHand().getItemMeta() == null) return;
+        ItemStack itemInOffHand = p.getInventory().getItemInOffHand();
+        if ((itemInOffHand.getItemMeta().getDisplayName().equalsIgnoreCase("§6§lInfoStick"))) {
             Location loc = event.getClickedBlock().getLocation();
             p.sendMessage("§e#-----| §6§l" + event.getClickedBlock().getType() + " §e|-----#");
             p.sendMessage("§e - Loc: §6" + loc.getBlockX() + " " + loc.getBlockY() + " " + loc.getBlockZ());

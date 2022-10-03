@@ -22,7 +22,7 @@ public class SwimmingSkillMenu implements Listener {
 
     public SwimmingSkillMenu(SurvivalPlus plugin, SkillsMenu skillsMenu) {
         this.plugin = plugin;
-        this.playersData = plugin.playersData;
+        this.playersData = plugin.pData;
         this.helper = plugin.helper;
         this.skillsMenu = skillsMenu;
         Bukkit.getPluginManager().registerEvents(this, plugin);

@@ -24,7 +24,7 @@ public class DeathListener implements Listener {
 
     public DeathListener(SurvivalPlus plugin) {
         this.plugin = plugin;
-        this.playersData = plugin.playersData;
+        this.playersData = plugin.pData;
         this.skillsConfig = plugin.skillsConfig;
         this.helper = plugin.helper;
         mobs = skillsConfig.get().getConfigurationSection("combat.mobs").getKeys(false);

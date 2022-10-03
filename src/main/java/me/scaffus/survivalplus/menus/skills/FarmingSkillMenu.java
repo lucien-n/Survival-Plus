@@ -29,7 +29,7 @@ public class FarmingSkillMenu implements Listener {
 
     public FarmingSkillMenu(SurvivalPlus plugin, SkillsMenu skillsMenu) {
         this.plugin = plugin;
-        this.pData = plugin.playersData;
+        this.pData = plugin.pData;
         this.helper = plugin.helper;
         this.skillsMenu = skillsMenu;
         Bukkit.getPluginManager().registerEvents(this, plugin);
@@ -94,7 +94,7 @@ public class FarmingSkillMenu implements Listener {
         inventory.setItem(15, replanterFortuneItem);
         inventory.setItem(31, helper.getItem(new ItemStack(Material.DIAMOND_HOE), "§6§lLarge Bêche",
                 pData.getPlayerUpgrade(uuid, "wide_till")
-                        > 0 ? "§ePrix: §6Acuit" : "§ePrix: §6" + wideTillePrice, "§eBêche une zone §63x3"));
+                        > 0 ? "§ePrix: §6Acquit" : "§ePrix: §6" + wideTillePrice, "§eBêche une zone §63x3"));
 
         inventory.setItem(49, helper.getHead(p, "§eJetons: §6" + pData.getPlayerTokens(p.getUniqueId())));
 

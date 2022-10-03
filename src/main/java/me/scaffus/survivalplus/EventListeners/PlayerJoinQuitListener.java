@@ -17,7 +17,7 @@ public class PlayerJoinQuitListener implements Listener {
     public PlayerJoinQuitListener(SurvivalPlus plugin) {
         this.plugin = plugin;
         this.data = plugin.data;
-        this.playersData = plugin.playersData;
+        this.playersData = plugin.pData;
     }
 
     @EventHandler

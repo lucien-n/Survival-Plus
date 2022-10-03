@@ -18,7 +18,7 @@ public final class SurvivalPlus extends JavaPlugin {
     public DatabaseGetterSetter data;
     public SkillsConfig skillsConfig = new SkillsConfig();
     public Helper helper = new Helper();
-    public PlayersData playersData;
+    public PlayersData pData;
     @Override
     public void onEnable() {
         INSTANCE = this;
@@ -29,7 +29,7 @@ public final class SurvivalPlus extends JavaPlugin {
         skillsConfig.get().options().copyDefaults(true);
         skillsConfig.save();
 
-        this.playersData = new PlayersData(this);
+        this.pData = new PlayersData(this);
 
         getServer().getPluginManager().registerEvents(new PlayerJoinQuitListener(this), this);
         getServer().getPluginManager().registerEvents(new BlockBreakListener(this), this);

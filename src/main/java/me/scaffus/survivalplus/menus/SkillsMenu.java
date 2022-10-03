@@ -30,7 +30,7 @@ public class SkillsMenu implements Listener {
 
     public SkillsMenu(SurvivalPlus plugin) {
         this.plugin = plugin;
-        this.playersData = plugin.playersData;
+        this.playersData = plugin.pData;
         this.helper = plugin.helper;
 
         this.farmingSkillMenu = new FarmingSkillMenu(plugin, this);

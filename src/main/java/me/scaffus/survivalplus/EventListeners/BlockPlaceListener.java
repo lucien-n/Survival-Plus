@@ -24,7 +24,7 @@ public class BlockPlaceListener implements Listener {
     public BlockPlaceListener(SurvivalPlus plugin) {
         this.plugin = plugin;
         this.skillsConfig = plugin.skillsConfig;
-        this.pData = plugin.playersData;
+        this.pData = plugin.pData;
         this.helper = plugin.helper;
         blocks = skillsConfig.get().getConfigurationSection("mining.blocks").getKeys(false);
         points = skillsConfig.get().getConfigurationSection("mining.blocks").getValues(false);

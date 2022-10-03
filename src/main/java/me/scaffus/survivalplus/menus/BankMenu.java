@@ -23,7 +23,7 @@ public class BankMenu implements Listener {
 
     public BankMenu(SurvivalPlus plugin) {
         this.plugin = plugin;
-        this.playersData = plugin.playersData;
+        this.playersData = plugin.pData;
         this.helper = plugin.helper;
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
