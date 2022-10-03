@@ -4,16 +4,19 @@ import me.scaffus.survivalplus.Helper;
 import me.scaffus.survivalplus.SkillsConfig;
 import me.scaffus.survivalplus.SurvivalData;
 import me.scaffus.survivalplus.SurvivalPlus;
+import me.scaffus.survivalplus.tasks.PlaceBlockTask;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Ageable;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
 import java.util.Map;
@@ -33,12 +36,18 @@ public class BlockBreakListener implements Listener {
     private final List<String> replantableCrops;
     private final String skillsGainedXpMessage;
     private final String skillsPassedLevelMessage;
+    private PlaceBlockTask placeBlockTask;
+
+    private ItemStack hoeFortune1;
+    private ItemStack hoeFortune2;
+    private ItemStack hoeFortune3;
 
     public BlockBreakListener(SurvivalPlus plugin) {
         this.plugin = plugin;
         this.survivalData = plugin.survivalData;
         this.skillsConfig = plugin.skillsConfig;
         this.helper = plugin.helper;
+
         ores = skillsConfig.get().getConfigurationSection("mining.blocks").getKeys(false);
         oresPoints = skillsConfig.get().getConfigurationSection("mining.blocks").getValues(false);
         crops = skillsConfig.get().getConfigurationSection("farming.crops").getKeys(false);
@@ -49,6 +58,18 @@ public class BlockBreakListener implements Listener {
 
         skillsGainedXpMessage = plugin.getConfig().getString("skills.gained");
         skillsPassedLevelMessage = plugin.getConfig().getString("skills.passed_level");
+
+        hoeFortune1 = new ItemStack(Material.WOODEN_HOE);
+        hoeFortune2 = new ItemStack(Material.WOODEN_HOE);
+        hoeFortune3 = new ItemStack(Material.WOODEN_HOE);
+
+        ItemMeta hoe = hoeFortune1.getItemMeta();
+        hoe.addEnchant(Enchantment.LOOT_BONUS_BLOCKS, 1, false);
+        hoeFortune1.setItemMeta(hoe);
+        hoe.addEnchant(Enchantment.LOOT_BONUS_BLOCKS, 2, false);
+        hoeFortune2.setItemMeta(hoe);
+        hoe.addEnchant(Enchantment.LOOT_BONUS_BLOCKS, 3, false);
+        hoeFortune3.setItemMeta(hoe);
     }
 
     @EventHandler
@@ -102,9 +123,24 @@ public class BlockBreakListener implements Listener {
             }
 
             // Replant
-            if (replantableCrops.contains(block.getType().toString())) {
-                Location loc = block.getLocation();
-                loc.getBlock().setType(Material.GOLD_BLOCK);
+            if (survivalData.playerHasUpgradeReplanter.get(p.getUniqueId()) > 0 && replantableCrops.contains(block.getType().toString())) {
+                event.setCancelled(true);
+                // Apply fortune
+                if (survivalData.playerHasUpgradeReplanterFortune.get(p.getUniqueId()) > 0) {
+                    switch (survivalData.playerHasUpgradeReplanterFortune.get(p.getUniqueId())) {
+                        case 1:
+                            block.breakNaturally(hoeFortune1);
+                            break;
+                        case 2:
+                            block.breakNaturally(hoeFortune2);
+                            break;
+                        case 3:
+                            block.breakNaturally(hoeFortune3);
+                            break;
+                    }
+                } else block.breakNaturally();
+                placeBlockTask = new PlaceBlockTask(plugin, block.getLocation(), block.getType());
+                placeBlockTask.runTaskLater(plugin, 20L);
             }
             return;
         }

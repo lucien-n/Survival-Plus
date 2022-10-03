@@ -93,14 +93,14 @@ public class Helper {
         return bd.doubleValue();
     }
 
-    public boolean buyUpgrade(Player p, String upgrade, int upgradeCost, SurvivalData data, HashMap playerUpgrade) {
-        if (!(data.getPlayerTokens(p.getUniqueId()) > upgradeCost))
-            return false;
-
-        data.setPlayerUpgrade(p.getUniqueId(), upgrade, true, playerUpgrade);
-        data.incrementPlayerTokens(p.getUniqueId(), -upgradeCost);
-        return true;
-    }
+//    public boolean buyUpgrade(Player p, String upgrade, int upgradeCost, SurvivalData data, HashMap playerUpgrade) {
+//        if (!(data.getPlayerTokens(p.getUniqueId()) > upgradeCost))
+//            return false;
+//
+//        data.setPlayerUpgrade(p.getUniqueId(), upgrade, 0, playerUpgrade);
+//        data.incrementPlayerTokens(p.getUniqueId(), -upgradeCost);
+//        return true;
+//    }
 
     public String upgradeBoughtMessage(String message, String upgrade, int cost) {
         return message.replace("%upgrade%", upgrade).replace("%cost%", String.valueOf(cost));

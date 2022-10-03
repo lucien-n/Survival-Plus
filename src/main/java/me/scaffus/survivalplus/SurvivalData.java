@@ -28,8 +28,8 @@ public class SurvivalData {
     public HashMap<UUID, Integer> playerSkillLevelSwimming = new HashMap<>();
     public HashMap<UUID, Integer> playerSkillLevelFlying = new HashMap<>();
 
-    public HashMap<UUID, Boolean> playerHasUpgradeReplanter = new HashMap<>();
-    public HashMap<UUID, Boolean> playerHasUpgradeReplanterFortune = new HashMap<>();
+    public HashMap<UUID, Integer> playerHasUpgradeReplanter = new HashMap<>();
+    public HashMap<UUID, Integer> playerHasUpgradeReplanterFortune = new HashMap<>();
     public HashMap<UUID, Integer> playerTokens = new HashMap<>();
     public HashMap<UUID, Integer> playerBalance = new HashMap<>();
 
@@ -120,7 +120,7 @@ public class SurvivalData {
         playerBalance.put(uuid, playerBalance.get(uuid) + amount);
     }
 
-    public void setPlayerUpgrade(UUID uuid, String upgrade, Boolean status, HashMap playerUpgrade) {
+    public void setPlayerUpgrade(UUID uuid, String upgrade, Integer status, HashMap playerUpgrade) {
         data.setPlayerUpgrade(uuid, upgrade, status);
         playerUpgrade.put(uuid, status);
     }

@@ -32,39 +32,25 @@ public class DatabaseGetterSetter {
             UUID uuid = p.getUniqueId();
 
             if (!playerExists(uuid)) {
-                PreparedStatement psBank = ps("INSERT IGNORE INTO players_bank (UUID, BALANCE) VALUES (?, ?)");
+                PreparedStatement psBank = ps("INSERT IGNORE INTO players_bank (UUID) VALUES (?)");
                 psBank.setString(1, uuid.toString());
-                psBank.setInt(2, 0);
                 psBank.executeUpdate();
 
-                PreparedStatement psSkills = ps("INSERT IGNORE INTO players_points (UUID, FARMING, MINING, COMBAT, RUNNING, DEATH, ARCHERY, SWIMMING, FLYING) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                PreparedStatement psSkills = ps("INSERT IGNORE INTO players_points (UUID) VALUES (?)");
                 psSkills.setString(1, uuid.toString());
-                psSkills.setInt(2, 0);
-                psSkills.setInt(3, 0);
-                psSkills.setInt(4, 0);
-                psSkills.setInt(5, 0);
-                psSkills.setInt(6, 0);
-                psSkills.setInt(7, 0);
-                psSkills.setInt(8, 0);
-                psSkills.setInt(9, 0);
                 psSkills.executeUpdate();
 
-                PreparedStatement psLevels = ps("INSERT IGNORE INTO players_levels (UUID, FARMING, MINING, COMBAT, RUNNING, DEATH, ARCHERY, SWIMMING, FLYING) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                PreparedStatement psLevels = ps("INSERT IGNORE INTO players_levels (UUID) VALUES (?)");
                 psLevels.setString(1, uuid.toString());
-                psLevels.setInt(2, 0);
-                psLevels.setInt(3, 0);
-                psLevels.setInt(4, 0);
-                psLevels.setInt(5, 0);
-                psLevels.setInt(6, 0);
-                psLevels.setInt(7, 0);
-                psLevels.setInt(8, 0);
-                psLevels.setInt(9, 0);
                 psLevels.executeUpdate();
 
-                PreparedStatement psData = ps("INSERT IGNORE INTO players_data (UUID, TOKENS) VALUES (?, ?)");
+                PreparedStatement psData = ps("INSERT IGNORE INTO players_data (UUID) VALUES (?)");
                 psData.setString(1, uuid.toString());
-                psData.setInt(2, 0);
                 psData.executeUpdate();
+
+                PreparedStatement psUpgrades = ps("INSERT IGNORE INTO players_upgrades (UUID) VALUES (?)");
+                psUpgrades.setString(1, uuid.toString());
+                psUpgrades.executeUpdate();
 
                 PreparedStatement psPlayers = ps("INSERT IGNORE INTO players (UUID, NAME) VALUES (?, ?)");
                 psPlayers.setString(1, uuid.toString());
@@ -250,11 +236,11 @@ public class DatabaseGetterSetter {
         return 0;
     }
 
-    public void setPlayerUpgrade(UUID uuid, String upgradeName, Boolean status) {
+    public void setPlayerUpgrade(UUID uuid, String upgradeName, Integer status) {
         if (uuid == null || upgradeName == null || status == null) return;
         try {
             PreparedStatement pS = ps("UPDATE players_upgrades SET " + upgradeName + "= ? WHERE UUID=?");
-            pS.setBoolean(1, status);
+            pS.setInt(1, status);
             pS.setString(2, uuid.toString());
             pS.executeUpdate();
         } catch (SQLException e) {
@@ -262,19 +248,18 @@ public class DatabaseGetterSetter {
         }
     }
 
-    public Boolean getPlayerUpgrade(UUID uuid, String upgradeName) {
-        if (uuid == null || upgradeName == null) return false;
+    public Integer getPlayerUpgrade(UUID uuid, String upgradeName) {
+        if (uuid == null || upgradeName == null) return 0;
         try {
-            PreparedStatement pS = ps("SELECT ? FROM players_upgrades WHERE UUID=?");
-            pS.setString(1, upgradeName);
-            pS.setString(2, uuid.toString());
+            PreparedStatement pS = ps("SELECT * FROM players_upgrades WHERE UUID=?");
+            pS.setString(1, uuid.toString());
             ResultSet result = pS.executeQuery();
             if (result.next()) {
-                return result.getBoolean(upgradeName);
+                return result.getInt(upgradeName);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return false;
+        return 0;
     }
 }
