@@ -100,7 +100,7 @@ public class BlockBreakListener implements Listener {
 
         // FARMING
         ItemStack itemInMainHand = p.getInventory().getItem(p.getInventory().getHeldItemSlot());
-        if (itemInMainHand != null && farmingTools.contains(itemInMainHand.getType().toString())) {
+        if (itemInMainHand != null && farmingTools.contains(itemInMainHand.getType().toString()) && crops.contains(block.getType().toString())) {
             // Checking crop growth (WHY TH IS "Crops" DEPRECATED ARRGGGGGHHHHHHHHHHHH)
             Ageable ageable = (Ageable) block.getBlockData();
             if (ageable.getAge() != ageable.getMaximumAge()) return;

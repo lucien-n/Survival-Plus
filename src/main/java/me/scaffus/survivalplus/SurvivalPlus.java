@@ -1,9 +1,6 @@
 package me.scaffus.survivalplus;
 
-import me.scaffus.survivalplus.EventListeners.BlockBreakListener;
-import me.scaffus.survivalplus.EventListeners.BlockPlaceListener;
-import me.scaffus.survivalplus.EventListeners.DeathListener;
-import me.scaffus.survivalplus.EventListeners.PlayerJoinQuitListener;
+import me.scaffus.survivalplus.EventListeners.*;
 import me.scaffus.survivalplus.commands.BankCommand;
 import me.scaffus.survivalplus.commands.SkillCommand;
 import me.scaffus.survivalplus.sql.DatabaseGetterSetter;
@@ -40,10 +37,10 @@ public final class SurvivalPlus extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new BlockBreakListener(this), this);
         getServer().getPluginManager().registerEvents(new BlockPlaceListener(this), this);
         getServer().getPluginManager().registerEvents(new DeathListener(this), this);
+        getServer().getPluginManager().registerEvents(new PlayerInteractListener(this), this);
 
         new BankCommand(this);
         new SkillCommand(this);
-
 
         Logger.getLogger("Minecraft").info("[SURV+] Plugin ON");
     }

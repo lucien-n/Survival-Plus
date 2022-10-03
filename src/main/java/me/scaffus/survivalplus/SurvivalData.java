@@ -28,10 +28,12 @@ public class SurvivalData {
     public HashMap<UUID, Integer> playerSkillLevelSwimming = new HashMap<>();
     public HashMap<UUID, Integer> playerSkillLevelFlying = new HashMap<>();
 
-    public HashMap<UUID, Integer> playerHasUpgradeReplanter = new HashMap<>();
-    public HashMap<UUID, Integer> playerHasUpgradeReplanterFortune = new HashMap<>();
     public HashMap<UUID, Integer> playerTokens = new HashMap<>();
     public HashMap<UUID, Integer> playerBalance = new HashMap<>();
+
+    public HashMap<UUID, Integer> playerHasUpgradeReplanter = new HashMap<>();
+    public HashMap<UUID, Integer> playerHasUpgradeReplanterFortune = new HashMap<>();
+    public HashMap<UUID, Integer> playerHasUpgradeWideTill = new HashMap<>();
 
     public String upgradeBought;
 
@@ -64,6 +66,7 @@ public class SurvivalData {
 
         playerHasUpgradeReplanter.put(uuid, data.getPlayerUpgrade(uuid, "replanter"));
         playerHasUpgradeReplanterFortune.put(uuid, data.getPlayerUpgrade(uuid, "replanter_fortune"));
+        playerHasUpgradeWideTill.put(uuid, data.getPlayerUpgrade(uuid, "wide_till"));
 
         playerTokens.put(uuid, data.getPlayerTokens(uuid));
         playerBalance.put(uuid, data.getPlayerBalance(uuid));
@@ -91,6 +94,7 @@ public class SurvivalData {
 
         data.setPlayerUpgrade(uuid, "replanter", playerHasUpgradeReplanter.get(uuid));
         data.setPlayerUpgrade(uuid, "replanter_fortune", playerHasUpgradeReplanterFortune.get(uuid));
+        data.setPlayerUpgrade(uuid, "wide_till", playerHasUpgradeWideTill.get(uuid));
 
         data.setPlayerTokens(uuid, playerTokens.get(uuid));
         data.setPlayerBalance(uuid, playerBalance.get(uuid));

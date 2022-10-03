@@ -21,7 +21,8 @@ public class FarmingSkillMenu implements Listener {
     private Helper helper;
     private SkillsMenu skillsMenu;
     private String inventoryName = "§6§lAgriculture";
-    private int replanterPrice = 1;
+    private Integer replanterPrice = 1;
+    private Integer wideTillePrice = 2;
 
 
     public FarmingSkillMenu(SurvivalPlus plugin, SkillsMenu skillsMenu) {
@@ -42,14 +43,25 @@ public class FarmingSkillMenu implements Listener {
 
         Integer playerReplanterFortuneLevel = survivalData.playerHasUpgradeReplanterFortune.get(p.getUniqueId());
         Integer playerReplanterLevel = survivalData.playerHasUpgradeReplanter.get(p.getUniqueId());
+        Integer playerWideTillLevel = survivalData.playerHasUpgradeWideTill.get(p.getUniqueId());
+
         if (slot == 11 && survivalData.getPlayerTokens(p.getUniqueId()) >= replanterPrice && playerReplanterLevel < 1) {
             survivalData.playerHasUpgradeReplanter.put(p.getUniqueId(), playerReplanterLevel + 1);
             survivalData.incrementPlayerTokens(p.getUniqueId(), -replanterPrice);
-            p.sendMessage(helper.upgradeBoughtMessage(survivalData.upgradeBought, "replanteur niveau " + playerReplanterLevel + 1, replanterPrice));
-        } else if (slot == 15 && survivalData.getPlayerTokens(p.getUniqueId()) >= (playerReplanterFortuneLevel + 1) * 2 && playerReplanterFortuneLevel < 3) {
+            p.sendMessage(helper.upgradeBoughtMessage(survivalData.upgradeBought,
+                    "replanteur niveau " + playerReplanterLevel + 1, replanterPrice));
+        }
+        else if (slot == 15 && survivalData.getPlayerTokens(p.getUniqueId()) >= (playerReplanterFortuneLevel + 1) * 2 && playerReplanterFortuneLevel < 3) {
             survivalData.playerHasUpgradeReplanterFortune.put(p.getUniqueId(), playerReplanterFortuneLevel + 1);
             survivalData.incrementPlayerTokens(p.getUniqueId(), -(playerReplanterFortuneLevel + 1) * 2);
-            p.sendMessage(helper.upgradeBoughtMessage(survivalData.upgradeBought, "fortune du replanteur niveau " + (playerReplanterFortuneLevel + 1), (playerReplanterFortuneLevel + 1) * 2));
+            p.sendMessage(helper.upgradeBoughtMessage(survivalData.upgradeBought,
+                    "fortune du replanteur niveau " + (playerReplanterFortuneLevel + 1), (playerReplanterFortuneLevel + 1) * 2));
+        }
+        else if (slot == 31 && survivalData.getPlayerTokens(p.getUniqueId()) >= wideTillePrice && survivalData.playerHasUpgradeWideTill.get(p.getUniqueId()) < 1) {
+            survivalData.playerHasUpgradeWideTill.put(p.getUniqueId(), playerWideTillLevel + 1);
+            survivalData.incrementPlayerTokens(p.getUniqueId(), -replanterPrice);
+            p.sendMessage(helper.upgradeBoughtMessage(survivalData.upgradeBought,
+                    "large bêche niveau " + playerWideTillLevel + 1, wideTillePrice));
         }
 
         if (slot == event.getInventory().getSize() - 9) p.openInventory(skillsMenu.createSkillMenu(p));
@@ -68,8 +80,11 @@ public class FarmingSkillMenu implements Listener {
         replanterFortuneItemMeta.addEnchant(Enchantment.LOOT_BONUS_BLOCKS, playerReplanterFortuneLevel == 3 ? 3 : playerReplanterFortuneLevel + 1, false);
         replanterFortuneItem.setItemMeta(replanterFortuneItemMeta);
 
-        inventory.setItem(11, helper.getItem(new ItemStack(Material.PISTON), "§6§lReplanteur", survivalData.playerHasUpgradeReplanter.get(p.getUniqueId()) > 0 ? "§ePrix: §6Acquit" : "§ePrix: §6" + replanterPrice));
+        inventory.setItem(11, helper.getItem(new ItemStack(Material.PISTON), "§6§lReplanteur", survivalData.playerHasUpgradeReplanter.get(p.getUniqueId())
+                > 0 ? "§ePrix: §6Acquit" : "§ePrix: §6" + replanterPrice));
         inventory.setItem(15, replanterFortuneItem);
+        inventory.setItem(31, helper.getItem(new ItemStack(Material.DIAMOND_HOE), "§6§lLarge Bêche", survivalData.playerHasUpgradeWideTill.get(p.getUniqueId())
+                > 0 ? "§ePrix: §6Acuit" : "§ePrix: §6" + wideTillePrice, "§eBêche une zone §63x3"));
 
         inventory.setItem(49, helper.getHead(p, "§eJetons: §6" + survivalData.getPlayerTokens(p.getUniqueId())));
 

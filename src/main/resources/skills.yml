@@ -83,6 +83,11 @@ farming:
     - IRON_AXE
     - STONE_AXE
     - WOODEN_AXE
+  tillables:
+    - FARMLAND
+    - DIRT
+    - GRASS_BLOCK
+    - DIRT_PATH
 
 points_for_level:
   - 500
