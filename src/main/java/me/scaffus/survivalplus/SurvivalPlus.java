@@ -8,7 +8,9 @@ import me.scaffus.survivalplus.commands.BankCommand;
 import me.scaffus.survivalplus.commands.SkillCommand;
 import me.scaffus.survivalplus.sql.DatabaseGetterSetter;
 import me.scaffus.survivalplus.sql.DatabaseManager;
+import me.scaffus.survivalplus.tasks.PlaceBlockTask;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -41,6 +43,7 @@ public final class SurvivalPlus extends JavaPlugin {
 
         new BankCommand(this);
         new SkillCommand(this);
+
 
         Logger.getLogger("Minecraft").info("[SURV+] Plugin ON");
     }

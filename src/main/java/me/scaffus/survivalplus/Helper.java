@@ -1,6 +1,8 @@
 package me.scaffus.survivalplus;
 
 import me.scaffus.survivalplus.sql.DatabaseGetterSetter;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -13,10 +15,11 @@ import org.bukkit.inventory.meta.SkullMeta;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Helper {
-    private DatabaseGetterSetter data;
+    private SurvivalData survivalData;
 
     public void removeAmountOfItemFromInventory(Inventory inventory, Material material, int amount) {
         if (amount <= 0) return;
@@ -90,20 +93,24 @@ public class Helper {
         return bd.doubleValue();
     }
 
-    public boolean buyUpgrade(Player p, String upgrade, int upgradeCost) {
-        if (!(data.getPlayerTokens(p.getUniqueId()) > upgradeCost))
-            return false;
+//    public boolean buyUpgrade(Player p, String upgrade, int upgradeCost, SurvivalData data, HashMap playerUpgrade) {
+//        if (!(data.getPlayerTokens(p.getUniqueId()) > upgradeCost))
+//            return false;
+//
+//        data.setPlayerUpgrade(p.getUniqueId(), upgrade, 0, playerUpgrade);
+//        data.incrementPlayerTokens(p.getUniqueId(), -upgradeCost);
+//        return true;
+//    }
 
-        data.setPlayerUpgrade(p.getUniqueId(), upgrade, true);
-        data.incrementPlayerTokens(p.getUniqueId(), -upgradeCost);
-        return true;
+    public String upgradeBoughtMessage(String message, String upgrade, int cost) {
+        return message.replace("%upgrade%", upgrade).replace("%cost%", String.valueOf(cost));
     }
 
-    public void sendUpgradeBoughtMessage(Player p, String upgrade, int cost) {
-        p.sendMessage(Bukkit.getPluginManager().getPlugin("SurvivalPlus").getConfig().getString("skills.upgrade_bought").replace("%upgrade%", upgrade).replace("%cost%", String.valueOf(cost)));
+    public void sendNotEnoughTokensMessage(Player p, String message) {
+        p.sendMessage(message);
     }
 
-    public void sendNotEnoughTokensMessage(Player p) {
-        p.sendMessage(Bukkit.getPluginManager().getPlugin("SurvivalPlus").getConfig().getString("skills.not_enough"));
+    public void sendActionBar(Player p, String message) {
+        p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
     }
 }

@@ -32,6 +32,6 @@ public class PlayerJoinQuitListener implements Listener {
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player p = event.getPlayer();
         survivalData.savePlayerData(p);
-        event.setQuitMessage("§6§l" + p.getDisplayName() + "§ea quitté.");
+        event.setQuitMessage("§6§l" + p.getDisplayName() + "§e a quitté.");
     }
 }

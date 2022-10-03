@@ -22,7 +22,7 @@ public class FarmingSkillMenu implements Listener {
     private SkillsMenu skillsMenu;
     private String inventoryName = "§6§lAgriculture";
     private int replanterPrice = 1;
-    private int replanterFortunePrice = 2;
+
 
     public FarmingSkillMenu(SurvivalPlus plugin, SkillsMenu skillsMenu) {
         this.plugin = plugin;
@@ -40,16 +40,20 @@ public class FarmingSkillMenu implements Listener {
         Player p = (Player) event.getWhoClicked();
         int slot = event.getSlot();
 
-        if (slot == 10) {
-            if (helper.buyUpgrade(p, "replanter", 1)) helper.sendUpgradeBoughtMessage(p, "replanteur", 1);
-            else helper.sendNotEnoughTokensMessage(p);
-        } else if (slot == 12) {
-            if (helper.buyUpgrade(p, "replanter_fortune", 1))
-                helper.sendUpgradeBoughtMessage(p, "fortune du replanteur", 1);
-            else helper.sendNotEnoughTokensMessage(p);
+        Integer playerReplanterFortuneLevel = survivalData.playerHasUpgradeReplanterFortune.get(p.getUniqueId());
+        Integer playerReplanterLevel = survivalData.playerHasUpgradeReplanter.get(p.getUniqueId());
+        if (slot == 11 && survivalData.getPlayerTokens(p.getUniqueId()) >= replanterPrice && playerReplanterLevel < 1) {
+            survivalData.playerHasUpgradeReplanter.put(p.getUniqueId(), playerReplanterLevel + 1);
+            survivalData.incrementPlayerTokens(p.getUniqueId(), -replanterPrice);
+            p.sendMessage(helper.upgradeBoughtMessage(survivalData.upgradeBought, "replanteur niveau " + playerReplanterLevel + 1, replanterPrice));
+        } else if (slot == 15 && survivalData.getPlayerTokens(p.getUniqueId()) >= (playerReplanterFortuneLevel + 1) * 2 && playerReplanterFortuneLevel < 3) {
+            survivalData.playerHasUpgradeReplanterFortune.put(p.getUniqueId(), playerReplanterFortuneLevel + 1);
+            survivalData.incrementPlayerTokens(p.getUniqueId(), -(playerReplanterFortuneLevel + 1) * 2);
+            p.sendMessage(helper.upgradeBoughtMessage(survivalData.upgradeBought, "fortune du replanteur niveau " + (playerReplanterFortuneLevel + 1), (playerReplanterFortuneLevel + 1) * 2));
         }
 
         if (slot == event.getInventory().getSize() - 9) p.openInventory(skillsMenu.createSkillMenu(p));
+        if (slot == event.getInventory().getSize() - 1) p.closeInventory();
     }
 
 
@@ -57,12 +61,16 @@ public class FarmingSkillMenu implements Listener {
         ItemStack backgroundItem = helper.getItem(new ItemStack(Material.GRAY_STAINED_GLASS_PANE), "", "");
         Inventory inventory = helper.createInventoryWithBackground(p, inventoryName, 54, backgroundItem, true);
 
-        ItemStack replanterFortuneItem = helper.getItem(new ItemStack(Material.PISTON), "§6§lFortune du Replanteur", "§ePrix: §6" + replanterFortunePrice);
+        // FORTUNE PRICE IS 2 TIMES THE DESIRED FORTUNE LEVEL
+        Integer playerReplanterFortuneLevel = survivalData.playerHasUpgradeReplanterFortune.get(p.getUniqueId());
+        ItemStack replanterFortuneItem = helper.getItem(new ItemStack(Material.PISTON), "§6§lFortune du Replanteur", playerReplanterFortuneLevel == 0 ? "§ePrix: §6" + (playerReplanterFortuneLevel + 1) * 2 : playerReplanterFortuneLevel == 1 ? "§ePrix: §6" + (playerReplanterFortuneLevel + 1) * 2 : playerReplanterFortuneLevel == 2 ? "§ePrix: §6" + (playerReplanterFortuneLevel + 1) * 2 : "§ePrix: §6Acquit", "§eRequiert: §6Replanteur");
         ItemMeta replanterFortuneItemMeta = replanterFortuneItem.getItemMeta();
-        replanterFortuneItemMeta.addEnchant(Enchantment.LOOT_BONUS_BLOCKS, 1, false);
+        replanterFortuneItemMeta.addEnchant(Enchantment.LOOT_BONUS_BLOCKS, playerReplanterFortuneLevel + 1, false);
         replanterFortuneItem.setItemMeta(replanterFortuneItemMeta);
 
-        inventory.setItem(11, helper.getItem(new ItemStack(Material.PISTON), "§6§lReplanteur", "§ePrix: §6" + replanterPrice));
+        p.sendMessage(String.valueOf(survivalData.playerHasUpgradeReplanter.get(p.getUniqueId())));
+
+        inventory.setItem(11, helper.getItem(new ItemStack(Material.PISTON), "§6§lReplanteur", survivalData.playerHasUpgradeReplanter.get(p.getUniqueId()) > 0 ? "§ePrix: §6Acquit" : "§ePrix: §6" + replanterPrice));
         inventory.setItem(15, replanterFortuneItem);
 
         inventory.setItem(49, helper.getHead(p, "§eJetons: §6" + survivalData.getPlayerTokens(p.getUniqueId())));
