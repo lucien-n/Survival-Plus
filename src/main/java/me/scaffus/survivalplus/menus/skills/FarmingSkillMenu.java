@@ -65,10 +65,8 @@ public class FarmingSkillMenu implements Listener {
         Integer playerReplanterFortuneLevel = survivalData.playerHasUpgradeReplanterFortune.get(p.getUniqueId());
         ItemStack replanterFortuneItem = helper.getItem(new ItemStack(Material.PISTON), "§6§lFortune du Replanteur", playerReplanterFortuneLevel == 0 ? "§ePrix: §6" + (playerReplanterFortuneLevel + 1) * 2 : playerReplanterFortuneLevel == 1 ? "§ePrix: §6" + (playerReplanterFortuneLevel + 1) * 2 : playerReplanterFortuneLevel == 2 ? "§ePrix: §6" + (playerReplanterFortuneLevel + 1) * 2 : "§ePrix: §6Acquit", "§eRequiert: §6Replanteur");
         ItemMeta replanterFortuneItemMeta = replanterFortuneItem.getItemMeta();
-        replanterFortuneItemMeta.addEnchant(Enchantment.LOOT_BONUS_BLOCKS, playerReplanterFortuneLevel + 1, false);
+        replanterFortuneItemMeta.addEnchant(Enchantment.LOOT_BONUS_BLOCKS, playerReplanterFortuneLevel == 3 ? 3 : playerReplanterFortuneLevel + 1, false);
         replanterFortuneItem.setItemMeta(replanterFortuneItemMeta);
-
-        p.sendMessage(String.valueOf(survivalData.playerHasUpgradeReplanter.get(p.getUniqueId())));
 
         inventory.setItem(11, helper.getItem(new ItemStack(Material.PISTON), "§6§lReplanteur", survivalData.playerHasUpgradeReplanter.get(p.getUniqueId()) > 0 ? "§ePrix: §6Acquit" : "§ePrix: §6" + replanterPrice));
         inventory.setItem(15, replanterFortuneItem);
