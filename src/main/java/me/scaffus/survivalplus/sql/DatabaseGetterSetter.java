@@ -236,7 +236,7 @@ public class DatabaseGetterSetter {
         return 0;
     }
 
-    public void setPlayerUpgrade(UUID uuid, String upgradeName, Integer status) {
+    public void setPlayerUpgrade(UUID uuid, Object upgradeName, Integer status) {
         if (uuid == null || upgradeName == null || status == null) return;
         try {
             PreparedStatement pS = ps("UPDATE players_upgrades SET " + upgradeName + "= ? WHERE UUID=?");

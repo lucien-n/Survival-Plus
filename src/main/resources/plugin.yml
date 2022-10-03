@@ -15,3 +15,6 @@ commands:
   skills:
     aliases: [skill]
     description: Renvois le niveau du joueurs des différents savoirs-faires
+  infostick:
+    aliases: [istick]
+    description: Donnes l'InfoStick au joueur

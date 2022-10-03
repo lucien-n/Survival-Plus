@@ -1,7 +1,7 @@
 package me.scaffus.survivalplus.menus.skills;
 
 import me.scaffus.survivalplus.Helper;
-import me.scaffus.survivalplus.SurvivalData;
+import me.scaffus.survivalplus.PlayersData;
 import me.scaffus.survivalplus.SurvivalPlus;
 import me.scaffus.survivalplus.menus.SkillsMenu;
 import org.bukkit.Bukkit;
@@ -15,9 +15,11 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.UUID;
+
 public class FarmingSkillMenu implements Listener {
     private SurvivalPlus plugin;
-    private SurvivalData survivalData;
+    private PlayersData pData;
     private Helper helper;
     private SkillsMenu skillsMenu;
     private String inventoryName = "§6§lAgriculture";
@@ -27,7 +29,7 @@ public class FarmingSkillMenu implements Listener {
 
     public FarmingSkillMenu(SurvivalPlus plugin, SkillsMenu skillsMenu) {
         this.plugin = plugin;
-        this.survivalData = plugin.survivalData;
+        this.pData = plugin.playersData;
         this.helper = plugin.helper;
         this.skillsMenu = skillsMenu;
         Bukkit.getPluginManager().registerEvents(this, plugin);
@@ -39,28 +41,27 @@ public class FarmingSkillMenu implements Listener {
         event.setCancelled(true);
 
         Player p = (Player) event.getWhoClicked();
+        UUID uuid = p.getUniqueId();
         int slot = event.getSlot();
 
-        Integer playerReplanterFortuneLevel = survivalData.playerHasUpgradeReplanterFortune.get(p.getUniqueId());
-        Integer playerReplanterLevel = survivalData.playerHasUpgradeReplanter.get(p.getUniqueId());
-        Integer playerWideTillLevel = survivalData.playerHasUpgradeWideTill.get(p.getUniqueId());
+        Integer playerReplanterLevel = pData.getPlayerUpgrade(uuid, "replanter");
+        Integer playerReplanterFortuneLevel = pData.getPlayerUpgrade(uuid, "replanter_fortune");
+        Integer playerWideTillLevel = pData.getPlayerUpgrade(uuid, "wide_till");
 
-        if (slot == 11 && survivalData.getPlayerTokens(p.getUniqueId()) >= replanterPrice && playerReplanterLevel < 1) {
-            survivalData.playerHasUpgradeReplanter.put(p.getUniqueId(), playerReplanterLevel + 1);
-            survivalData.incrementPlayerTokens(p.getUniqueId(), -replanterPrice);
-            p.sendMessage(helper.upgradeBoughtMessage(survivalData.upgradeBought,
+        if (slot == 11 && pData.getPlayerTokens(p.getUniqueId()) >= replanterPrice && playerReplanterLevel < 1) {
+            pData.setPlayerUpgrade(uuid, "replanter", playerReplanterLevel + 1);
+            pData.incrementPlayerTokens(p.getUniqueId(), -replanterPrice);
+            p.sendMessage(helper.upgradeBoughtMessage(pData.upgradeBought,
                     "replanteur niveau " + playerReplanterLevel + 1, replanterPrice));
-        }
-        else if (slot == 15 && survivalData.getPlayerTokens(p.getUniqueId()) >= (playerReplanterFortuneLevel + 1) * 2 && playerReplanterFortuneLevel < 3) {
-            survivalData.playerHasUpgradeReplanterFortune.put(p.getUniqueId(), playerReplanterFortuneLevel + 1);
-            survivalData.incrementPlayerTokens(p.getUniqueId(), -(playerReplanterFortuneLevel + 1) * 2);
-            p.sendMessage(helper.upgradeBoughtMessage(survivalData.upgradeBought,
+        } else if (slot == 15 && pData.getPlayerTokens(p.getUniqueId()) >= (playerReplanterFortuneLevel + 1) * 2 && playerReplanterFortuneLevel < 3) {
+            pData.setPlayerUpgrade(uuid, "replanter_fortune", playerReplanterFortuneLevel + 1);
+            pData.incrementPlayerTokens(p.getUniqueId(), -(playerReplanterFortuneLevel + 1) * 2);
+            p.sendMessage(helper.upgradeBoughtMessage(pData.upgradeBought,
                     "fortune du replanteur niveau " + (playerReplanterFortuneLevel + 1), (playerReplanterFortuneLevel + 1) * 2));
-        }
-        else if (slot == 31 && survivalData.getPlayerTokens(p.getUniqueId()) >= wideTillePrice && survivalData.playerHasUpgradeWideTill.get(p.getUniqueId()) < 1) {
-            survivalData.playerHasUpgradeWideTill.put(p.getUniqueId(), playerWideTillLevel + 1);
-            survivalData.incrementPlayerTokens(p.getUniqueId(), -replanterPrice);
-            p.sendMessage(helper.upgradeBoughtMessage(survivalData.upgradeBought,
+        } else if (slot == 31 && pData.getPlayerTokens(p.getUniqueId()) >= wideTillePrice && pData.getPlayerUpgrade(uuid, "wide_till") < 1) {
+            pData.setPlayerUpgrade(uuid, "wide_till", playerWideTillLevel + 1);
+            pData.incrementPlayerTokens(p.getUniqueId(), -replanterPrice);
+            p.sendMessage(helper.upgradeBoughtMessage(pData.upgradeBought,
                     "large bêche niveau " + playerWideTillLevel + 1, wideTillePrice));
         }
 
@@ -70,23 +71,32 @@ public class FarmingSkillMenu implements Listener {
 
 
     public Inventory createMenu(Player p) {
+        UUID uuid = p.getUniqueId();
         ItemStack backgroundItem = helper.getItem(new ItemStack(Material.GRAY_STAINED_GLASS_PANE), "", "");
         Inventory inventory = helper.createInventoryWithBackground(p, inventoryName, 54, backgroundItem, true);
 
         // FORTUNE PRICE IS 2 TIMES THE DESIRED FORTUNE LEVEL
-        Integer playerReplanterFortuneLevel = survivalData.playerHasUpgradeReplanterFortune.get(p.getUniqueId());
-        ItemStack replanterFortuneItem = helper.getItem(new ItemStack(Material.PISTON), "§6§lFortune du Replanteur", playerReplanterFortuneLevel == 0 ? "§ePrix: §6" + (playerReplanterFortuneLevel + 1) * 2 : playerReplanterFortuneLevel == 1 ? "§ePrix: §6" + (playerReplanterFortuneLevel + 1) * 2 : playerReplanterFortuneLevel == 2 ? "§ePrix: §6" + (playerReplanterFortuneLevel + 1) * 2 : "§ePrix: §6Acquit", "§eRequiert: §6Replanteur");
+        Integer playerReplanterFortuneLevel = pData.getPlayerUpgrade(uuid, "replanter_fortune");
+        ItemStack replanterFortuneItem = helper.getItem(new ItemStack(Material.PISTON), "§6§lFortune du Replanteur",
+                playerReplanterFortuneLevel == 0 ? "§ePrix: §6" + (playerReplanterFortuneLevel + 1) * 2 :
+                        playerReplanterFortuneLevel == 1 ? "§ePrix: §6" + (playerReplanterFortuneLevel + 1) * 2 :
+                                playerReplanterFortuneLevel == 2 ? "§ePrix: §6" + (playerReplanterFortuneLevel + 1) * 2 :
+                                        "§ePrix: §6Acquit", "§eRequiert: §6Replanteur");
         ItemMeta replanterFortuneItemMeta = replanterFortuneItem.getItemMeta();
-        replanterFortuneItemMeta.addEnchant(Enchantment.LOOT_BONUS_BLOCKS, playerReplanterFortuneLevel == 3 ? 3 : playerReplanterFortuneLevel + 1, false);
+        replanterFortuneItemMeta.addEnchant(Enchantment.LOOT_BONUS_BLOCKS,
+                playerReplanterFortuneLevel == 3 ? 3 :
+                        playerReplanterFortuneLevel + 1, false);
         replanterFortuneItem.setItemMeta(replanterFortuneItemMeta);
 
-        inventory.setItem(11, helper.getItem(new ItemStack(Material.PISTON), "§6§lReplanteur", survivalData.playerHasUpgradeReplanter.get(p.getUniqueId())
-                > 0 ? "§ePrix: §6Acquit" : "§ePrix: §6" + replanterPrice));
+        inventory.setItem(11, helper.getItem(new ItemStack(Material.PISTON), "§6§lReplanteur",
+                pData.getPlayerUpgrade(uuid, "replanter")
+                        > 0 ? "§ePrix: §6Acquit" : "§ePrix: §6" + replanterPrice));
         inventory.setItem(15, replanterFortuneItem);
-        inventory.setItem(31, helper.getItem(new ItemStack(Material.DIAMOND_HOE), "§6§lLarge Bêche", survivalData.playerHasUpgradeWideTill.get(p.getUniqueId())
-                > 0 ? "§ePrix: §6Acuit" : "§ePrix: §6" + wideTillePrice, "§eBêche une zone §63x3"));
+        inventory.setItem(31, helper.getItem(new ItemStack(Material.DIAMOND_HOE), "§6§lLarge Bêche",
+                pData.getPlayerUpgrade(uuid, "wide_till")
+                        > 0 ? "§ePrix: §6Acuit" : "§ePrix: §6" + wideTillePrice, "§eBêche une zone §63x3"));
 
-        inventory.setItem(49, helper.getHead(p, "§eJetons: §6" + survivalData.getPlayerTokens(p.getUniqueId())));
+        inventory.setItem(49, helper.getHead(p, "§eJetons: §6" + pData.getPlayerTokens(p.getUniqueId())));
 
         return inventory;
     }

@@ -2,16 +2,13 @@ package me.scaffus.survivalplus;
 
 import me.scaffus.survivalplus.EventListeners.*;
 import me.scaffus.survivalplus.commands.BankCommand;
+import me.scaffus.survivalplus.commands.InfoStickCommand;
 import me.scaffus.survivalplus.commands.SkillCommand;
 import me.scaffus.survivalplus.sql.DatabaseGetterSetter;
 import me.scaffus.survivalplus.sql.DatabaseManager;
-import me.scaffus.survivalplus.tasks.PlaceBlockTask;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.UUID;
 import java.util.logging.Logger;
 
 public final class SurvivalPlus extends JavaPlugin {
@@ -21,17 +18,18 @@ public final class SurvivalPlus extends JavaPlugin {
     public DatabaseGetterSetter data;
     public SkillsConfig skillsConfig = new SkillsConfig();
     public Helper helper = new Helper();
-    public SurvivalData survivalData;
+    public PlayersData playersData;
     @Override
     public void onEnable() {
         INSTANCE = this;
         this.data = new DatabaseGetterSetter(databaseManager.playerConnection.getConnection());
-        this.survivalData = new SurvivalData(this);
-        saveDefaultConfig();
 
+        saveDefaultConfig();
         skillsConfig.setup();
         skillsConfig.get().options().copyDefaults(true);
         skillsConfig.save();
+
+        this.playersData = new PlayersData(this);
 
         getServer().getPluginManager().registerEvents(new PlayerJoinQuitListener(this), this);
         getServer().getPluginManager().registerEvents(new BlockBreakListener(this), this);
@@ -41,6 +39,7 @@ public final class SurvivalPlus extends JavaPlugin {
 
         new BankCommand(this);
         new SkillCommand(this);
+        new InfoStickCommand(this);
 
         Logger.getLogger("Minecraft").info("[SURV+] Plugin ON");
     }

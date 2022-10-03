@@ -1,10 +1,9 @@
 package me.scaffus.survivalplus.menus;
 
 import me.scaffus.survivalplus.Helper;
-import me.scaffus.survivalplus.SurvivalData;
+import me.scaffus.survivalplus.PlayersData;
 import me.scaffus.survivalplus.SurvivalPlus;
 import me.scaffus.survivalplus.menus.skills.*;
-import me.scaffus.survivalplus.sql.DatabaseGetterSetter;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -16,7 +15,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class SkillsMenu implements Listener {
     private SurvivalPlus plugin;
-    private SurvivalData survivalData;
+    private PlayersData playersData;
     private Helper helper;
     private String skillInventoryName = "§6§lSkills";
 
@@ -31,7 +30,7 @@ public class SkillsMenu implements Listener {
 
     public SkillsMenu(SurvivalPlus plugin) {
         this.plugin = plugin;
-        this.survivalData = plugin.survivalData;
+        this.playersData = plugin.playersData;
         this.helper = plugin.helper;
 
         this.farmingSkillMenu = new FarmingSkillMenu(plugin, this);
@@ -74,32 +73,32 @@ public class SkillsMenu implements Listener {
         Inventory inventory = helper.createInventoryWithBackground(p, skillInventoryName, 54, backgroundItem, false);
 
         inventory.setItem(10, helper.getItem(
-                new ItemStack(Material.GOLDEN_HOE), "§6§lAgriculture", "§eXp: §6" + survivalData.getPlayerSkillPoints(p.getUniqueId(), "farming"),
-                "§eNiveau: §6" + survivalData.getPlayerSkillLevel(p.getUniqueId(), "farming")));
+                new ItemStack(Material.GOLDEN_HOE), "§6§lAgriculture", "§eXp: §6" + playersData.getPlayerSkillPoints(p.getUniqueId(), "farming"),
+                "§eNiveau: §6" + playersData.getPlayerSkillLevel(p.getUniqueId(), "farming")));
         inventory.setItem(12, helper.getItem(
-                new ItemStack(Material.DIAMOND_PICKAXE), "§6§lMinage", "§eXp: §6" + survivalData.getPlayerSkillPoints(p.getUniqueId(), "mining"),
-                "§eNiveau: §6" + survivalData.getPlayerSkillLevel(p.getUniqueId(), "mining")));
+                new ItemStack(Material.DIAMOND_PICKAXE), "§6§lMinage", "§eXp: §6" + playersData.getPlayerSkillPoints(p.getUniqueId(), "mining"),
+                "§eNiveau: §6" + playersData.getPlayerSkillLevel(p.getUniqueId(), "mining")));
         inventory.setItem(14, helper.getItem(
-                new ItemStack(Material.NETHERITE_SWORD), "§6§lCombat", "§eXp: §6" + survivalData.getPlayerSkillPoints(p.getUniqueId(), "combat"),
-                "§eNiveau: §6" + survivalData.getPlayerSkillLevel(p.getUniqueId(), "combat")));
+                new ItemStack(Material.NETHERITE_SWORD), "§6§lCombat", "§eXp: §6" + playersData.getPlayerSkillPoints(p.getUniqueId(), "combat"),
+                "§eNiveau: §6" + playersData.getPlayerSkillLevel(p.getUniqueId(), "combat")));
         inventory.setItem(16, helper.getItem(
-                new ItemStack(Material.LEATHER_BOOTS), "§6§lCourse", "§eXp: §6" + survivalData.getPlayerSkillPoints(p.getUniqueId(), "running"),
-                "§eNiveau: §6" + survivalData.getPlayerSkillLevel(p.getUniqueId(), "running")));
+                new ItemStack(Material.LEATHER_BOOTS), "§6§lCourse", "§eXp: §6" + playersData.getPlayerSkillPoints(p.getUniqueId(), "running"),
+                "§eNiveau: §6" + playersData.getPlayerSkillLevel(p.getUniqueId(), "running")));
 
         inventory.setItem(28, helper.getItem(
-                new ItemStack(Material.SKELETON_SKULL), "§6§lMort", "§eXp: §6" + survivalData.getPlayerSkillPoints(p.getUniqueId(), "death"),
-                "§eNiveau: §6" + survivalData.getPlayerSkillLevel(p.getUniqueId(), "death")));
+                new ItemStack(Material.SKELETON_SKULL), "§6§lMort", "§eXp: §6" + playersData.getPlayerSkillPoints(p.getUniqueId(), "death"),
+                "§eNiveau: §6" + playersData.getPlayerSkillLevel(p.getUniqueId(), "death")));
         inventory.setItem(30, helper.getItem(
-                new ItemStack(Material.BOW), "§6§lArcher", "§eXp: §6" + survivalData.getPlayerSkillPoints(p.getUniqueId(), "archery"),
-                "§eNiveau: §6" + survivalData.getPlayerSkillLevel(p.getUniqueId(), "archery")));
+                new ItemStack(Material.BOW), "§6§lArcher", "§eXp: §6" + playersData.getPlayerSkillPoints(p.getUniqueId(), "archery"),
+                "§eNiveau: §6" + playersData.getPlayerSkillLevel(p.getUniqueId(), "archery")));
         inventory.setItem(32, helper.getItem(
-                new ItemStack(Material.CONDUIT), "§6§lNage", "§eXp: §6" + survivalData.getPlayerSkillPoints(p.getUniqueId(), "swimming"),
-                "§eNiveau: §6" + survivalData.getPlayerSkillLevel(p.getUniqueId(), "swimming")));
+                new ItemStack(Material.CONDUIT), "§6§lNage", "§eXp: §6" + playersData.getPlayerSkillPoints(p.getUniqueId(), "swimming"),
+                "§eNiveau: §6" + playersData.getPlayerSkillLevel(p.getUniqueId(), "swimming")));
         inventory.setItem(34, helper.getItem(
-                new ItemStack(Material.ELYTRA), "§6§lVol", "§eXp: §6" + survivalData.getPlayerSkillPoints(p.getUniqueId(), "flying"),
-                "§eNiveau: §6" + survivalData.getPlayerSkillLevel(p.getUniqueId(), "flying")));
+                new ItemStack(Material.ELYTRA), "§6§lVol", "§eXp: §6" + playersData.getPlayerSkillPoints(p.getUniqueId(), "flying"),
+                "§eNiveau: §6" + playersData.getPlayerSkillLevel(p.getUniqueId(), "flying")));
 
-        inventory.setItem(49, helper.getHead(p, "§eJetons: §6" + survivalData.getPlayerTokens(p.getUniqueId())));
+        inventory.setItem(49, helper.getHead(p, "§eJetons: §6" + playersData.getPlayerTokens(p.getUniqueId())));
 
         return inventory;
     }

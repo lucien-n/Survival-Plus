@@ -2,11 +2,9 @@ package me.scaffus.survivalplus.EventListeners;
 
 import me.scaffus.survivalplus.Helper;
 import me.scaffus.survivalplus.SkillsConfig;
-import me.scaffus.survivalplus.SurvivalData;
+import me.scaffus.survivalplus.PlayersData;
 import me.scaffus.survivalplus.SurvivalPlus;
 import me.scaffus.survivalplus.tasks.PlaceBlockTask;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Ageable;
@@ -21,10 +19,11 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 public class BlockBreakListener implements Listener {
     private final SurvivalPlus plugin;
-    private final SurvivalData survivalData;
+    private final PlayersData pData;
     private final SkillsConfig skillsConfig;
     private final Helper helper;
     private final Set ores;
@@ -44,7 +43,7 @@ public class BlockBreakListener implements Listener {
 
     public BlockBreakListener(SurvivalPlus plugin) {
         this.plugin = plugin;
-        this.survivalData = plugin.survivalData;
+        this.pData = plugin.playersData;
         this.skillsConfig = plugin.skillsConfig;
         this.helper = plugin.helper;
 
@@ -75,23 +74,24 @@ public class BlockBreakListener implements Listener {
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
         Player p = event.getPlayer();
+        UUID uuid = p.getUniqueId();
         Block block = event.getBlock();
 
         // MINING
         if (ores.contains(block.getType().toString())) {
             // Points
             Double pointsGained = helper.round((Double) oresPoints.get(block.getType().toString()), 2);
-            survivalData.incrementPlayerSkillPoints(p.getUniqueId(), "mining", pointsGained);
+            pData.incrementPlayerSkillPoints(p.getUniqueId(), "mining", pointsGained);
             helper.sendActionBar(p, skillsGainedXpMessage.replace("%amount%", String.valueOf(pointsGained)).replace("%skill%", "minage"));
 
             // Levels
-            int playerSkillLevel = survivalData.getPlayerSkillLevel(p.getUniqueId(), "mining");
-            Double playerSkillPoints = survivalData.getPlayerSkillPoints(p.getUniqueId(), "mining");
+            int playerSkillLevel = pData.getPlayerSkillLevel(p.getUniqueId(), "mining");
+            Double playerSkillPoints = pData.getPlayerSkillPoints(p.getUniqueId(), "mining");
             for (int i = 0; i <= levels.size(); i++) {
                 if (playerSkillLevel == levels.size()) return;
                 if (playerSkillLevel == i && playerSkillPoints >= (int) levels.get(i)) {
-                    survivalData.incrementPlayerSkillLevel(p.getUniqueId(), "mining", 1);
-                    survivalData.incrementPlayerTokens(p.getUniqueId(), 1);
+                    pData.incrementPlayerSkillLevel(p.getUniqueId(), "mining", 1);
+                    pData.incrementPlayerTokens(p.getUniqueId(), 1);
                     p.sendMessage(skillsPassedLevelMessage.replace("%level%", String.valueOf(i + 1)));
                 }
             }
@@ -107,27 +107,28 @@ public class BlockBreakListener implements Listener {
 
             // Points
             Double pointsGained = helper.round((Double) cropsPoints.getOrDefault(block.getType().toString(), 0.0), 2);
-            survivalData.incrementPlayerSkillPoints(p.getUniqueId(), "farming", pointsGained);
+            pData.incrementPlayerSkillPoints(p.getUniqueId(), "farming", pointsGained);
             helper.sendActionBar(p, skillsGainedXpMessage.replace("%amount%", String.valueOf(pointsGained)).replace("%skill%", "agriculture"));
 
             // Levels
-            int playerSkillLevel = survivalData.getPlayerSkillLevel(p.getUniqueId(), "farming");
-            Double playerSkillPoints = survivalData.getPlayerSkillPoints(p.getUniqueId(), "farming");
+            int playerSkillLevel = pData.getPlayerSkillLevel(p.getUniqueId(), "farming");
+            Double playerSkillPoints = pData.getPlayerSkillPoints(p.getUniqueId(), "farming");
             for (int i = 0; i <= levels.size(); i++) {
                 if (playerSkillLevel == levels.size()) return;
                 if (playerSkillLevel == i && playerSkillPoints >= (int) levels.get(i)) {
-                    survivalData.incrementPlayerSkillLevel(p.getUniqueId(), "farming", 1);
-                    survivalData.incrementPlayerTokens(p.getUniqueId(), 1);
+                    pData.incrementPlayerSkillLevel(p.getUniqueId(), "farming", 1);
+                    pData.incrementPlayerTokens(p.getUniqueId(), 1);
                     p.sendMessage(skillsPassedLevelMessage.replace("%level%", String.valueOf(i + 1)));
                 }
             }
 
             // Replant
-            if (survivalData.playerHasUpgradeReplanter.get(p.getUniqueId()) > 0 && replantableCrops.contains(block.getType().toString())) {
+            if (pData.getPlayerUpgrade(uuid, "replanter") > 0 && replantableCrops.contains(block.getType().toString())) {
                 event.setCancelled(true);
                 // Apply fortune
-                if (survivalData.playerHasUpgradeReplanterFortune.get(p.getUniqueId()) > 0) {
-                    switch (survivalData.playerHasUpgradeReplanterFortune.get(p.getUniqueId())) {
+                Integer playerReplanterFortuneLevel = pData.getPlayerUpgrade(uuid, "replanter_fortune");
+                if (playerReplanterFortuneLevel > 0) {
+                    switch (playerReplanterFortuneLevel) {
                         case 1:
                             block.breakNaturally(hoeFortune1);
                             break;

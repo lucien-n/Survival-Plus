@@ -1,9 +1,8 @@
 package me.scaffus.survivalplus.menus;
 
 import me.scaffus.survivalplus.Helper;
-import me.scaffus.survivalplus.SurvivalData;
+import me.scaffus.survivalplus.PlayersData;
 import me.scaffus.survivalplus.SurvivalPlus;
-import me.scaffus.survivalplus.sql.DatabaseGetterSetter;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -15,7 +14,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class BankMenu implements Listener {
     private final SurvivalPlus plugin;
-    private final SurvivalData survivalData;
+    private final PlayersData playersData;
     private final Helper helper;
     private final String bankInventoryName = "§lBanque";
     private final String amountInventoryName = "§6§lMontant";
@@ -24,7 +23,7 @@ public class BankMenu implements Listener {
 
     public BankMenu(SurvivalPlus plugin) {
         this.plugin = plugin;
-        this.survivalData = plugin.survivalData;
+        this.playersData = plugin.playersData;
         this.helper = plugin.helper;
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
@@ -58,7 +57,7 @@ public class BankMenu implements Listener {
             else if (slot == 11) amount = amount - 8;
             else if (slot == 12) amount = amount - 1;
             else if (slot == 13) {
-                if (mode.equals("withdraw")) amount = survivalData.getPlayerBalance(p.getUniqueId());
+                if (mode.equals("withdraw")) amount = playersData.getPlayerBalance(p.getUniqueId());
                 else if (mode.equals("deposit"))
                     amount = helper.getAmountOfItemInventory(p.getInventory(), Material.DIAMOND);
             } else if (slot == 14) amount = amount + 1;
@@ -66,9 +65,9 @@ public class BankMenu implements Listener {
             else if (slot == 16) amount = amount + 64;
             else if (slot == 22) {
                 if (mode.equals("withdraw")) {
-                    int playerBalance = survivalData.getPlayerBalance(p.getUniqueId());
+                    int playerBalance = playersData.getPlayerBalance(p.getUniqueId());
                     if (playerBalance >= amount) {
-                        survivalData.incrementPlayerBalance(p.getUniqueId(), -amount);
+                        playersData.incrementPlayerBalance(p.getUniqueId(), -amount);
                         p.getInventory().addItem(new ItemStack(Material.DIAMOND, amount));
                         p.sendMessage(plugin.getConfig().getString("bank.withdraw.successful").replace("%amount%", String.valueOf(amount)));
                     } else {
@@ -78,7 +77,7 @@ public class BankMenu implements Listener {
                 } else if (mode.equals("deposit")) {
                     int diamondInInv = helper.getAmountOfItemInventory(p.getInventory(), Material.DIAMOND);
                     if (diamondInInv >= amount) {
-                        survivalData.incrementPlayerTokens(p.getUniqueId(), amount);
+                        playersData.incrementPlayerTokens(p.getUniqueId(), amount);
                         helper.removeAmountOfItemFromInventory(p.getInventory(), Material.DIAMOND, amount);
                         p.sendMessage(plugin.getConfig().getString("bank.deposit.successful").replace("%amount%", String.valueOf(amount)));
                     } else {
@@ -105,7 +104,7 @@ public class BankMenu implements Listener {
 
         inventory.setItem(13, helper.getHead(p,
                 "§eTu possèdes §6§l%amount%$§e sur ton compte.".replace("%amount%", String.valueOf(
-                        survivalData.getPlayerBalance(p.getUniqueId())))));
+                        playersData.getPlayerBalance(p.getUniqueId())))));
 
         inventory.setItem(15, helper.getItem(
                 new ItemStack(Material.LIME_STAINED_GLASS_PANE), "§6§lDéposer", "§eDéposer une somme sur ton compte."

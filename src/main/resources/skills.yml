@@ -84,7 +84,6 @@ farming:
     - STONE_AXE
     - WOODEN_AXE
   tillables:
-    - FARMLAND
     - DIRT
     - GRASS_BLOCK
     - DIRT_PATH
@@ -101,3 +100,8 @@ points_for_level:
   - 21000
   - 30000
 
+# DO NOT TOUCH
+upgrades:
+  - replanter
+  - wide_till
+  - replanter_fortune

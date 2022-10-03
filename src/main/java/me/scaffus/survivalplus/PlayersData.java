@@ -4,11 +4,13 @@ import me.scaffus.survivalplus.sql.DatabaseGetterSetter;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
-public class SurvivalData {
+public class PlayersData {
     private SurvivalPlus plugin;
     private DatabaseGetterSetter data;
+    private SkillsConfig skillsConfig;
 
     public HashMap<UUID, Double> playerSkillPointsFarming = new HashMap<>();
     public HashMap<UUID, Double> playerSkillPointsMining = new HashMap<>();
@@ -31,16 +33,17 @@ public class SurvivalData {
     public HashMap<UUID, Integer> playerTokens = new HashMap<>();
     public HashMap<UUID, Integer> playerBalance = new HashMap<>();
 
-    public HashMap<UUID, Integer> playerHasUpgradeReplanter = new HashMap<>();
-    public HashMap<UUID, Integer> playerHasUpgradeReplanterFortune = new HashMap<>();
-    public HashMap<UUID, Integer> playerHasUpgradeWideTill = new HashMap<>();
+    public HashMap<UUID, HashMap<String, Integer>> playerUpgrades = new HashMap<>();
 
     public String upgradeBought;
+    public List<String> upgrades;
 
-    public SurvivalData(SurvivalPlus plugin) {
+    public PlayersData(SurvivalPlus plugin) {
         this.plugin = plugin;
         this.data = plugin.data;
+        this.skillsConfig = plugin.skillsConfig;
         this.upgradeBought = plugin.getConfig().getString("skills.upgrade_bought");
+        upgrades = (List<String>) skillsConfig.get().get("upgrades");
     }
 
     public void loadPlayerData(Player p) {
@@ -64,9 +67,7 @@ public class SurvivalData {
         playerSkillLevelSwimming.put(uuid, data.getPlayerSkillLevel(uuid, "swimming"));
         playerSkillLevelFlying.put(uuid, data.getPlayerSkillLevel(uuid, "flying"));
 
-        playerHasUpgradeReplanter.put(uuid, data.getPlayerUpgrade(uuid, "replanter"));
-        playerHasUpgradeReplanterFortune.put(uuid, data.getPlayerUpgrade(uuid, "replanter_fortune"));
-        playerHasUpgradeWideTill.put(uuid, data.getPlayerUpgrade(uuid, "wide_till"));
+        loadPlayerUpgrades(uuid);
 
         playerTokens.put(uuid, data.getPlayerTokens(uuid));
         playerBalance.put(uuid, data.getPlayerBalance(uuid));
@@ -74,30 +75,70 @@ public class SurvivalData {
 
     public void savePlayerData(Player p) {
         UUID uuid = p.getUniqueId();
-        if (playerSkillLevelFarming.get(uuid) != 0) data.setPlayerSkillLevel(uuid, "farming", playerSkillLevelFarming.get(uuid));
-        if (playerSkillLevelMining.get(uuid) != 0) data.setPlayerSkillLevel(uuid, "mining", playerSkillLevelMining.get(uuid));
-        if (playerSkillLevelCombat.get(uuid) != 0) data.setPlayerSkillLevel(uuid, "combat", playerSkillLevelCombat.get(uuid));
-        if (playerSkillLevelRunning.get(uuid) != 0) data.setPlayerSkillLevel(uuid, "running", playerSkillLevelRunning.get(uuid));
-        if (playerSkillLevelDeath.get(uuid) != 0) data.setPlayerSkillLevel(uuid, "death", playerSkillLevelDeath.get(uuid));
-        if (playerSkillLevelArchery.get(uuid) != 0) data.setPlayerSkillLevel(uuid, "archery", playerSkillLevelArchery.get(uuid));
-        if (playerSkillLevelSwimming.get(uuid) != 0) data.setPlayerSkillLevel(uuid, "swimming", playerSkillLevelSwimming.get(uuid));
-        if (playerSkillLevelFlying.get(uuid) != 0) data.setPlayerSkillLevel(uuid, "flying", playerSkillLevelFlying.get(uuid));
+        if (playerSkillLevelFarming.get(uuid) != 0)
+            data.setPlayerSkillLevel(uuid, "farming", playerSkillLevelFarming.get(uuid));
+        if (playerSkillLevelMining.get(uuid) != 0)
+            data.setPlayerSkillLevel(uuid, "mining", playerSkillLevelMining.get(uuid));
+        if (playerSkillLevelCombat.get(uuid) != 0)
+            data.setPlayerSkillLevel(uuid, "combat", playerSkillLevelCombat.get(uuid));
+        if (playerSkillLevelRunning.get(uuid) != 0)
+            data.setPlayerSkillLevel(uuid, "running", playerSkillLevelRunning.get(uuid));
+        if (playerSkillLevelDeath.get(uuid) != 0)
+            data.setPlayerSkillLevel(uuid, "death", playerSkillLevelDeath.get(uuid));
+        if (playerSkillLevelArchery.get(uuid) != 0)
+            data.setPlayerSkillLevel(uuid, "archery", playerSkillLevelArchery.get(uuid));
+        if (playerSkillLevelSwimming.get(uuid) != 0)
+            data.setPlayerSkillLevel(uuid, "swimming", playerSkillLevelSwimming.get(uuid));
+        if (playerSkillLevelFlying.get(uuid) != 0)
+            data.setPlayerSkillLevel(uuid, "flying", playerSkillLevelFlying.get(uuid));
 
-        if (playerSkillPointsFarming.get(uuid) != 0) data.setPlayerSkillPoints(uuid, "farming", playerSkillPointsFarming.get(uuid));
-        if (playerSkillPointsMining.get(uuid) != 0) data.setPlayerSkillPoints(uuid, "mining", playerSkillPointsMining.get(uuid));
-        if (playerSkillPointsCombat.get(uuid) != 0) data.setPlayerSkillPoints(uuid, "combat", playerSkillPointsCombat.get(uuid));
-        if (playerSkillPointsRunning.get(uuid) != 0) data.setPlayerSkillPoints(uuid, "running", playerSkillPointsRunning.get(uuid));
-        if (playerSkillPointsDeath.get(uuid) != 0) data.setPlayerSkillPoints(uuid, "death", playerSkillPointsDeath.get(uuid));
-        if (playerSkillPointsArchery.get(uuid) != 0) data.setPlayerSkillPoints(uuid, "archery", playerSkillPointsArchery.get(uuid));
-        if (playerSkillPointsSwimming.get(uuid) != 0) data.setPlayerSkillPoints(uuid, "swimming", playerSkillPointsSwimming.get(uuid));
-        if (playerSkillPointsFlying.get(uuid) != 0) data.setPlayerSkillPoints(uuid, "flying", playerSkillPointsFlying.get(uuid));
+        if (playerSkillPointsFarming.get(uuid) != 0)
+            data.setPlayerSkillPoints(uuid, "farming", playerSkillPointsFarming.get(uuid));
+        if (playerSkillPointsMining.get(uuid) != 0)
+            data.setPlayerSkillPoints(uuid, "mining", playerSkillPointsMining.get(uuid));
+        if (playerSkillPointsCombat.get(uuid) != 0)
+            data.setPlayerSkillPoints(uuid, "combat", playerSkillPointsCombat.get(uuid));
+        if (playerSkillPointsRunning.get(uuid) != 0)
+            data.setPlayerSkillPoints(uuid, "running", playerSkillPointsRunning.get(uuid));
+        if (playerSkillPointsDeath.get(uuid) != 0)
+            data.setPlayerSkillPoints(uuid, "death", playerSkillPointsDeath.get(uuid));
+        if (playerSkillPointsArchery.get(uuid) != 0)
+            data.setPlayerSkillPoints(uuid, "archery", playerSkillPointsArchery.get(uuid));
+        if (playerSkillPointsSwimming.get(uuid) != 0)
+            data.setPlayerSkillPoints(uuid, "swimming", playerSkillPointsSwimming.get(uuid));
+        if (playerSkillPointsFlying.get(uuid) != 0)
+            data.setPlayerSkillPoints(uuid, "flying", playerSkillPointsFlying.get(uuid));
 
-        data.setPlayerUpgrade(uuid, "replanter", playerHasUpgradeReplanter.get(uuid));
-        data.setPlayerUpgrade(uuid, "replanter_fortune", playerHasUpgradeReplanterFortune.get(uuid));
-        data.setPlayerUpgrade(uuid, "wide_till", playerHasUpgradeWideTill.get(uuid));
+        savePlayerUpgrades(uuid);
 
         data.setPlayerTokens(uuid, playerTokens.get(uuid));
         data.setPlayerBalance(uuid, playerBalance.get(uuid));
+    }
+
+    public void loadPlayerUpgrades(UUID uuid) {
+        HashMap<String, Integer> upgradeMap = new HashMap<>();
+        for (String upgradeName : upgrades) {
+            upgradeMap.put(upgradeName, data.getPlayerUpgrade(uuid, upgradeName));
+        }
+        playerUpgrades.put(uuid, upgradeMap);
+    }
+
+    public void savePlayerUpgrades(UUID uuid) {
+        HashMap<String, Integer> upgradeMap = playerUpgrades.get(uuid);
+        for (String upgradeName : upgrades) {
+            data.setPlayerUpgrade(uuid, upgradeName, upgradeMap.get(upgradeName));
+        }
+    }
+
+    public Integer getPlayerUpgrade(UUID uuid, String upgradeName) {
+        HashMap<String, Integer> playerUpgradeMap = playerUpgrades.get(uuid);
+        return playerUpgradeMap.get(upgradeName);
+    }
+
+    public void setPlayerUpgrade(UUID uuid, String upgradeName, Integer value) {
+        HashMap<String, Integer> upgradeMap = playerUpgrades.get(uuid);
+        upgradeMap.put(upgradeName, value);
+        playerUpgrades.put(uuid, upgradeMap);
     }
 
     public Integer getPlayerTokens(UUID uuid) {

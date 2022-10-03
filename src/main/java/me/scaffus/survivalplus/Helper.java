@@ -1,6 +1,5 @@
 package me.scaffus.survivalplus;
 
-import me.scaffus.survivalplus.sql.DatabaseGetterSetter;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
@@ -15,11 +14,10 @@ import org.bukkit.inventory.meta.SkullMeta;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class Helper {
-    private SurvivalData survivalData;
+    private PlayersData playersData;
 
     public void removeAmountOfItemFromInventory(Inventory inventory, Material material, int amount) {
         if (amount <= 0) return;
