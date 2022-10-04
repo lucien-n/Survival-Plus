@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Helper {
-    private SurvivalData playersData;
+    private SurvivalData survivalData;
 
     public void removeAmountOfItemFromInventory(Inventory inventory, Material material, int amount) {
         if (amount <= 0) return;

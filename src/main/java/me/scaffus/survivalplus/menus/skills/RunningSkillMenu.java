@@ -15,14 +15,14 @@ import org.bukkit.inventory.ItemStack;
 
 public class RunningSkillMenu implements Listener {
     private SurvivalPlus plugin;
-    private SurvivalData playersData;
+    private SurvivalData survivalData;
     private Helper helper;
     private SkillsMenu skillsMenu;
     private String inventoryName = "§6§lCourse";
 
     public RunningSkillMenu(SurvivalPlus plugin, SkillsMenu skillsMenu) {
         this.plugin = plugin;
-        this.playersData = plugin.survivalData;
+        this.survivalData = plugin.survivalData;
         this.helper = plugin.helper;
         this.skillsMenu = skillsMenu;
         Bukkit.getPluginManager().registerEvents(this, plugin);
@@ -44,7 +44,7 @@ public class RunningSkillMenu implements Listener {
         ItemStack backgroundItem = helper.getItem(new ItemStack(Material.GRAY_STAINED_GLASS_PANE), "", "");
         Inventory inventory = helper.createInventoryWithBackground(p, inventoryName, 54, backgroundItem, true);
 
-        inventory.setItem(49, helper.getHead(p, "§eJetons: §6" + playersData.getPlayerTokens(p.getUniqueId())));
+        inventory.setItem(49, helper.getHead(p, "§eJetons: §6" + survivalData.getPlayerTokens(p.getUniqueId())));
 
         return inventory;
     }

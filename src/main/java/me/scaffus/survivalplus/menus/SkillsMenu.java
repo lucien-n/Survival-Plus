@@ -1,5 +1,6 @@
 package me.scaffus.survivalplus.menus;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import me.scaffus.survivalplus.Helper;
 import me.scaffus.survivalplus.SurvivalData;
 import me.scaffus.survivalplus.SurvivalPlus;
@@ -112,16 +113,26 @@ public class SkillsMenu implements Listener {
         return inventory;
     }
 
-    public void buyUpgrade(Player p, PlayerUpgrade upgrade) {
+    public Boolean buyUpgrade(Player p, PlayerUpgrade upgrade) {
         UUID uuid = p.getUniqueId();
         Integer playerUpgradeLevel = survivalData.getPlayerUpgrade(uuid, upgrade.name);
         Integer cost = (playerUpgradeLevel + 1) * upgrade.cost;
-        if (survivalData.getPlayerTokens(uuid) < cost) return;
-        if (playerUpgradeLevel.equals(upgrade.maxLevel)) return;
+        if (survivalData.getPlayerTokens(uuid) < cost) return false;
+        if (playerUpgradeLevel >= upgrade.maxLevel) return false;
 
         survivalData.setPlayerUpgrade(uuid, upgrade.name, playerUpgradeLevel + 1);
         survivalData.incrementPlayerTokens(uuid, -cost);
         p.sendMessage(helper.upgradeBoughtMessage(survivalData.upgradeBought,
                 "§6§n" + upgrade.displayName + "§6 niveau " + (playerUpgradeLevel + 1), cost));
+        return true;
+    }
+
+    public String getUpgradePrice(Player p, PlayerUpgrade upgrade) {
+        UUID uuid = p.getUniqueId();
+        Integer playerUpgradelevel = survivalData.getPlayerUpgrade(uuid, upgrade.name);
+        String priceText = "§ePrix: §6";
+        String acquiredText = "Acquit";
+        if (playerUpgradelevel.equals(upgrade.maxLevel)) return priceText + acquiredText;
+        return priceText + ((playerUpgradelevel + 1) * upgrade.cost);
     }
 }

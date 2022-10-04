@@ -12,25 +12,25 @@ import org.bukkit.event.player.PlayerQuitEvent;
 public class PlayerJoinQuitListener implements Listener {
     private SurvivalPlus plugin;
     private DatabaseGetterSetter data;
-    private SurvivalData playersData;
+    private SurvivalData survivalData;
     public PlayerJoinQuitListener(SurvivalPlus plugin) {
         this.plugin = plugin;
         this.data = plugin.data;
-        this.playersData = plugin.survivalData;
+        this.survivalData = plugin.survivalData;
     }
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player p = event.getPlayer();
         data.createPlayer(p);
-        playersData.loadPlayerData(p);
+        survivalData.loadPlayerData(p);
         event.setJoinMessage("§6§l" + p.getDisplayName() + "§e a rejoint.");
     }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player p = event.getPlayer();
-        playersData.savePlayerData(p);
+        survivalData.savePlayerData(p);
         event.setQuitMessage("§6§l" + p.getDisplayName() + "§e a quitté.");
     }
 }

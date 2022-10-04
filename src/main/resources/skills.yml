@@ -88,12 +88,6 @@ farming:
     - IRON_HOE
     - STONE_HOE
     - WOODEN_HOE
-    - NETHERITE_AXE
-    - DIAMOND_AXE
-    - GOLDEN_AXE
-    - IRON_AXE
-    - STONE_AXE
-    - WOODEN_AXE
   tillables:
     - DIRT
     - GRASS_BLOCK
@@ -198,6 +192,12 @@ upgrades:
   cat_life:
     cost: 2
     cost_factor: 1.0
-    max_level: 1
-    display_item: GOLDEN_APPLE
+    max_level: 5
+    display_item: ENCHANTED_GOLDEN_APPLE
     display_name: "§6§lVie de Chat"
+  limited_immortality:
+    cost: 2
+    cost_factor: 1.0
+    max_level: 1
+    display_item: TOTEM_OF_UNDYING
+    display_name: "§6§lImmortalité à Usage Unique"

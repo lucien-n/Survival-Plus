@@ -3,8 +3,10 @@ package me.scaffus.survivalplus.listeners;
 import me.scaffus.survivalplus.SkillsConfig;
 import me.scaffus.survivalplus.SurvivalData;
 import me.scaffus.survivalplus.SurvivalPlus;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -33,7 +35,7 @@ public class PlayerInteractListener implements Listener {
         farmingHoes = (List<String>) skillsConfig.get().get("farming.tools");
         farmingTillables = (List<String>) skillsConfig.get().get("farming.tillables");
 
-        choppingDestrippables = (List<String>) skillsConfig.get().get("chopping.restrippables");
+        choppingDestrippables = (List<String>) skillsConfig.get().get("chopping.destrippables");
         choppingLogs = skillsConfig.get().getConfigurationSection("chopping.logs").getKeys(false);
     }
 
@@ -88,30 +90,33 @@ public class PlayerInteractListener implements Listener {
         }
 
         // ? DESTRIP
-        if (survivalData.getPlayerUpgrade(uuid, "destrip") > 0 && event.getAction() == Action.RIGHT_CLICK_BLOCK && choppingLogs.contains(block.getType().toString())) {
+        if (survivalData.getPlayerUpgrade(uuid, "destrip") > 0 && event.getAction() == Action.RIGHT_CLICK_BLOCK && choppingDestrippables.contains(block.getType().toString())) {
+            Material type = Material.AIR;
             switch (block.getType()) {
                 case STRIPPED_OAK_LOG:
-                    block.setType(Material.OAK_LOG);
+                    type = Material.OAK_LOG;
                     break;
                 case STRIPPED_DARK_OAK_LOG:
-                    block.setType(Material.DARK_OAK_LOG);
+                    type = Material.DARK_OAK_LOG;
                     break;
                 case STRIPPED_SPRUCE_LOG:
-                    block.setType(Material.SPRUCE_LOG);
+                    type = Material.SPRUCE_LOG;
                     break;
                 case STRIPPED_ACACIA_LOG:
-                    block.setType(Material.ACACIA_LOG);
+                    type = Material.ACACIA_LOG;
                     break;
                 case STRIPPED_JUNGLE_LOG:
-                    block.setType(Material.JUNGLE_LOG);
+                    type = Material.JUNGLE_LOG;
                     break;
                 case STRIPPED_BIRCH_LOG:
-                    block.setType(Material.BIRCH_LOG);
+                    type = Material.BIRCH_LOG;
                     break;
                 case STRIPPED_MANGROVE_LOG:
-                    block.setType(Material.MANGROVE_LOG);
+                    type = Material.MANGROVE_LOG;
                     break;
             }
+            block.setType(type);
+            p.playSound(p.getLocation(), Sound.ITEM_AXE_STRIP, 1.0F, 1.0F);
         }
 
         // ? INFO STICK

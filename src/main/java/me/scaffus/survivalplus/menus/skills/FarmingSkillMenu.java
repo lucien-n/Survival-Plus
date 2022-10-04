@@ -62,21 +62,18 @@ public class FarmingSkillMenu implements Listener {
 
         inventory.setItem(11, helper.getItem(new ItemStack(replanter.displayItem), replanter.displayName, "§eReplante pour toi après que tu aies récolté",
                 "",
-                survivalData.getPlayerUpgrade(uuid, "replanter")
+                survivalData.getPlayerUpgrade(uuid, replanter.name)
                         > 0 ? "§ePrix: §6Acquit" : "§ePrix: §6" + replanter.cost));
 
-        Integer playerReplanterFortuneLevel = survivalData.getPlayerUpgrade(uuid, "replanter_fortune");
+        Integer playerReplanterFortuneLevel = survivalData.getPlayerUpgrade(uuid, replanterFortune.name);
         inventory.setItem(15, helper.getItem(new ItemStack(replanterFortune.displayItem), replanterFortune.displayName, "§eFortune fonctionne sur les plantes sans", "§eavoir à enchanté ton outil",
                 "",
-                playerReplanterFortuneLevel
-                        == 0 ? "§ePrix: §6" + (playerReplanterFortuneLevel + 1) * replanterFortune.costFactor : playerReplanterFortuneLevel
-                        == 1 ? "§ePrix: §6" + (playerReplanterFortuneLevel + 1) * replanterFortune.costFactor : playerReplanterFortuneLevel
-                        == 2 ? "§ePrix: §6" + (playerReplanterFortuneLevel + 1) * replanterFortune.costFactor : "§ePrix: §6Acquit", "§eRequiert: §6Replanteur"));
+                skillsMenu.getUpgradePrice(p, survivalData.getUpgrade(replanterFortune.name)), "§eRequiert: §6Replanteur"));
 
         inventory.setItem(31, helper.getItem(new ItemStack(wideTill.displayItem), wideTill.displayName, "§eBêche une zone §63x3",
                 "",
-                survivalData.getPlayerUpgrade(uuid, "wide_till")
-                        > 0 ? "§ePrix: §6Acquit" : "§ePrix: §6" + wideTill.costFactor));
+                survivalData.getPlayerUpgrade(uuid, wideTill.name)
+                        > 0 ? "§ePrix: §6Acquit" : "§ePrix: §6" + wideTill.cost));
 
         inventory.setItem(49, helper.getHead(p, "§eJetons: §6" + survivalData.getPlayerTokens(p.getUniqueId())));
 

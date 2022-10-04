@@ -116,7 +116,7 @@ public class BlockBreakListener implements Listener {
             helper.sendActionBar(p, skillsGainedXpMessage.replace("%amount%", String.valueOf(pointsGained)).replace("%skill%", "minage"));
 
             // Levels
-            checkIfPlayerPassedLevel(p, "mining");
+            handlePlayerSkillLevel(p, "mining");
 
             // Autosmelt
             if (survivalData.getPlayerUpgrade(uuid, "auto_smelt") > 0) {
@@ -180,7 +180,7 @@ public class BlockBreakListener implements Listener {
             helper.sendActionBar(p, skillsGainedXpMessage.replace("%amount%", String.valueOf(pointsGained)).replace("%skill%", "agriculture"));
 
             // Levels
-            checkIfPlayerPassedLevel(p, "chopping");
+            handlePlayerSkillLevel(p, "chopping");
 
             // Replant
             if (survivalData.getPlayerUpgrade(uuid, "replanter") > 0 && farmingReplantableCrops.contains(block.getType().toString())) {
@@ -218,7 +218,7 @@ public class BlockBreakListener implements Listener {
             helper.sendActionBar(p, skillsGainedXpMessage.replace("%amount%", String.valueOf(pointsGained)).replace("%skill%", "bûcheronnage"));
 
             // Levels
-            checkIfPlayerPassedLevel(p, "chopping");
+            handlePlayerSkillLevel(p, "chopping");
 
             // ? LOGVITY
             Integer playerLogvityUpgradeLevel = survivalData.getPlayerUpgrade(uuid, "logvity");
@@ -233,7 +233,7 @@ public class BlockBreakListener implements Listener {
         }
     }
 
-    public void checkIfPlayerPassedLevel(Player p, String skill) {
+    public void handlePlayerSkillLevel(Player p, String skill) {
         int playerSkillLevel = survivalData.getPlayerSkillLevel(p.getUniqueId(), skill);
         Double playerSkillPoints = survivalData.getPlayerSkillPoints(p.getUniqueId(), skill);
         for (int i = 0; i <= pointsForLevels.size(); i++) {
