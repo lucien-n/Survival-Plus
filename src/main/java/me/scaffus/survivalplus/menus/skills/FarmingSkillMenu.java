@@ -5,6 +5,7 @@ import me.scaffus.survivalplus.SurvivalData;
 import me.scaffus.survivalplus.SkillsConfig;
 import me.scaffus.survivalplus.SurvivalPlus;
 import me.scaffus.survivalplus.menus.SkillsMenu;
+import me.scaffus.survivalplus.objects.PlayerUpgrade;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -23,10 +24,6 @@ public class FarmingSkillMenu implements Listener {
     private final Helper helper;
     private final SkillsMenu skillsMenu;
     private final String inventoryName = "§6§lAgriculture";
-    private final Integer replanterCost;
-    private final Integer replanterFortuneCost;
-    private final Integer wideTilleCost;
-
 
     public FarmingSkillMenu(SurvivalPlus plugin, SkillsMenu skillsMenu) {
         this.survivalData = plugin.survivalData;
@@ -34,9 +31,6 @@ public class FarmingSkillMenu implements Listener {
         SkillsConfig skillsConfig = plugin.skillsConfig;
         this.skillsMenu = skillsMenu;
         Bukkit.getPluginManager().registerEvents(this, plugin);
-        replanterCost = (Integer) skillsConfig.get().get("upgrades.replanter.cost");
-        replanterFortuneCost = (Integer) skillsConfig.get().get("upgrades.replanter_fortune.cost");
-        wideTilleCost = (Integer) skillsConfig.get().get("upgrades.wide_till.cost");
     }
 
     @EventHandler
@@ -62,29 +56,27 @@ public class FarmingSkillMenu implements Listener {
         ItemStack backgroundItem = helper.getItem(new ItemStack(Material.GRAY_STAINED_GLASS_PANE), "", "");
         Inventory inventory = helper.createInventoryWithBackground(p, inventoryName, 54, backgroundItem, true);
 
-        // FORTUNE PRICE IS 2 TIMES THE DESIRED FORTUNE LEVEL
-        Integer playerReplanterFortuneLevel = survivalData.getPlayerUpgrade(uuid, "replanter_fortune");
-        ItemStack replanterFortuneItem = helper.getItem(new ItemStack(Material.PISTON), "§6§lFortune du Replanteur", "§eFortune fonctionne sur les plantes sans", "§eavoir à enchanté ton outil",
-                "",
-                playerReplanterFortuneLevel
-                        == 0 ? "§ePrix: §6" + (playerReplanterFortuneLevel + 1) * replanterFortuneCost : playerReplanterFortuneLevel
-                        == 1 ? "§ePrix: §6" + (playerReplanterFortuneLevel + 1) * replanterFortuneCost : playerReplanterFortuneLevel
-                        == 2 ? "§ePrix: §6" + (playerReplanterFortuneLevel + 1) * replanterFortuneCost : "§ePrix: §6Acquit", "§eRequiert: §6Replanteur");
-        ItemMeta replanterFortuneItemMeta = replanterFortuneItem.getItemMeta();
-        replanterFortuneItemMeta.addEnchant(Enchantment.LOOT_BONUS_BLOCKS,
-                playerReplanterFortuneLevel == 3 ? 3 :
-                        playerReplanterFortuneLevel + 1, false);
-        replanterFortuneItem.setItemMeta(replanterFortuneItemMeta);
+        PlayerUpgrade replanter = survivalData.getUpgrade("replanter");
+        PlayerUpgrade replanterFortune = survivalData.getUpgrade("replanter_fortune");
+        PlayerUpgrade wideTill = survivalData.getUpgrade("wide_till");
 
-        inventory.setItem(11, helper.getItem(new ItemStack(Material.PISTON), "§6§lReplanteur", "§eReplante pour toi après que tu aies récolté",
+        inventory.setItem(11, helper.getItem(new ItemStack(replanter.displayItem), replanter.displayName, "§eReplante pour toi après que tu aies récolté",
                 "",
                 survivalData.getPlayerUpgrade(uuid, "replanter")
-                        > 0 ? "§ePrix: §6Acquit" : "§ePrix: §6" + replanterCost));
-        inventory.setItem(15, replanterFortuneItem);
-        inventory.setItem(31, helper.getItem(new ItemStack(Material.DIAMOND_HOE), "§6§lLarge Bêche", "§eBêche une zone §63x3",
+                        > 0 ? "§ePrix: §6Acquit" : "§ePrix: §6" + replanter.cost));
+
+        Integer playerReplanterFortuneLevel = survivalData.getPlayerUpgrade(uuid, "replanter_fortune");
+        inventory.setItem(15, helper.getItem(new ItemStack(replanterFortune.displayItem), replanterFortune.displayName, "§eFortune fonctionne sur les plantes sans", "§eavoir à enchanté ton outil",
+                "",
+                playerReplanterFortuneLevel
+                        == 0 ? "§ePrix: §6" + (playerReplanterFortuneLevel + 1) * replanterFortune.costFactor : playerReplanterFortuneLevel
+                        == 1 ? "§ePrix: §6" + (playerReplanterFortuneLevel + 1) * replanterFortune.costFactor : playerReplanterFortuneLevel
+                        == 2 ? "§ePrix: §6" + (playerReplanterFortuneLevel + 1) * replanterFortune.costFactor : "§ePrix: §6Acquit", "§eRequiert: §6Replanteur"));
+
+        inventory.setItem(31, helper.getItem(new ItemStack(wideTill.displayItem), wideTill.displayName, "§eBêche une zone §63x3",
                 "",
                 survivalData.getPlayerUpgrade(uuid, "wide_till")
-                        > 0 ? "§ePrix: §6Acquit" : "§ePrix: §6" + wideTilleCost));
+                        > 0 ? "§ePrix: §6Acquit" : "§ePrix: §6" + wideTill.costFactor));
 
         inventory.setItem(49, helper.getHead(p, "§eJetons: §6" + survivalData.getPlayerTokens(p.getUniqueId())));
 

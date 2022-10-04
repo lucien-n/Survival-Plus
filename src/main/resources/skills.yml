@@ -149,55 +149,55 @@ upgrades:
     cost_factor: 1.0
     max_level: 1
     display_item: STRIPPED_OAK_LOG
-    display_name: "Recorceur"
+    display_name: "§6§lRecorceur"
   logvity:
     cost: 2
     cost_factor: 1.5
     max_level: 3
     display_item: BEACON
-    display_name: "Tronvité"
+    display_name: "§6§lTronvité"
   # Farming
   replanter:
     cost: 2
     cost_factor: 1.0
     max_level: 1
     display_item: PISTON
-    display_name: "Replanteur"
+    display_name: "§6§lReplanteur"
   replanter_fortune:
     cost: 2
     cost_factor: 1.5
     max_level: 3
     display_item: STICKY_PISTON
-    display_name: "Fortune du Replanteur"
+    display_name: "§6§lFortune du Replanteur"
   wide_till:
     cost: 2
     cost_factor: 1.0
     max_level: 1
     display_item: DIAMOND_HOE
-    display_name: "Large Bêche"
+    display_name: "§6§lLarge Bêche"
   # Mining
   auto_smelt:
     cost: 1
     cost_factor: 1.0
     max_level: 1
     display_item: FURNACE
-    display_name: "Cuissont Auto"
+    display_name: "§6§lCuissont Auto"
   vein_mine:
     cost: 2
     cost_factor: 1.0
     max_level: 1
     display_item: TNT
-    display_name: "Mineur de Veine"
+    display_name: "§6§lMineur de Veine"
   magnet:
     cost: 3
     cost_factor: 1.5
     max_level: 3
     display_item: ENDER_EYE
-    display_name: "Aimant"
-  # Combat
+    display_name: "§6§lAimant"
+  # Death
   cat_life:
     cost: 2
     cost_factor: 1.0
     max_level: 1
     display_item: GOLDEN_APPLE
-    display_name: "Vie de Chat"
+    display_name: "§6§lVie de Chat"

@@ -1,6 +1,7 @@
 package me.scaffus.survivalplus.menus.skills;
 
 import me.scaffus.survivalplus.Helper;
+import me.scaffus.survivalplus.SkillsConfig;
 import me.scaffus.survivalplus.SurvivalData;
 import me.scaffus.survivalplus.SurvivalPlus;
 import me.scaffus.survivalplus.menus.SkillsMenu;
@@ -14,16 +15,18 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 public class DeathSkillMenu implements Listener {
-    private SurvivalPlus plugin;
-    private SurvivalData playersData;
-    private Helper helper;
-    private SkillsMenu skillsMenu;
-    private String inventoryName = "§6§lMort";
+    private final SurvivalPlus plugin;
+    private final SurvivalData playersData;
+    private final Helper helper;
+    private final SkillsConfig skillsConfig;
+    private final SkillsMenu skillsMenu;
+    private final String inventoryName = "§6§lMort";
 
     public DeathSkillMenu(SurvivalPlus plugin, SkillsMenu skillsMenu) {
         this.plugin = plugin;
         this.playersData = plugin.survivalData;
         this.helper = plugin.helper;
+        this.skillsConfig = plugin.skillsConfig;
         this.skillsMenu = skillsMenu;
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
@@ -43,6 +46,7 @@ public class DeathSkillMenu implements Listener {
     public Inventory createMenu(Player p) {
         ItemStack backgroundItem = helper.getItem(new ItemStack(Material.GRAY_STAINED_GLASS_PANE), "", "");
         Inventory inventory = helper.createInventoryWithBackground(p, inventoryName, 54, backgroundItem, true);
+
 
         inventory.setItem(49, helper.getHead(p, "§eJetons: §6" + playersData.getPlayerTokens(p.getUniqueId())));
 

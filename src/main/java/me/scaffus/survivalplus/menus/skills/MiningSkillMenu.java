@@ -5,6 +5,7 @@ import me.scaffus.survivalplus.SurvivalData;
 import me.scaffus.survivalplus.SkillsConfig;
 import me.scaffus.survivalplus.SurvivalPlus;
 import me.scaffus.survivalplus.menus.SkillsMenu;
+import me.scaffus.survivalplus.objects.PlayerUpgrade;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -73,12 +74,16 @@ public class MiningSkillMenu implements Listener {
         ItemStack backgroundItem = helper.getItem(new ItemStack(Material.GRAY_STAINED_GLASS_PANE), "", "");
         Inventory inventory = helper.createInventoryWithBackground(p, inventoryName, 54, backgroundItem, true);
 
-        inventory.setItem(11, helper.getItem(new ItemStack(Material.FURNACE), "§6§lCuisson Auto", "§eCuit ton minerais quand tu le casses", "", survivalData.getPlayerUpgrade(uuid, "auto_smelt") > 0 ? "§ePrix: §6Acquit" : "§ePrix: §6" + autoSmeltCost, survivalData.getPlayerUpgrade(uuid, "vein_mine") > 0 ? "§cMineur de Veines sera perdue" : "§cNe fonctionne pas avec Mineur de Veines"));
+        PlayerUpgrade autoSmelt = survivalData.getUpgrade("auto_smelt");
+        PlayerUpgrade veinMiner = survivalData.getUpgrade("vein_mine");
+        PlayerUpgrade magnet = survivalData.getUpgrade("magnet");
 
-        inventory.setItem(15, helper.getItem(new ItemStack(Material.TNT), "§6§lMineur De Veines", "§eMine tous les blocs du même type autour du", "§e bloc casser dans une zone de 3x3x3", "", survivalData.getPlayerUpgrade(uuid, "vein_mine") > 0 ? "§ePrix: §6Acquit" : "§ePrix: §6" + veinMineCost, survivalData.getPlayerUpgrade(uuid, "auto_smelt") > 0 ? "§cCuissont Auto sera perdue" : "§cNe fonctionne pas avec Cuissont Auto"));
+        inventory.setItem(11, helper.getItem(new ItemStack(autoSmelt.displayItem), veinMiner.displayName, "§eCuit ton minerais quand tu le casses", "", survivalData.getPlayerUpgrade(uuid, "auto_smelt") > 0 ? "§ePrix: §6Acquit" : "§ePrix: §6" + autoSmeltCost, survivalData.getPlayerUpgrade(uuid, "vein_mine") > 0 ? "§cMineur de Veines sera perdue" : "§cNe fonctionne pas avec Mineur de Veines"));
+
+        inventory.setItem(15, helper.getItem(new ItemStack(veinMiner.displayItem), veinMiner.displayName, "§eMine tous les blocs du même type autour du", "§e bloc casser dans une zone de 3x3x3", "", survivalData.getPlayerUpgrade(uuid, "vein_mine") > 0 ? "§ePrix: §6Acquit" : "§ePrix: §6" + veinMineCost, survivalData.getPlayerUpgrade(uuid, "auto_smelt") > 0 ? "§cCuissont Auto sera perdue" : "§cNe fonctionne pas avec Cuissont Auto"));
 
         Integer playerMagnetUpgradeLevel = survivalData.getPlayerUpgrade(uuid, "magnet");
-        inventory.setItem(31, helper.getItem(new ItemStack(Material.ENDER_EYE), "§6§lAimant", "§eTéléporte les items à tes pieds dans un rayon autour de toi", "§eLe rayon augment à chaque niveau", "", "§eNiveau: §6" + playerMagnetUpgradeLevel, playerMagnetUpgradeLevel > 0 ? "§eRayon: §6" + magnetRanges.get(playerMagnetUpgradeLevel - 1) : "", playerMagnetUpgradeLevel
+        inventory.setItem(31, helper.getItem(new ItemStack(magnet.displayItem), magnet.displayName, "§eTéléporte les items à tes pieds dans un rayon autour de toi", "§eLe rayon augment à chaque niveau", "", "§eNiveau: §6" + playerMagnetUpgradeLevel, playerMagnetUpgradeLevel > 0 ? "§eRayon: §6" + magnetRanges.get(playerMagnetUpgradeLevel - 1) : "", playerMagnetUpgradeLevel
                 == 0 ? "§ePrix: §6" + (playerMagnetUpgradeLevel + 1) * magnetCost : playerMagnetUpgradeLevel
                 == 1 ? "§ePrix: §6" + (playerMagnetUpgradeLevel + 1) * magnetCost : playerMagnetUpgradeLevel
                 == 2 ? "§ePrix: §6" + (playerMagnetUpgradeLevel + 1) * magnetCost : "§ePrix: §6Acquit"));
