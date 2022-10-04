@@ -1,2 +1,2 @@
 # SurvivalPlus
-SurvivalPlus is a plugin for my minecraft server
+SurvivalPlus is a plugin for my a minecraft server
