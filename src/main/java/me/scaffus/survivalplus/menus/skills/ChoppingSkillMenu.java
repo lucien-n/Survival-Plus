@@ -65,7 +65,7 @@ public class ChoppingSkillMenu implements Listener {
                 survivalData.getPlayerUpgrade(uuid, "destrip") > 0 ? "§ePrix: §6Acquit" : "§ePrix: §6" + destrip.cost));
 
         Integer playerLogvityUpgradeLevel = survivalData.getPlayerUpgrade(uuid, "logvity");
-        inventory.setItem(15, helper.getItem(new ItemStack(logvity.displayItem), logvity.displayName, "§eLe tronc est \"soumis\" à la \"gravité\"", "§eCasser une bûche casse les autres bûches", "§eau dessus. Augmente à chaque niveaux",
+        inventory.setItem(15, helper.getItem(new ItemStack(logvity.displayItem), logvity.displayName, "§eLe tronc est \"soumis\" à la \"gravité\"", "§eCasser une bûche casse les autres bûches", "§eau dessus. Augmente à chaque niveaux.", "§eLes bûches cassées par cette amélioration", "§ene donnent que 70% de leur xp",
                 "",
                 "§eNiveau: §6" + playerLogvityUpgradeLevel, playerLogvityUpgradeLevel > 0 ?
                 "§eColonne: §6" + logvityRanges.get(playerLogvityUpgradeLevel - 1) :

@@ -26,9 +26,9 @@ mining:
     - STONE_PICKAXE
     - WOODEN_PICKAXE
   magnet_ranges:
-    - 1.0
+    - 1.8
     - 2.5
-    - 3.5
+    - 3.8
 
 combat:
   mobs:
@@ -95,13 +95,13 @@ farming:
 
 chopping:
   logs:
-    OAK_LOG: 3.5
-    BIRCH_LOG: 3.5
-    SPRUCE_LOG: 2.5
-    JUNGLE_LOG: 2.5
-    ACACIA_LOG: 4.5
-    DARK_OAK_LOG: 2.8
-    MANGROVE_LOG: 3.0
+    OAK_LOG: 3.0
+    BIRCH_LOG: 3.0
+    SPRUCE_LOG: 2.0
+    JUNGLE_LOG: 2.0
+    ACACIA_LOG: 4.0
+    DARK_OAK_LOG: 2.2
+    MANGROVE_LOG: 3.4
   destrippables:
     - STRIPPED_OAK_LOG
     - STRIPPED_BIRCH_LOG

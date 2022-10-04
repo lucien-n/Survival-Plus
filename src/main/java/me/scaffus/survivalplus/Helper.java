@@ -14,12 +14,13 @@ import org.bukkit.inventory.meta.SkullMeta;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class Helper {
-    private SurvivalData survivalData;
-
+    public NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.FRENCH);
     public void removeAmountOfItemFromInventory(Inventory inventory, Material material, int amount) {
         if (amount <= 0) return;
         int size = inventory.getSize();
@@ -107,6 +108,7 @@ public class Helper {
     public void applyDamage(ItemStack item, Integer damageToDeal) {
         ItemMeta meta = item.getItemMeta();
         Damageable damageable = (Damageable) meta;
+        if (damageable == null) return;
         damageable.setDamage(damageable.getDamage() - damageToDeal);
         item.setItemMeta(meta);
     }

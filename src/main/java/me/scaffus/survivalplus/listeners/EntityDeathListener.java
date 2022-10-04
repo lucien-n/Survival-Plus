@@ -15,12 +15,12 @@ import java.util.Map;
 import java.util.Set;
 
 public class EntityDeathListener implements Listener {
-    private SurvivalPlus plugin;
-    private SurvivalData survivalData;
-    private SkillsConfig skillsConfig;
-    private Helper helper;
-    private Set<String> mobs;
-    private Map points;
+    private final SurvivalPlus plugin;
+    private final SurvivalData survivalData;
+    private final SkillsConfig skillsConfig;
+    private final Helper helper;
+    private final Set<String> mobs;
+    private final Map points;
 
     public EntityDeathListener(SurvivalPlus plugin) {
         this.plugin = plugin;

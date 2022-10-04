@@ -11,25 +11,8 @@ import java.util.*;
 public class SurvivalData {
     private SurvivalPlus plugin;
     private DatabaseGetterSetter data;
+    private Helper helper;
     private SkillsConfig skillsConfig;
-
-    public HashMap<UUID, Double> playerSkillPointsFarming = new HashMap<>();
-    public HashMap<UUID, Double> playerSkillPointsMining = new HashMap<>();
-    public HashMap<UUID, Double> playerSkillPointsCombat = new HashMap<>();
-    public HashMap<UUID, Double> playerSkillPointsRunning = new HashMap<>();
-    public HashMap<UUID, Double> playerSkillPointsDeath = new HashMap<>();
-    public HashMap<UUID, Double> playerSkillPointsChopping = new HashMap<>();
-    public HashMap<UUID, Double> playerSkillPointsSwimming = new HashMap<>();
-    public HashMap<UUID, Double> playerSkillPointsFlying = new HashMap<>();
-
-    public HashMap<UUID, Integer> playerSkillLevelFarming = new HashMap<>();
-    public HashMap<UUID, Integer> playerSkillLevelMining = new HashMap<>();
-    public HashMap<UUID, Integer> playerSkillLevelCombat = new HashMap<>();
-    public HashMap<UUID, Integer> playerSkillLevelRunning = new HashMap<>();
-    public HashMap<UUID, Integer> playerSkillLevelDeath = new HashMap<>();
-    public HashMap<UUID, Integer> playerSkillLevelArchery = new HashMap<>();
-    public HashMap<UUID, Integer> playerSkillLevelSwimming = new HashMap<>();
-    public HashMap<UUID, Integer> playerSkillLevelFlying = new HashMap<>();
 
     public List<String> skills = Arrays.asList("farming", "mining", "combat", "running", "death", "chopping", "swimming", "flying");
     public HashMap<UUID, HashMap<String, Integer>> playersLevels = new HashMap<UUID, HashMap<String, Integer>>();
@@ -46,6 +29,7 @@ public class SurvivalData {
     public SurvivalData(SurvivalPlus plugin) {
         this.plugin = plugin;
         this.data = plugin.data;
+        this.helper = plugin.helper;
         this.skillsConfig = plugin.skillsConfig;
         this.upgradeBought = plugin.getConfig().getString("skills.upgrade_bought");
         createUpgrades();
@@ -96,7 +80,7 @@ public class SurvivalData {
     public void loadPlayerPoints(UUID uuid) {
         HashMap<String, Double> pointsMap = new HashMap<>();
         for (String skill : skills) {
-            pointsMap.put(skill, data.getPlayerSkillPoints(uuid, skill));
+            pointsMap.put(skill, helper.round(data.getPlayerSkillPoints(uuid, skill), 2));
         }
         playersPoints.put(uuid, pointsMap);
     }
@@ -113,7 +97,7 @@ public class SurvivalData {
         HashMap<String, Double> playerPoints = playersPoints.get(uuid);
         for (String skill : skills) {
             if (playerPoints.get(skill) != 0) {
-                data.setPlayerSkillPoints(uuid, skill, playerPoints.get(skill));
+                data.setPlayerSkillPoints(uuid, skill, helper.round(playerPoints.get(skill), 2));
             }
         }
     }
@@ -183,7 +167,7 @@ public class SurvivalData {
     }
 
     public Double getPlayerSkillPoints(UUID uuid, String skill) {
-        return playersPoints.get(uuid).get(skill);
+        return helper.round(playersPoints.get(uuid).get(skill), 2);
     }
 
     public void setPlayerSkillPoints(UUID uuid, String skill, Double amount) {
@@ -191,8 +175,7 @@ public class SurvivalData {
     }
 
     public void incrementPlayerSkillPoints(UUID uuid, String skill, Double amount) {
-        Double points = getPlayerSkillPoints(uuid, skill);
-        playersPoints.get(uuid).put(skill, points + amount);
+        playersPoints.get(uuid).put(skill, playersPoints.get(uuid).get(skill) + amount);
     }
 
     public Integer getPlayerSkillLevel(UUID uuid, String skill) {
@@ -204,7 +187,6 @@ public class SurvivalData {
     }
 
     public void incrementPlayerSkillLevel(UUID uuid, String skill, Integer amount) {
-        Integer levels = getPlayerSkillLevel(uuid, skill);
-        playersLevels.get(uuid).put(skill, levels + amount);
+        playersLevels.get(uuid).put(skill, playersLevels.get(uuid).get(skill) + amount);
     }
 }

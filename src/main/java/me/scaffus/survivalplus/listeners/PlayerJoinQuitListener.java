@@ -3,6 +3,7 @@ package me.scaffus.survivalplus.listeners;
 import me.scaffus.survivalplus.SurvivalData;
 import me.scaffus.survivalplus.SurvivalPlus;
 import me.scaffus.survivalplus.sql.DatabaseGetterSetter;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -24,6 +25,7 @@ public class PlayerJoinQuitListener implements Listener {
         Player p = event.getPlayer();
         data.createPlayer(p);
         survivalData.loadPlayerData(p);
+        p.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20 + (survivalData.getPlayerUpgrade(p.getUniqueId(), "cat_life") * 2));
         event.setJoinMessage("§6§l" + p.getDisplayName() + "§e a rejoint.");
     }
 

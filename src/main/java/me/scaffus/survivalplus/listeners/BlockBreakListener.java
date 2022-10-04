@@ -108,7 +108,7 @@ public class BlockBreakListener implements Listener {
         Block block = event.getBlock();
         ItemStack itemInMainHand = p.getInventory().getItem(p.getInventory().getHeldItemSlot());
 
-        // MINING
+        // ? MINING
         if (miningOres.contains(block.getType().toString()) && miningTools.contains(p.getInventory().getItemInMainHand().getType().toString())) {
             // Points
             Double pointsGained = helper.round((Double) miningOrePoints.get(block.getType().toString()), 2);
@@ -118,7 +118,7 @@ public class BlockBreakListener implements Listener {
             // Levels
             handlePlayerSkillLevel(p, "mining");
 
-            // Autosmelt
+            // * Autosmelt
             if (survivalData.getPlayerUpgrade(uuid, "auto_smelt") > 0) {
                 Material resultItem = Material.AIR;
                 switch (block.getType()) {
@@ -140,7 +140,7 @@ public class BlockBreakListener implements Listener {
                 return;
             }
 
-            // ? Vein Mine
+            // * Vein Mine
             if (survivalData.getPlayerUpgrade(uuid, "vein_mine") > 0) {
                 int range = 4;
                 if (miningOres.contains(block.getType().toString())) {
@@ -163,27 +163,28 @@ public class BlockBreakListener implements Listener {
                         if (veinMinedBlock.getType() == block.getType()) {
                             veinMinedBlock.breakNaturally(p.getItemInUse());
                         }
+                        survivalData.incrementPlayerSkillPoints(uuid, "mining", pointsGained * 0.7);
                     }
                 }
             }
             return;
         }
 
-        // FARMING
-        if (itemInMainHand != null && farmingTools.contains(itemInMainHand.getType().toString()) && farmingCrops.contains(block.getType().toString())) {
+        // ? FARMING
+        if (farmingCrops.contains(block.getType().toString())) {
             Ageable ageable = (Ageable) block.getBlockData();
             if (ageable.getAge() != ageable.getMaximumAge()) return;
 
             // Points
             Double pointsGained = helper.round((Double) farmingCropsPoints.getOrDefault(block.getType().toString(), 0.0), 2);
-            survivalData.incrementPlayerSkillPoints(p.getUniqueId(), "chopping", pointsGained);
+            survivalData.incrementPlayerSkillPoints(p.getUniqueId(), "farming", pointsGained);
             helper.sendActionBar(p, skillsGainedXpMessage.replace("%amount%", String.valueOf(pointsGained)).replace("%skill%", "agriculture"));
 
             // Levels
             handlePlayerSkillLevel(p, "chopping");
 
-            // Replant
-            if (survivalData.getPlayerUpgrade(uuid, "replanter") > 0 && farmingReplantableCrops.contains(block.getType().toString())) {
+            // * Replant
+            if (p.getInventory().getItemInMainHand() != null && farmingTools.contains(p.getInventory().getItemInMainHand().getType().toString()) && survivalData.getPlayerUpgrade(uuid, "replanter") > 0 && farmingReplantableCrops.contains(block.getType().toString())) {
                 event.setCancelled(true);
                 Material blockType = block.getType();
 
@@ -210,7 +211,7 @@ public class BlockBreakListener implements Listener {
             return;
         }
 
-        // CHOPPING
+        // ? CHOPPING
         if (choppingLogs.contains(block.getType().toString())) {
             // Points
             Double pointsGained = helper.round((Double) choppingLogsPoints.getOrDefault(block.getType().toString(), 0.0), 2);
@@ -220,14 +221,17 @@ public class BlockBreakListener implements Listener {
             // Levels
             handlePlayerSkillLevel(p, "chopping");
 
-            // ? LOGVITY
+            // * LOGVITY
             Integer playerLogvityUpgradeLevel = survivalData.getPlayerUpgrade(uuid, "logvity");
+            ItemStack tool = p.getInventory().getItemInMainHand();
             if (playerLogvityUpgradeLevel > 0) {
                 for (int y = 1; y <= choppingLogvityRange.get(playerLogvityUpgradeLevel - 1); y++) {
                     Block toChopp = block.getWorld().getBlockAt(block.getX(), block.getY() + y, block.getZ());
                     if (toChopp.getType() != block.getType()) return;
-                    toChopp.breakNaturally(p.getInventory().getItemInMainHand());
-                    helper.applyDamage(p.getInventory().getItemInMainHand(), -1);
+                    toChopp.breakNaturally(tool);
+                    helper.applyDamage(tool, -1);
+                    // 70% of gained points to avoid logvity being to op
+                    survivalData.incrementPlayerSkillPoints(uuid, "chopping", pointsGained * 0.7);
                 }
             }
         }
