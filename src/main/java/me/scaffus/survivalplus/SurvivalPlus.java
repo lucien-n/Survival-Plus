@@ -14,24 +14,22 @@ import java.util.logging.Logger;
 
 public final class SurvivalPlus extends JavaPlugin {
 
-    public static SurvivalPlus INSTANCE;
     private final DatabaseManager databaseManager = new DatabaseManager(this);
     public DatabaseGetterSetter data;
     public SkillsConfig skillsConfig = new SkillsConfig();
-    public Helper helper = new Helper();
+    public Helper helper = new Helper(this);
     public SurvivalData survivalData;
     private MagnetTask magnetTask;
     @Override
     public void onEnable() {
-        INSTANCE = this;
-        this.data = new DatabaseGetterSetter(databaseManager.playerConnection.getConnection());
+        this.data = new DatabaseGetterSetter(databaseManager.playerConnection.getConnection(), this);
 
         saveDefaultConfig();
         skillsConfig.setup();
         skillsConfig.get().options().copyDefaults(true);
         skillsConfig.save();
 
-        this.survivalData = new SurvivalData(this);
+        survivalData = new SurvivalData(this);
 
         getServer().getPluginManager().registerEvents(new PlayerJoinQuitListener(this), this);
         getServer().getPluginManager().registerEvents(new BlockBreakListener(this), this);
@@ -40,6 +38,7 @@ public final class SurvivalPlus extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerInteractListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerDeathListener(this), this);
         getServer().getPluginManager().registerEvents(new EntityDamageListener(this), this);
+        getServer().getPluginManager().registerEvents(new PlayerMoveListener(this), this);
 
         new BankCommand(this);
         new SkillCommand(this);

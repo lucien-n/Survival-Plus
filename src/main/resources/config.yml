@@ -21,4 +21,9 @@ skills:
   passed_level: "§eTu es passé niveau §6§l%level%§e"
   not_enough_tokens: "§eTu n'as pas assé de §6§njetons"
   upgrade_bought: "§eTu as acheté §6§l%upgrade%§e pour §6§n%cost%§e jeton(s)"
+
+menus:
+  back_item: SPECTRAL_ARROW
+  close_item: BARRIER
+  background_item: GRAY_STAINED_GLASS_PANE
 # -2023974026108394531

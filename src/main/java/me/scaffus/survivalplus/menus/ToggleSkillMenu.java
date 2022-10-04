@@ -47,7 +47,7 @@ public class ToggleSkillMenu implements Listener {
     public Inventory createMenu(Player p) {
         UUID uuid = p.getUniqueId();
         ItemStack backgroundItem = helper.getItem(new ItemStack(Material.AIR), "", "");
-        Inventory inventory = helper.createInventoryWithBackground(p, inventoryName, 27, backgroundItem, true);
+        Inventory inventory = helper.createInventoryWithBackground(p, inventoryName, 27, true);
 
         HashMap<String, Integer> playerUpgrades = survivalData.playersUpgrades.get(uuid);
 

@@ -95,8 +95,7 @@ public class BankMenu implements Listener {
 
 
     public Inventory createBankMenu(Player p) {
-        ItemStack backgroundItem = helper.getItem(new ItemStack(Material.GRAY_STAINED_GLASS_PANE), "", "");
-        Inventory inventory = helper.createInventoryWithBackground(p, bankInventoryName, 27, backgroundItem, false);
+        Inventory inventory = helper.createInventoryWithBackground(p, bankInventoryName, 27, false);
 
         inventory.setItem(11, helper.getItem(
                 new ItemStack(Material.YELLOW_STAINED_GLASS_PANE), "§6§lRécupérer", "§eRécupérer une somme de ton compte."
@@ -116,7 +115,7 @@ public class BankMenu implements Listener {
     public Inventory createAmountMenu(Player p) {
         amount = 0;
         ItemStack backgroundItem = helper.getItem(new ItemStack(Material.GRAY_STAINED_GLASS_PANE), "", "");
-        Inventory inventory = helper.createInventoryWithBackground(p, amountInventoryName, 27, backgroundItem, true);
+        Inventory inventory = helper.createInventoryWithBackground(p, amountInventoryName, 27, true);
 
         inventory.setItem(4, helper.getItem(new ItemStack(Material.GOLD_BLOCK), "§6§lMontant", "§e0"));
 

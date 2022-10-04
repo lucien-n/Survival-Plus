@@ -78,7 +78,7 @@ public class SkillsMenu implements Listener {
 
     public Inventory createSkillMenu(Player p) {
         ItemStack backgroundItem = helper.getItem(new ItemStack(Material.GRAY_STAINED_GLASS_PANE), "", "");
-        Inventory inventory = helper.createInventoryWithBackground(p, skillInventoryName, 54, backgroundItem, false);
+        Inventory inventory = helper.createInventoryWithBackground(p, skillInventoryName, 54, false);
 
         inventory.setItem(10, helper.getItem(
                 new ItemStack(Material.GOLDEN_HOE), "§6§lAgriculture", "§eXp: §6" +

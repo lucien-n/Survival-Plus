@@ -21,6 +21,19 @@ import java.util.Locale;
 
 public class Helper {
     public NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.FRENCH);
+    private final SurvivalPlus plugin;
+    private final Material menuBackItem;
+    private final Material menuBackgroundItem;
+    private final Material menuCloseItem;
+
+
+    public Helper(SurvivalPlus plugin) {
+        this.plugin = plugin;
+        menuBackItem = Material.getMaterial((String) plugin.getConfig().get("menus.back_item"));
+        menuBackgroundItem = Material.getMaterial((String) plugin.getConfig().get("menus.background_item"));
+        menuCloseItem = Material.getMaterial((String) plugin.getConfig().get("menus.close_item"));
+    }
+
     public void removeAmountOfItemFromInventory(Inventory inventory, Material material, int amount) {
         if (amount <= 0) return;
         int size = inventory.getSize();
@@ -66,13 +79,14 @@ public class Helper {
         return item;
     }
 
-    public Inventory createInventoryWithBackground(Player p, String inventoryName, int inventorySize, ItemStack backgroundItem, Boolean backButton) {
+    public Inventory createInventoryWithBackground(Player p, String inventoryName, int inventorySize, Boolean backButton) {
         Inventory inventory = Bukkit.createInventory(p, inventorySize, inventoryName);
+        ItemStack backgroundItem = getItem(new ItemStack(menuBackgroundItem), " ");
         for (int i = 0; i < inventorySize; i++) {
             inventory.setItem(i, backgroundItem);
         }
-        if (backButton) inventory.setItem(inventorySize - 9, getItem(new ItemStack(Material.ARROW), "§fRetour", ""));
-        inventory.setItem(inventorySize - 1, getItem(new ItemStack(Material.BARRIER), "§cFermer", ""));
+        if (backButton) inventory.setItem(inventorySize - 9, getItem(new ItemStack(menuBackItem), "§7§l§oRetour"));
+        inventory.setItem(inventorySize - 1, getItem(new ItemStack(menuCloseItem), "§c§lFermer"));
         return inventory;
     }
 

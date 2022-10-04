@@ -123,6 +123,9 @@ chopping:
     - 5
     - 10
 
+running:
+  xp: 0.2
+
 points_for_level:
   - 500
   - 1500

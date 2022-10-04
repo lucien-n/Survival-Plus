@@ -42,7 +42,7 @@ public class SwimmingSkillMenu implements Listener {
 
     public Inventory createMenu(Player p) {
         ItemStack backgroundItem = helper.getItem(new ItemStack(Material.GRAY_STAINED_GLASS_PANE), "", "");
-        Inventory inventory = helper.createInventoryWithBackground(p, inventoryName, 54, backgroundItem, true);
+        Inventory inventory = helper.createInventoryWithBackground(p, inventoryName, 54, true);
 
         inventory.setItem(49, helper.getHead(p, "§eJetons: §6" + survivalData.getPlayerTokens(p.getUniqueId())));
 

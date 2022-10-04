@@ -1,6 +1,7 @@
 package me.scaffus.survivalplus.sql;
 
 import me.scaffus.survivalplus.Helper;
+import me.scaffus.survivalplus.SurvivalPlus;
 import org.bukkit.entity.Player;
 
 import java.sql.Connection;
@@ -11,10 +12,13 @@ import java.util.UUID;
 
 public class DatabaseGetterSetter {
     private Connection connection;
-    private Helper helper = new Helper();
+    private SurvivalPlus plugin;
+    private Helper helper;
 
-    public DatabaseGetterSetter(Connection connection) {
+    public DatabaseGetterSetter(Connection connection, SurvivalPlus plugin) {
         this.connection = connection;
+        this.plugin = plugin;
+        this.helper = plugin.helper;
     }
 
     private PreparedStatement ps(String statement) {

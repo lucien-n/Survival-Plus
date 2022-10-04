@@ -23,5 +23,6 @@ public class PlayerDeathListener implements Listener {
         Player p = event.getEntity();
         UUID uuid = p.getUniqueId();
 
+        survivalData.incrementPlayerSkillPoints(p.getUniqueId(), "death", 200.0);
     }
 }

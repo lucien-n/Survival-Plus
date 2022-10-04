@@ -59,7 +59,7 @@ public class DeathSkillMenu implements Listener {
     public Inventory createMenu(Player p) {
         UUID uuid = p.getUniqueId();
         ItemStack backgroundItem = helper.getItem(new ItemStack(Material.GRAY_STAINED_GLASS_PANE), "", "");
-        Inventory inventory = helper.createInventoryWithBackground(p, inventoryName, 54, backgroundItem, true);
+        Inventory inventory = helper.createInventoryWithBackground(p, inventoryName, 54, true);
 
         PlayerUpgrade catLife = survivalData.getUpgrade("cat_life");
         PlayerUpgrade limitedImmortality = survivalData.getUpgrade("limited_immortality");
