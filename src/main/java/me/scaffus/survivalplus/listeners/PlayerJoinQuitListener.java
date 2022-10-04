@@ -1,6 +1,6 @@
-package me.scaffus.survivalplus.EventListeners;
+package me.scaffus.survivalplus.listeners;
 
-import me.scaffus.survivalplus.PlayersData;
+import me.scaffus.survivalplus.SurvivalData;
 import me.scaffus.survivalplus.SurvivalPlus;
 import me.scaffus.survivalplus.sql.DatabaseGetterSetter;
 import org.bukkit.entity.Player;
@@ -12,12 +12,11 @@ import org.bukkit.event.player.PlayerQuitEvent;
 public class PlayerJoinQuitListener implements Listener {
     private SurvivalPlus plugin;
     private DatabaseGetterSetter data;
-    private PlayersData playersData;
-
+    private SurvivalData playersData;
     public PlayerJoinQuitListener(SurvivalPlus plugin) {
         this.plugin = plugin;
         this.data = plugin.data;
-        this.playersData = plugin.pData;
+        this.playersData = plugin.survivalData;
     }
 
     @EventHandler

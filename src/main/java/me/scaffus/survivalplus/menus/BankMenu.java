@@ -1,7 +1,7 @@
 package me.scaffus.survivalplus.menus;
 
 import me.scaffus.survivalplus.Helper;
-import me.scaffus.survivalplus.PlayersData;
+import me.scaffus.survivalplus.SurvivalData;
 import me.scaffus.survivalplus.SurvivalPlus;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -14,7 +14,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class BankMenu implements Listener {
     private final SurvivalPlus plugin;
-    private final PlayersData playersData;
+    private final SurvivalData playersData;
     private final Helper helper;
     private final String bankInventoryName = "§lBanque";
     private final String amountInventoryName = "§6§lMontant";
@@ -23,7 +23,7 @@ public class BankMenu implements Listener {
 
     public BankMenu(SurvivalPlus plugin) {
         this.plugin = plugin;
-        this.playersData = plugin.pData;
+        this.playersData = plugin.survivalData;
         this.helper = plugin.helper;
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }

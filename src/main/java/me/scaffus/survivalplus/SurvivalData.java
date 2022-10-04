@@ -1,13 +1,14 @@
 package me.scaffus.survivalplus;
 
+import me.scaffus.survivalplus.objects.PlayerUpgrade;
 import me.scaffus.survivalplus.sql.DatabaseGetterSetter;
+import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
-public class PlayersData {
+public class SurvivalData {
     private SurvivalPlus plugin;
     private DatabaseGetterSetter data;
     private SkillsConfig skillsConfig;
@@ -17,7 +18,7 @@ public class PlayersData {
     public HashMap<UUID, Double> playerSkillPointsCombat = new HashMap<>();
     public HashMap<UUID, Double> playerSkillPointsRunning = new HashMap<>();
     public HashMap<UUID, Double> playerSkillPointsDeath = new HashMap<>();
-    public HashMap<UUID, Double> playerSkillPointsArchery = new HashMap<>();
+    public HashMap<UUID, Double> playerSkillPointsChopping = new HashMap<>();
     public HashMap<UUID, Double> playerSkillPointsSwimming = new HashMap<>();
     public HashMap<UUID, Double> playerSkillPointsFlying = new HashMap<>();
 
@@ -36,14 +37,14 @@ public class PlayersData {
     public HashMap<UUID, HashMap<String, Integer>> playerUpgrades = new HashMap<>();
 
     public String upgradeBought;
-    public List<String> upgrades;
+    public HashMap<String, PlayerUpgrade> allUpgrades = new HashMap<>();
 
-    public PlayersData(SurvivalPlus plugin) {
+    public SurvivalData(SurvivalPlus plugin) {
         this.plugin = plugin;
         this.data = plugin.data;
         this.skillsConfig = plugin.skillsConfig;
         this.upgradeBought = plugin.getConfig().getString("skills.upgrade_bought");
-        upgrades = (List<String>) skillsConfig.get().get("upgrades");
+        createUpgrades();
     }
 
     public void loadPlayerData(Player p) {
@@ -54,7 +55,7 @@ public class PlayersData {
         playerSkillPointsCombat.put(uuid, data.getPlayerSkillPoints(uuid, "combat"));
         playerSkillPointsRunning.put(uuid, data.getPlayerSkillPoints(uuid, "running"));
         playerSkillPointsDeath.put(uuid, data.getPlayerSkillPoints(uuid, "death"));
-        playerSkillPointsArchery.put(uuid, data.getPlayerSkillPoints(uuid, "archery"));
+        playerSkillPointsChopping.put(uuid, data.getPlayerSkillPoints(uuid, "chopping"));
         playerSkillPointsSwimming.put(uuid, data.getPlayerSkillPoints(uuid, "swimming"));
         playerSkillPointsFlying.put(uuid, data.getPlayerSkillPoints(uuid, "flying"));
 
@@ -63,7 +64,7 @@ public class PlayersData {
         playerSkillLevelCombat.put(uuid, data.getPlayerSkillLevel(uuid, "combat"));
         playerSkillLevelRunning.put(uuid, data.getPlayerSkillLevel(uuid, "running"));
         playerSkillLevelDeath.put(uuid, data.getPlayerSkillLevel(uuid, "death"));
-        playerSkillLevelArchery.put(uuid, data.getPlayerSkillLevel(uuid, "archery"));
+        playerSkillLevelArchery.put(uuid, data.getPlayerSkillLevel(uuid, "chopping"));
         playerSkillLevelSwimming.put(uuid, data.getPlayerSkillLevel(uuid, "swimming"));
         playerSkillLevelFlying.put(uuid, data.getPlayerSkillLevel(uuid, "flying"));
 
@@ -86,7 +87,7 @@ public class PlayersData {
         if (playerSkillLevelDeath.get(uuid) != 0)
             data.setPlayerSkillLevel(uuid, "death", playerSkillLevelDeath.get(uuid));
         if (playerSkillLevelArchery.get(uuid) != 0)
-            data.setPlayerSkillLevel(uuid, "archery", playerSkillLevelArchery.get(uuid));
+            data.setPlayerSkillLevel(uuid, "chopping", playerSkillLevelArchery.get(uuid));
         if (playerSkillLevelSwimming.get(uuid) != 0)
             data.setPlayerSkillLevel(uuid, "swimming", playerSkillLevelSwimming.get(uuid));
         if (playerSkillLevelFlying.get(uuid) != 0)
@@ -102,8 +103,8 @@ public class PlayersData {
             data.setPlayerSkillPoints(uuid, "running", playerSkillPointsRunning.get(uuid));
         if (playerSkillPointsDeath.get(uuid) != 0)
             data.setPlayerSkillPoints(uuid, "death", playerSkillPointsDeath.get(uuid));
-        if (playerSkillPointsArchery.get(uuid) != 0)
-            data.setPlayerSkillPoints(uuid, "archery", playerSkillPointsArchery.get(uuid));
+        if (playerSkillPointsChopping.get(uuid) != 0)
+            data.setPlayerSkillPoints(uuid, "chopping", playerSkillPointsChopping.get(uuid));
         if (playerSkillPointsSwimming.get(uuid) != 0)
             data.setPlayerSkillPoints(uuid, "swimming", playerSkillPointsSwimming.get(uuid));
         if (playerSkillPointsFlying.get(uuid) != 0)
@@ -115,9 +116,29 @@ public class PlayersData {
         data.setPlayerBalance(uuid, playerBalance.get(uuid));
     }
 
+    public void createUpgrades() {
+        FileConfiguration config = skillsConfig.get();
+        Set<String> upgradesKeysSet = config.getConfigurationSection("upgrades").getKeys(false);
+        ArrayList<String> upgradeKeysList = new ArrayList<String>(upgradesKeysSet);
+        for (String upgrade : upgradeKeysList) {
+            String name = upgrade;
+            String displayName = (String) config.get("upgrades." + upgrade + ".display_name");
+            String displayItem = (String) config.get("upgrades." + upgrade + ".display_item");
+            Integer maxLevel = (Integer) config.get("upgrades." + upgrade + ".max_level");
+            Integer cost = (Integer) config.get("upgrades." + upgrade + ".cost");
+            Double costFactor = (Double) config.get("upgrades." + upgrade + ".cost_factor");
+            PlayerUpgrade playerUpgrade = new PlayerUpgrade(name, displayName, Material.getMaterial(displayItem), maxLevel, cost, costFactor);
+            allUpgrades.put(upgrade, playerUpgrade);
+        }
+    }
+
+    public PlayerUpgrade getUpgrade(String upgradeName) {
+        return allUpgrades.get(upgradeName);
+    }
+
     public void loadPlayerUpgrades(UUID uuid) {
         HashMap<String, Integer> upgradeMap = new HashMap<>();
-        for (String upgradeName : upgrades) {
+        for (String upgradeName : allUpgrades.keySet()) {
             upgradeMap.put(upgradeName, data.getPlayerUpgrade(uuid, upgradeName));
         }
         playerUpgrades.put(uuid, upgradeMap);
@@ -125,7 +146,7 @@ public class PlayersData {
 
     public void savePlayerUpgrades(UUID uuid) {
         HashMap<String, Integer> upgradeMap = playerUpgrades.get(uuid);
-        for (String upgradeName : upgrades) {
+        for (String upgradeName : allUpgrades.keySet()) {
             data.setPlayerUpgrade(uuid, upgradeName, upgradeMap.get(upgradeName));
         }
     }
@@ -182,8 +203,8 @@ public class PlayersData {
                 return playerSkillPointsRunning.get(uuid);
             case "death":
                 return playerSkillPointsDeath.get(uuid);
-            case "archery":
-                return playerSkillPointsArchery.get(uuid);
+            case "chopping":
+                return playerSkillPointsChopping.get(uuid);
             case "swimming":
                 return playerSkillPointsSwimming.get(uuid);
             case "flying":
@@ -209,8 +230,8 @@ public class PlayersData {
             case "death":
                 playerSkillPointsDeath.put(uuid, amount);
                 break;
-            case "archery":
-                playerSkillPointsArchery.put(uuid, amount);
+            case "chopping":
+                playerSkillPointsChopping.put(uuid, amount);
                 break;
             case "swimming":
                 playerSkillPointsSwimming.put(uuid, amount);
@@ -238,8 +259,8 @@ public class PlayersData {
             case "death":
                 playerSkillPointsDeath.put(uuid, playerSkillPointsDeath.get(uuid) + amount);
                 break;
-            case "archery":
-                playerSkillPointsArchery.put(uuid, playerSkillPointsArchery.get(uuid) + amount);
+            case "chopping":
+                playerSkillPointsChopping.put(uuid, playerSkillPointsChopping.get(uuid) + amount);
                 break;
             case "swimming":
                 playerSkillPointsSwimming.put(uuid, playerSkillPointsSwimming.get(uuid) + amount);
@@ -262,7 +283,7 @@ public class PlayersData {
                 return playerSkillLevelRunning.get(uuid);
             case "death":
                 return playerSkillLevelDeath.get(uuid);
-            case "archery":
+            case "chopping":
                 return playerSkillLevelArchery.get(uuid);
             case "swimming":
                 return playerSkillLevelSwimming.get(uuid);
@@ -289,7 +310,7 @@ public class PlayersData {
             case "death":
                 playerSkillLevelDeath.put(uuid, amount);
                 break;
-            case "archery":
+            case "chopping":
                 playerSkillLevelArchery.put(uuid, amount);
                 break;
             case "swimming":
@@ -318,7 +339,7 @@ public class PlayersData {
             case "death":
                 playerSkillLevelDeath.put(uuid, playerSkillLevelDeath.get(uuid) + amount);
                 break;
-            case "archery":
+            case "chopping":
                 playerSkillLevelArchery.put(uuid, playerSkillLevelArchery.get(uuid) + amount);
                 break;
             case "swimming":

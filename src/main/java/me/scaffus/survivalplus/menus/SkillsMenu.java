@@ -1,9 +1,10 @@
 package me.scaffus.survivalplus.menus;
 
 import me.scaffus.survivalplus.Helper;
-import me.scaffus.survivalplus.PlayersData;
+import me.scaffus.survivalplus.SurvivalData;
 import me.scaffus.survivalplus.SurvivalPlus;
 import me.scaffus.survivalplus.menus.skills.*;
+import me.scaffus.survivalplus.objects.PlayerUpgrade;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -13,9 +14,11 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.UUID;
+
 public class SkillsMenu implements Listener {
     private SurvivalPlus plugin;
-    private PlayersData playersData;
+    private SurvivalData survivalData;
     private Helper helper;
     private String skillInventoryName = "§6§lSkills";
 
@@ -24,13 +27,14 @@ public class SkillsMenu implements Listener {
     private CombatSkillMenu combatSkillMenu;
     private RunningSkillMenu runningSkillMenu;
     private DeathSkillMenu deathSkillMenu;
-    private ArcherySkillMenu archerySkillMenu;
+    private ChoppingSkillMenu choppingSkillMenu;
     private SwimmingSkillMenu swimmingSkillMenu;
     private FlyingSkillMenu flyingSkillMenu;
+//    private ToggleSkillMenu toggleSkillMenu;
 
     public SkillsMenu(SurvivalPlus plugin) {
         this.plugin = plugin;
-        this.playersData = plugin.pData;
+        this.survivalData = plugin.survivalData;
         this.helper = plugin.helper;
 
         this.farmingSkillMenu = new FarmingSkillMenu(plugin, this);
@@ -38,9 +42,11 @@ public class SkillsMenu implements Listener {
         this.combatSkillMenu = new CombatSkillMenu(plugin, this);
         this.runningSkillMenu = new RunningSkillMenu(plugin, this);
         this.deathSkillMenu = new DeathSkillMenu(plugin, this);
-        this.archerySkillMenu = new ArcherySkillMenu(plugin, this);
+        this.choppingSkillMenu = new ChoppingSkillMenu(plugin, this);
         this.swimmingSkillMenu = new SwimmingSkillMenu(plugin, this);
         this.flyingSkillMenu = new FlyingSkillMenu(plugin, this);
+
+//        this.toggleSkillMenu = new ToggleSkillMenu(plugin, this);
 
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
@@ -58,11 +64,12 @@ public class SkillsMenu implements Listener {
             if (slot == 12) p.openInventory(miningSkillMenu.createMenu(p));
             if (slot == 14) p.openInventory(combatSkillMenu.createMenu(p));
             if (slot == 16) p.openInventory(runningSkillMenu.createMenu(p));
-
             if (slot == 28) p.openInventory(deathSkillMenu.createMenu(p));
-            if (slot == 30) p.openInventory(archerySkillMenu.createMenu(p));
+            if (slot == 30) p.openInventory(choppingSkillMenu.createMenu(p));
             if (slot == 32) p.openInventory(swimmingSkillMenu.createMenu(p));
             if (slot == 34) p.openInventory(flyingSkillMenu.createMenu(p));
+
+//            if (slot == 45) p.openInventory(toggleSkillMenu.createMenu(p));
 
             if (slot == event.getInventory().getSize() - 1) p.closeInventory();
         }
@@ -73,33 +80,48 @@ public class SkillsMenu implements Listener {
         Inventory inventory = helper.createInventoryWithBackground(p, skillInventoryName, 54, backgroundItem, false);
 
         inventory.setItem(10, helper.getItem(
-                new ItemStack(Material.GOLDEN_HOE), "§6§lAgriculture", "§eXp: §6" + playersData.getPlayerSkillPoints(p.getUniqueId(), "farming"),
-                "§eNiveau: §6" + playersData.getPlayerSkillLevel(p.getUniqueId(), "farming")));
+                new ItemStack(Material.GOLDEN_HOE), "§6§lAgriculture", "§eXp: §6" + survivalData.getPlayerSkillPoints(p.getUniqueId(), "chopping"),
+                "§eNiveau: §6" + survivalData.getPlayerSkillLevel(p.getUniqueId(), "chopping")));
         inventory.setItem(12, helper.getItem(
-                new ItemStack(Material.DIAMOND_PICKAXE), "§6§lMinage", "§eXp: §6" + playersData.getPlayerSkillPoints(p.getUniqueId(), "mining"),
-                "§eNiveau: §6" + playersData.getPlayerSkillLevel(p.getUniqueId(), "mining")));
+                new ItemStack(Material.DIAMOND_PICKAXE), "§6§lMinage", "§eXp: §6" + survivalData.getPlayerSkillPoints(p.getUniqueId(), "mining"),
+                "§eNiveau: §6" + survivalData.getPlayerSkillLevel(p.getUniqueId(), "mining")));
         inventory.setItem(14, helper.getItem(
-                new ItemStack(Material.NETHERITE_SWORD), "§6§lCombat", "§eXp: §6" + playersData.getPlayerSkillPoints(p.getUniqueId(), "combat"),
-                "§eNiveau: §6" + playersData.getPlayerSkillLevel(p.getUniqueId(), "combat")));
+                new ItemStack(Material.NETHERITE_SWORD), "§6§lCombat", "§eXp: §6" + survivalData.getPlayerSkillPoints(p.getUniqueId(), "combat"),
+                "§eNiveau: §6" + survivalData.getPlayerSkillLevel(p.getUniqueId(), "combat")));
         inventory.setItem(16, helper.getItem(
-                new ItemStack(Material.LEATHER_BOOTS), "§6§lCourse", "§eXp: §6" + playersData.getPlayerSkillPoints(p.getUniqueId(), "running"),
-                "§eNiveau: §6" + playersData.getPlayerSkillLevel(p.getUniqueId(), "running")));
+                new ItemStack(Material.LEATHER_BOOTS), "§6§lCourse", "§eXp: §6" + survivalData.getPlayerSkillPoints(p.getUniqueId(), "running"),
+                "§eNiveau: §6" + survivalData.getPlayerSkillLevel(p.getUniqueId(), "running")));
 
         inventory.setItem(28, helper.getItem(
-                new ItemStack(Material.SKELETON_SKULL), "§6§lMort", "§eXp: §6" + playersData.getPlayerSkillPoints(p.getUniqueId(), "death"),
-                "§eNiveau: §6" + playersData.getPlayerSkillLevel(p.getUniqueId(), "death")));
+                new ItemStack(Material.SKELETON_SKULL), "§6§lMort", "§eXp: §6" + survivalData.getPlayerSkillPoints(p.getUniqueId(), "death"),
+                "§eNiveau: §6" + survivalData.getPlayerSkillLevel(p.getUniqueId(), "death")));
         inventory.setItem(30, helper.getItem(
-                new ItemStack(Material.BOW), "§6§lArcher", "§eXp: §6" + playersData.getPlayerSkillPoints(p.getUniqueId(), "archery"),
-                "§eNiveau: §6" + playersData.getPlayerSkillLevel(p.getUniqueId(), "archery")));
+                new ItemStack(Material.STONE_AXE), "§6§lBûcheronnage", "§eXp: §6" + survivalData.getPlayerSkillPoints(p.getUniqueId(), "chopping"),
+                "§eNiveau: §6" + survivalData.getPlayerSkillLevel(p.getUniqueId(), "chopping")));
         inventory.setItem(32, helper.getItem(
-                new ItemStack(Material.CONDUIT), "§6§lNage", "§eXp: §6" + playersData.getPlayerSkillPoints(p.getUniqueId(), "swimming"),
-                "§eNiveau: §6" + playersData.getPlayerSkillLevel(p.getUniqueId(), "swimming")));
+                new ItemStack(Material.CONDUIT), "§6§lNage", "§eXp: §6" + survivalData.getPlayerSkillPoints(p.getUniqueId(), "swimming"),
+                "§eNiveau: §6" + survivalData.getPlayerSkillLevel(p.getUniqueId(), "swimming")));
         inventory.setItem(34, helper.getItem(
-                new ItemStack(Material.ELYTRA), "§6§lVol", "§eXp: §6" + playersData.getPlayerSkillPoints(p.getUniqueId(), "flying"),
-                "§eNiveau: §6" + playersData.getPlayerSkillLevel(p.getUniqueId(), "flying")));
+                new ItemStack(Material.ELYTRA), "§6§lVol", "§eXp: §6" + survivalData.getPlayerSkillPoints(p.getUniqueId(), "flying"),
+                "§eNiveau: §6" + survivalData.getPlayerSkillLevel(p.getUniqueId(), "flying")));
 
-        inventory.setItem(49, helper.getHead(p, "§eJetons: §6" + playersData.getPlayerTokens(p.getUniqueId())));
+//        inventory.setItem(45, helper.getItem(new ItemStack(Material.REDSTONE_TORCH), "§6§lSkills", "§eActiver/Désactiver un de tes skill"));
+
+        inventory.setItem(49, helper.getHead(p, "§eJetons: §6" + survivalData.getPlayerTokens(p.getUniqueId())));
 
         return inventory;
+    }
+
+    public void buyUpgrade(Player p, PlayerUpgrade upgrade) {
+        UUID uuid = p.getUniqueId();
+        Integer playerUpgradeLevel = survivalData.getPlayerUpgrade(uuid, upgrade.name);
+        Integer cost = (playerUpgradeLevel + 1) * upgrade.cost;
+        if (survivalData.getPlayerTokens(uuid) < cost) return;
+        if (playerUpgradeLevel.equals(upgrade.maxLevel)) return;
+
+        survivalData.setPlayerUpgrade(uuid, upgrade.name, playerUpgradeLevel + 1);
+        survivalData.incrementPlayerTokens(uuid, -cost);
+        p.sendMessage(helper.upgradeBoughtMessage(survivalData.upgradeBought,
+                "§6§n" + upgrade.displayName + "§6 niveau " + (playerUpgradeLevel + 1), cost));
     }
 }

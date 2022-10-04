@@ -25,6 +25,10 @@ mining:
     - IRON_PICKAXE
     - STONE_PICKAXE
     - WOODEN_PICKAXE
+  magnet_ranges:
+    - 1.0
+    - 2.5
+    - 3.5
 
 combat:
   mobs:
@@ -95,6 +99,36 @@ farming:
     - GRASS_BLOCK
     - DIRT_PATH
 
+chopping:
+  logs:
+    OAK_LOG: 3.5
+    BIRCH_LOG: 3.5
+    SPRUCE_LOG: 2.5
+    JUNGLE_LOG: 2.5
+    ACACIA_LOG: 4.5
+    DARK_OAK_LOG: 2.8
+    MANGROVE_LOG: 3.0
+  destrippables:
+    - STRIPPED_OAK_LOG
+    - STRIPPED_BIRCH_LOG
+    - STRIPPED_SPRUCE_LOG
+    - STRIPPED_JUNGLE_LOG
+    - STRIPPED_ACACIA_LOG
+    - STRIPPED_DARK_OAK_LOG
+    - STRIPPED_MANGROVE_LOG
+  saplings:
+    OAK_SAPLING: 1.0
+    DARK_OAK_SAPLING: 1.0
+    BIRCH_SAPLING: 1.0
+    MANGROVE_PROPAGULE: 1.0
+    JUNGLE_SAPLING: 1.0
+    SPRUCE_SAPLING: 1.0
+    ACACIA_SAPLING: 1.0
+  logvity_ranges:
+    - 2
+    - 5
+    - 10
+
 points_for_level:
   - 500
   - 1500
@@ -109,9 +143,61 @@ points_for_level:
 
 # DO NOT TOUCH
 upgrades:
-  - replanter
-  - wide_till
-  - replanter_fortune
-  - auto_smelt
-  - vein_mine
-  - ore_magnet
+  # Chopping
+  destrip:
+    cost: 1
+    cost_factor: 1.0
+    max_level: 1
+    display_item: STRIPPED_OAK_LOG
+    display_name: "Recorceur"
+  logvity:
+    cost: 2
+    cost_factor: 1.5
+    max_level: 3
+    display_item: BEACON
+    display_name: "Tronvité"
+  # Farming
+  replanter:
+    cost: 2
+    cost_factor: 1.0
+    max_level: 1
+    display_item: PISTON
+    display_name: "Replanteur"
+  replanter_fortune:
+    cost: 2
+    cost_factor: 1.5
+    max_level: 3
+    display_item: STICKY_PISTON
+    display_name: "Fortune du Replanteur"
+  wide_till:
+    cost: 2
+    cost_factor: 1.0
+    max_level: 1
+    display_item: DIAMOND_HOE
+    display_name: "Large Bêche"
+  # Mining
+  auto_smelt:
+    cost: 1
+    cost_factor: 1.0
+    max_level: 1
+    display_item: FURNACE
+    display_name: "Cuissont Auto"
+  vein_mine:
+    cost: 2
+    cost_factor: 1.0
+    max_level: 1
+    display_item: TNT
+    display_name: "Mineur de Veine"
+  magnet:
+    cost: 3
+    cost_factor: 1.5
+    max_level: 3
+    display_item: ENDER_EYE
+    display_name: "Aimant"
+  # Combat
+  cat_life:
+    cost: 2
+    cost_factor: 1.0
+    max_level: 1
+    display_item: GOLDEN_APPLE
+    display_name: "Vie de Chat"

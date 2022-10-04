@@ -5,6 +5,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -17,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Helper {
-    private PlayersData playersData;
+    private SurvivalData playersData;
 
     public void removeAmountOfItemFromInventory(Inventory inventory, Material material, int amount) {
         if (amount <= 0) return;
@@ -91,15 +92,6 @@ public class Helper {
         return bd.doubleValue();
     }
 
-//    public boolean buyUpgrade(Player p, String upgrade, int upgradeCost, SurvivalData data, HashMap playerUpgrade) {
-//        if (!(data.getPlayerTokens(p.getUniqueId()) > upgradeCost))
-//            return false;
-//
-//        data.setPlayerUpgrade(p.getUniqueId(), upgrade, 0, playerUpgrade);
-//        data.incrementPlayerTokens(p.getUniqueId(), -upgradeCost);
-//        return true;
-//    }
-
     public String upgradeBoughtMessage(String message, String upgrade, int cost) {
         return message.replace("%upgrade%", upgrade).replace("%cost%", String.valueOf(cost));
     }
@@ -110,5 +102,12 @@ public class Helper {
 
     public void sendActionBar(Player p, String message) {
         p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
+    }
+
+    public void applyDamage(ItemStack item, Integer damageToDeal) {
+        ItemMeta meta = item.getItemMeta();
+        Damageable damageable = (Damageable) meta;
+        damageable.setDamage(damageable.getDamage() - damageToDeal);
+        item.setItemMeta(meta);
     }
 }

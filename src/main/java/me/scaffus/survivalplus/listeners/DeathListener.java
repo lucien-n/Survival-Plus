@@ -1,8 +1,8 @@
-package me.scaffus.survivalplus.EventListeners;
+package me.scaffus.survivalplus.listeners;
 
 import me.scaffus.survivalplus.Helper;
 import me.scaffus.survivalplus.SkillsConfig;
-import me.scaffus.survivalplus.PlayersData;
+import me.scaffus.survivalplus.SurvivalData;
 import me.scaffus.survivalplus.SurvivalPlus;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -16,7 +16,7 @@ import java.util.Set;
 
 public class DeathListener implements Listener {
     private SurvivalPlus plugin;
-    private PlayersData playersData;
+    private SurvivalData playersData;
     private SkillsConfig skillsConfig;
     private Helper helper;
     private Set<String> mobs;
@@ -24,7 +24,7 @@ public class DeathListener implements Listener {
 
     public DeathListener(SurvivalPlus plugin) {
         this.plugin = plugin;
-        this.playersData = plugin.pData;
+        this.playersData = plugin.survivalData;
         this.skillsConfig = plugin.skillsConfig;
         this.helper = plugin.helper;
         mobs = skillsConfig.get().getConfigurationSection("combat.mobs").getKeys(false);

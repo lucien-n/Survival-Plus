@@ -1,7 +1,8 @@
 package me.scaffus.survivalplus.menus.skills;
 
 import me.scaffus.survivalplus.Helper;
-import me.scaffus.survivalplus.PlayersData;
+import me.scaffus.survivalplus.SurvivalData;
+import me.scaffus.survivalplus.SkillsConfig;
 import me.scaffus.survivalplus.SurvivalPlus;
 import me.scaffus.survivalplus.menus.SkillsMenu;
 import org.bukkit.Bukkit;
@@ -13,24 +14,34 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.List;
 import java.util.UUID;
 
 public class MiningSkillMenu implements Listener {
-    private SurvivalPlus plugin;
-    private PlayersData pData;
-    private Helper helper;
-    private SkillsMenu skillsMenu;
-    private String inventoryName = "§6§lMinage";
-    private Integer autoSmeltPrice = 2;
-    private Integer veinMinePrice = 3;
-    private Integer oreMagnetPrice = 2;
+    private final SurvivalPlus plugin;
+    private final SurvivalData survivalData;
+    private final SkillsConfig skillsConfig;
+    private final Helper helper;
+    private final SkillsMenu skillsMenu;
+    private final String inventoryName = "§6§lMinage";
+    private final Integer autoSmeltCost;
+    private final Integer veinMineCost;
+    private final Integer magnetCost;
+    private final Integer magnetCostFactor;
+    private final List<Double> magnetRanges;
 
     public MiningSkillMenu(SurvivalPlus plugin, SkillsMenu skillsMenu) {
         this.plugin = plugin;
-        this.pData = plugin.pData;
+        this.survivalData = plugin.survivalData;
         this.helper = plugin.helper;
+        this.skillsConfig = plugin.skillsConfig;
         this.skillsMenu = skillsMenu;
         Bukkit.getPluginManager().registerEvents(this, plugin);
+        magnetRanges = (List<Double>) skillsConfig.get().get("mining.magnet_ranges");
+        autoSmeltCost = (Integer) skillsConfig.get().get("upgrades.auto_smelt.cost");
+        veinMineCost = (Integer) skillsConfig.get().get("upgrades.vein_mine.cost");
+        magnetCost = (Integer) skillsConfig.get().get("upgrades.magnet.cost");
+        magnetCostFactor = (Integer) skillsConfig.get().get("upgrades.magnet.factor");
     }
 
     @EventHandler
@@ -42,26 +53,16 @@ public class MiningSkillMenu implements Listener {
         UUID uuid = p.getUniqueId();
         int slot = event.getSlot();
 
-        Integer playerAutoSmeltLevel = pData.getPlayerUpgrade(uuid, "auto_smelt");
-        Integer playerVeinMineLevel = pData.getPlayerUpgrade(uuid, "vein_mine");
-        Integer playerOreMagnetLevel = pData.getPlayerUpgrade(uuid, "ore_magnet");
+        Integer playerAutoSmeltLevel = survivalData.getPlayerUpgrade(uuid, "auto_smelt");
+        Integer playerVeinMineLevel = survivalData.getPlayerUpgrade(uuid, "vein_mine");
 
-        if (slot == 11 && pData.getPlayerTokens(uuid) >= autoSmeltPrice && playerAutoSmeltLevel < 1) {
-            pData.setPlayerUpgrade(uuid, "auto_smelt", playerAutoSmeltLevel + 1);
-            pData.incrementPlayerTokens(uuid, -autoSmeltPrice);
-            p.sendMessage(helper.upgradeBoughtMessage(pData.upgradeBought,
-                    "cuisson des minerais niveau " + (playerAutoSmeltLevel + 1), autoSmeltPrice));
-        } else if (slot == 15 && pData.getPlayerTokens(uuid) >= veinMinePrice && playerVeinMineLevel < 1) {
-            pData.setPlayerUpgrade(uuid, "vein_mine", playerVeinMineLevel + 1);
-            pData.incrementPlayerTokens(uuid, veinMinePrice);
-            p.sendMessage(helper.upgradeBoughtMessage(pData.upgradeBought,
-                    "mineur de veines niveau " + (playerVeinMineLevel + 1), veinMinePrice));
-        } else if (slot == 31 && pData.getPlayerTokens(uuid) >= oreMagnetPrice && playerOreMagnetLevel < 1) {
-            pData.setPlayerUpgrade(uuid, "ore_magnet", playerOreMagnetLevel + 1);
-            pData.incrementPlayerTokens(uuid, oreMagnetPrice);
-            p.sendMessage(helper.upgradeBoughtMessage(pData.upgradeBought,
-                    "aimant à minerais niveau " + (playerOreMagnetLevel + 1), oreMagnetPrice));
-        }
+        if (slot == 11 && survivalData.getPlayerTokens(uuid) >= autoSmeltCost && playerAutoSmeltLevel < 1) {
+            if (playerVeinMineLevel > 0) survivalData.setPlayerUpgrade(uuid, "vein_mine", 0);
+            skillsMenu.buyUpgrade(p, survivalData.getUpgrade("auto_smelt"));
+        } else if (slot == 15) {
+            if (playerAutoSmeltLevel > 0) survivalData.setPlayerUpgrade(uuid, "auto_smelt", 0);
+            skillsMenu.buyUpgrade(p, survivalData.getUpgrade("vein_mine"));
+        } else if (slot == 31) skillsMenu.buyUpgrade(p, survivalData.getUpgrade("magnet"));
 
         if (slot == event.getInventory().getSize() - 9) p.openInventory(skillsMenu.createSkillMenu(p));
         if (slot == event.getInventory().getSize() - 1) p.closeInventory();
@@ -72,21 +73,17 @@ public class MiningSkillMenu implements Listener {
         ItemStack backgroundItem = helper.getItem(new ItemStack(Material.GRAY_STAINED_GLASS_PANE), "", "");
         Inventory inventory = helper.createInventoryWithBackground(p, inventoryName, 54, backgroundItem, true);
 
-        inventory.setItem(11, helper.getItem(new ItemStack(Material.FURNACE), "§6§lCuisson Auto", "§eCuit ton minerais quand tu le casses",
-                pData.getPlayerUpgrade(uuid, "auto_smelt")
-                        > 0 ? "§ePrix: §6Acquit" : "§ePrix: §6" + autoSmeltPrice));
+        inventory.setItem(11, helper.getItem(new ItemStack(Material.FURNACE), "§6§lCuisson Auto", "§eCuit ton minerais quand tu le casses", "", survivalData.getPlayerUpgrade(uuid, "auto_smelt") > 0 ? "§ePrix: §6Acquit" : "§ePrix: §6" + autoSmeltCost, survivalData.getPlayerUpgrade(uuid, "vein_mine") > 0 ? "§cMineur de Veines sera perdue" : "§cNe fonctionne pas avec Mineur de Veines"));
 
-        inventory.setItem(15, helper.getItem(new ItemStack(Material.TNT), "§6§lMineur De Veines", "§eCuit ton minerais quand tu le casses",
-                pData.getPlayerUpgrade(uuid, "vein_mine")
-                        > 0 ? "§ePrix: §6Acquit" : "§ePrix: §6" + veinMinePrice));
+        inventory.setItem(15, helper.getItem(new ItemStack(Material.TNT), "§6§lMineur De Veines", "§eMine tous les blocs du même type autour du", "§e bloc casser dans une zone de 3x3x3", "", survivalData.getPlayerUpgrade(uuid, "vein_mine") > 0 ? "§ePrix: §6Acquit" : "§ePrix: §6" + veinMineCost, survivalData.getPlayerUpgrade(uuid, "auto_smelt") > 0 ? "§cCuissont Auto sera perdue" : "§cNe fonctionne pas avec Cuissont Auto"));
 
-        inventory.setItem(31, helper.getItem(new ItemStack(Material.ENDER_EYE), "§6§lAimant à minerais", "§ele minerais arrives directement dans ton inventaire",
-                pData.getPlayerUpgrade(uuid, "ore_magnet")
-                        > 0 ? "§ePrix: §6Acquit" : "§ePrix: §6" + oreMagnetPrice,
-                "§eRequiert: §6Cuissont Auto",
-                "§cNe fonctionne qu'avec §6Cuissont Auto"));
+        Integer playerMagnetUpgradeLevel = survivalData.getPlayerUpgrade(uuid, "magnet");
+        inventory.setItem(31, helper.getItem(new ItemStack(Material.ENDER_EYE), "§6§lAimant", "§eTéléporte les items à tes pieds dans un rayon autour de toi", "§eLe rayon augment à chaque niveau", "", "§eNiveau: §6" + playerMagnetUpgradeLevel, playerMagnetUpgradeLevel > 0 ? "§eRayon: §6" + magnetRanges.get(playerMagnetUpgradeLevel - 1) : "", playerMagnetUpgradeLevel
+                == 0 ? "§ePrix: §6" + (playerMagnetUpgradeLevel + 1) * magnetCost : playerMagnetUpgradeLevel
+                == 1 ? "§ePrix: §6" + (playerMagnetUpgradeLevel + 1) * magnetCost : playerMagnetUpgradeLevel
+                == 2 ? "§ePrix: §6" + (playerMagnetUpgradeLevel + 1) * magnetCost : "§ePrix: §6Acquit"));
 
-        inventory.setItem(49, helper.getHead(p, "§eJetons: §6" + pData.getPlayerTokens(p.getUniqueId())));
+        inventory.setItem(49, helper.getHead(p, "§eJetons: §6" + survivalData.getPlayerTokens(p.getUniqueId())));
 
         return inventory;
     }

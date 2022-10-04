@@ -1,11 +1,12 @@
 package me.scaffus.survivalplus;
 
-import me.scaffus.survivalplus.EventListeners.*;
+import me.scaffus.survivalplus.listeners.*;
 import me.scaffus.survivalplus.commands.BankCommand;
 import me.scaffus.survivalplus.commands.InfoStickCommand;
 import me.scaffus.survivalplus.commands.SkillCommand;
 import me.scaffus.survivalplus.sql.DatabaseGetterSetter;
 import me.scaffus.survivalplus.sql.DatabaseManager;
+import me.scaffus.survivalplus.tasks.MagnetTask;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.SQLException;
@@ -18,7 +19,8 @@ public final class SurvivalPlus extends JavaPlugin {
     public DatabaseGetterSetter data;
     public SkillsConfig skillsConfig = new SkillsConfig();
     public Helper helper = new Helper();
-    public PlayersData pData;
+    public SurvivalData survivalData;
+    private MagnetTask magnetTask;
     @Override
     public void onEnable() {
         INSTANCE = this;
@@ -29,7 +31,7 @@ public final class SurvivalPlus extends JavaPlugin {
         skillsConfig.get().options().copyDefaults(true);
         skillsConfig.save();
 
-        this.pData = new PlayersData(this);
+        this.survivalData = new SurvivalData(this);
 
         getServer().getPluginManager().registerEvents(new PlayerJoinQuitListener(this), this);
         getServer().getPluginManager().registerEvents(new BlockBreakListener(this), this);
@@ -40,6 +42,9 @@ public final class SurvivalPlus extends JavaPlugin {
         new BankCommand(this);
         new SkillCommand(this);
         new InfoStickCommand(this);
+
+        this.magnetTask = new MagnetTask(this);
+        magnetTask.runTaskTimer(this, 0L, 5L);
 
         Logger.getLogger("Minecraft").info("[SURV+] Plugin ON");
     }

@@ -1,7 +1,7 @@
 package me.scaffus.survivalplus.menus.skills;
 
 import me.scaffus.survivalplus.Helper;
-import me.scaffus.survivalplus.PlayersData;
+import me.scaffus.survivalplus.SurvivalData;
 import me.scaffus.survivalplus.SurvivalPlus;
 import me.scaffus.survivalplus.menus.SkillsMenu;
 import org.bukkit.Bukkit;
@@ -15,14 +15,14 @@ import org.bukkit.inventory.ItemStack;
 
 public class SwimmingSkillMenu implements Listener {
     private SurvivalPlus plugin;
-    private PlayersData playersData;
+    private SurvivalData playersData;
     private Helper helper;
     private SkillsMenu skillsMenu;
     private String inventoryName = "§6§lNage";
 
     public SwimmingSkillMenu(SurvivalPlus plugin, SkillsMenu skillsMenu) {
         this.plugin = plugin;
-        this.playersData = plugin.pData;
+        this.playersData = plugin.survivalData;
         this.helper = plugin.helper;
         this.skillsMenu = skillsMenu;
         Bukkit.getPluginManager().registerEvents(this, plugin);
