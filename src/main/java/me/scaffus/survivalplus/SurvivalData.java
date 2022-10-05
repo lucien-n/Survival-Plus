@@ -68,7 +68,8 @@ public class SurvivalData {
             Integer maxLevel = (Integer) config.get("upgrades." + upgrade + ".max_level");
             Integer cost = (Integer) config.get("upgrades." + upgrade + ".cost");
             Double costFactor = (Double) config.get("upgrades." + upgrade + ".cost_factor");
-            PlayerUpgrade playerUpgrade = new PlayerUpgrade(name, displayName, Material.getMaterial(displayItem), maxLevel, cost, costFactor);
+            List<String> lore = (List<String>) config.get("upgrades." + upgrade + ".lore");
+            PlayerUpgrade playerUpgrade = new PlayerUpgrade(name, displayName, Material.getMaterial(displayItem), maxLevel, cost, costFactor, lore);
             allUpgrades.put(upgrade, playerUpgrade);
         }
     }

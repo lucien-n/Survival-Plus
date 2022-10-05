@@ -7,7 +7,6 @@ import me.scaffus.survivalplus.SurvivalPlus;
 import me.scaffus.survivalplus.menus.SkillsMenu;
 import me.scaffus.survivalplus.objects.PlayerUpgrade;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -54,25 +53,13 @@ public class ChoppingSkillMenu implements Listener {
 
     public Inventory createMenu(Player p) {
         UUID uuid = p.getUniqueId();
-        ItemStack backgroundItem = helper.getItem(new ItemStack(Material.GRAY_STAINED_GLASS_PANE), "", "");
         Inventory inventory = helper.createInventoryWithBackground(p, inventoryName, 54, true);
 
         PlayerUpgrade destrip = survivalData.getUpgrade("destrip");
         PlayerUpgrade logvity = survivalData.getUpgrade("logvity");
 
-        inventory.setItem(11, helper.getItem(new ItemStack(destrip.displayItem), destrip.displayName, "§eCliques droit sur une bûche écorcée", "§epour magiquement lui remetrre son écorce",
-                "",
-                survivalData.getPlayerUpgrade(uuid, "destrip") > 0 ? "§ePrix: §6Acquit" : "§ePrix: §6" + destrip.cost));
-
-        Integer playerLogvityUpgradeLevel = survivalData.getPlayerUpgrade(uuid, "logvity");
-        inventory.setItem(15, helper.getItem(new ItemStack(logvity.displayItem), logvity.displayName, "§eLe tronc est \"soumis\" à la \"gravité\"", "§eCasser une bûche casse les autres bûches", "§eau dessus. Augmente à chaque niveaux.", "§eLes bûches cassées par cette amélioration", "§ene donnent que 70% de leur xp",
-                "",
-                "§eNiveau: §6" + playerLogvityUpgradeLevel, playerLogvityUpgradeLevel > 0 ?
-                "§eColonne: §6" + logvityRanges.get(playerLogvityUpgradeLevel - 1) :
-                "§eColonne: §6" + logvityRanges.get(0), playerLogvityUpgradeLevel
-                == 0 ? "§ePrix: §6" + (playerLogvityUpgradeLevel + 1) * logvity.cost : playerLogvityUpgradeLevel
-                == 1 ? "§ePrix: §6" + (playerLogvityUpgradeLevel + 1) * logvity.cost : playerLogvityUpgradeLevel
-                == 2 ? "§ePrix: §6" + (playerLogvityUpgradeLevel + 1) * logvity.cost : "§ePrix: §6Acquit"));
+        inventory.setItem(11, skillsMenu.getUpgradeMenuItem(destrip, uuid));
+        inventory.setItem(15, skillsMenu.getUpgradeMenuItem(logvity, uuid));
 
         inventory.setItem(49, helper.getHead(p, "§eJetons: §6" + survivalData.getPlayerTokens(p.getUniqueId())));
 

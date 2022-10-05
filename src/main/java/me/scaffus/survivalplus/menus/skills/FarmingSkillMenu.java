@@ -8,14 +8,12 @@ import me.scaffus.survivalplus.menus.SkillsMenu;
 import me.scaffus.survivalplus.objects.PlayerUpgrade;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.UUID;
 
@@ -53,27 +51,17 @@ public class FarmingSkillMenu implements Listener {
 
     public Inventory createMenu(Player p) {
         UUID uuid = p.getUniqueId();
-        ItemStack backgroundItem = helper.getItem(new ItemStack(Material.GRAY_STAINED_GLASS_PANE), "", "");
         Inventory inventory = helper.createInventoryWithBackground(p, inventoryName, 54, true);
 
         PlayerUpgrade replanter = survivalData.getUpgrade("replanter");
         PlayerUpgrade replanterFortune = survivalData.getUpgrade("replanter_fortune");
         PlayerUpgrade wideTill = survivalData.getUpgrade("wide_till");
 
-        inventory.setItem(11, helper.getItem(new ItemStack(replanter.displayItem), replanter.displayName, "§eReplante pour toi après que tu aies récolté",
-                "",
-                survivalData.getPlayerUpgrade(uuid, replanter.name)
-                        > 0 ? "§ePrix: §6Acquit" : "§ePrix: §6" + replanter.cost));
+        inventory.setItem(11, skillsMenu.getUpgradeMenuItem(replanter, uuid));
 
-        Integer playerReplanterFortuneLevel = survivalData.getPlayerUpgrade(uuid, replanterFortune.name);
-        inventory.setItem(15, helper.getItem(new ItemStack(replanterFortune.displayItem), replanterFortune.displayName, "§eFortune fonctionne sur les plantes sans", "§eavoir à enchanté ton outil",
-                "",
-                skillsMenu.getUpgradePrice(p, survivalData.getUpgrade(replanterFortune.name)), "§eRequiert: §6Replanteur"));
+        inventory.setItem(15, skillsMenu.getUpgradeMenuItem(replanterFortune, uuid));
 
-        inventory.setItem(31, helper.getItem(new ItemStack(wideTill.displayItem), wideTill.displayName, "§eBêche une zone §63x3",
-                "",
-                survivalData.getPlayerUpgrade(uuid, wideTill.name)
-                        > 0 ? "§ePrix: §6Acquit" : "§ePrix: §6" + wideTill.cost));
+        inventory.setItem(31, skillsMenu.getUpgradeMenuItem(wideTill, uuid));
 
         inventory.setItem(49, helper.getHead(p, "§eJetons: §6" + survivalData.getPlayerTokens(p.getUniqueId())));
 

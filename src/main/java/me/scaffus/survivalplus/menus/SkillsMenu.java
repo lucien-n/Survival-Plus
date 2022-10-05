@@ -1,12 +1,12 @@
 package me.scaffus.survivalplus.menus;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import me.scaffus.survivalplus.Helper;
 import me.scaffus.survivalplus.SurvivalData;
 import me.scaffus.survivalplus.SurvivalPlus;
 import me.scaffus.survivalplus.menus.skills.*;
 import me.scaffus.survivalplus.objects.PlayerUpgrade;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,7 +14,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class SkillsMenu implements Listener {
@@ -77,7 +80,6 @@ public class SkillsMenu implements Listener {
     }
 
     public Inventory createSkillMenu(Player p) {
-        ItemStack backgroundItem = helper.getItem(new ItemStack(Material.GRAY_STAINED_GLASS_PANE), "", "");
         Inventory inventory = helper.createInventoryWithBackground(p, skillInventoryName, 54, false);
 
         inventory.setItem(10, helper.getItem(
@@ -87,15 +89,15 @@ public class SkillsMenu implements Listener {
         inventory.setItem(12, helper.getItem(
                 new ItemStack(Material.DIAMOND_PICKAXE), "§6§lMinage", "§eXp: §6" +
                         helper.numberFormat.format(survivalData.getPlayerSkillPoints(p.getUniqueId(), "mining")).replace(" ", " "),
-                        "§eNiveau: §6" + survivalData.getPlayerSkillLevel(p.getUniqueId(), "mining")));
+                "§eNiveau: §6" + survivalData.getPlayerSkillLevel(p.getUniqueId(), "mining")));
         inventory.setItem(14, helper.getItem(
                 new ItemStack(Material.NETHERITE_SWORD), "§6§lCombat", "§eXp: §6" +
                         helper.numberFormat.format(survivalData.getPlayerSkillPoints(p.getUniqueId(), "combat")).replace(" ", " "),
-                        "§eNiveau: §6" + survivalData.getPlayerSkillLevel(p.getUniqueId(), "combat")));
+                "§eNiveau: §6" + survivalData.getPlayerSkillLevel(p.getUniqueId(), "combat")));
         inventory.setItem(16, helper.getItem(
                 new ItemStack(Material.LEATHER_BOOTS), "§6§lCourse", "§eXp: §6" +
                         helper.numberFormat.format(survivalData.getPlayerSkillPoints(p.getUniqueId(), "running")).replace(" ", " "),
-                        "§eNiveau: §6" + survivalData.getPlayerSkillLevel(p.getUniqueId(), "running")));
+                "§eNiveau: §6" + survivalData.getPlayerSkillLevel(p.getUniqueId(), "running")));
 
         inventory.setItem(28, helper.getItem(
                 new ItemStack(Material.SKELETON_SKULL), "§6§lMort", "§eXp: §6" +
@@ -135,12 +137,30 @@ public class SkillsMenu implements Listener {
         return true;
     }
 
-    public String getUpgradePrice(Player p, PlayerUpgrade upgrade) {
-        UUID uuid = p.getUniqueId();
-        Integer playerUpgradelevel = survivalData.getPlayerUpgrade(uuid, upgrade.name);
+    public ItemStack getUpgradeMenuItem(PlayerUpgrade upgrade, UUID uuid) {
+        ItemStack item = new ItemStack(upgrade.displayMaterial);
+        ItemMeta meta = item.getItemMeta();
+
+        assert meta != null;
+        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', upgrade.displayName));
+
+        List<String> lores = new ArrayList<>();
+        for (String s : upgrade.lore) {
+            lores.add(ChatColor.translateAlternateColorCodes('&', s));
+        }
+        lores.add("");
+        lores.add("§eNiveau: §6" + survivalData.getPlayerUpgrade(uuid, upgrade.name) + "/" + upgrade.maxLevel );
+        lores.add(getUpgradePriceText(upgrade, survivalData.getPlayerUpgrade(uuid, upgrade.name)));
+
+        meta.setLore(lores);
+        item.setItemMeta(meta);
+        return item;
+    }
+
+    public String getUpgradePriceText(PlayerUpgrade upgrade, Integer playerUpgradeLevel) {
         String priceText = "§ePrix: §6";
         String acquiredText = "Acquit";
-        if (playerUpgradelevel.equals(upgrade.maxLevel)) return priceText + acquiredText;
-        return priceText + ((playerUpgradelevel + 1) * upgrade.cost);
+        if (playerUpgradeLevel.equals(upgrade.maxLevel)) return priceText + acquiredText;
+        return priceText + ((playerUpgradeLevel + 1) * upgrade.cost);
     }
 }

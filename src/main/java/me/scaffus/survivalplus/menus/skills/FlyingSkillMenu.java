@@ -4,14 +4,15 @@ import me.scaffus.survivalplus.Helper;
 import me.scaffus.survivalplus.SurvivalData;
 import me.scaffus.survivalplus.SurvivalPlus;
 import me.scaffus.survivalplus.menus.SkillsMenu;
+import me.scaffus.survivalplus.objects.PlayerUpgrade;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
+
+import java.util.UUID;
 
 public class FlyingSkillMenu implements Listener {
     private SurvivalPlus plugin;
@@ -41,8 +42,12 @@ public class FlyingSkillMenu implements Listener {
     }
 
     public Inventory createMenu(Player p) {
-        ItemStack backgroundItem = helper.getItem(new ItemStack(Material.GRAY_STAINED_GLASS_PANE), "", "");
+        UUID uuid = p.getUniqueId();
         Inventory inventory = helper.createInventoryWithBackground(p, inventoryName, 54, true);
+
+        PlayerUpgrade leapUpgrade = survivalData.getUpgrade("leap");
+
+        inventory.setItem(11, skillsMenu.getUpgradeMenuItem(leapUpgrade, uuid));
 
         inventory.setItem(49, helper.getHead(p, "§eJetons: §6" + survivalData.getPlayerTokens(p.getUniqueId())));
 

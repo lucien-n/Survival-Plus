@@ -2,20 +2,25 @@ package me.scaffus.survivalplus.objects;
 
 import org.bukkit.Material;
 
+import java.util.Collections;
+import java.util.List;
+
 public class PlayerUpgrade {
     public String name;
     public String displayName;
-    public Material displayItem;
+    public Material displayMaterial;
     public Integer maxLevel;
     public Integer cost;
     public Double costFactor;
+    public List<String> lore;
 
-    public PlayerUpgrade(String upgradeName, String upgradeDisplayName, Material upgradeDisplayItem, Integer upgradeMaxLevel, Integer upgradeCost, Double upgradeCostFactor) {
+    public PlayerUpgrade(String upgradeName, String upgradeDisplayName, Material upgradeDisplayMaterial, Integer upgradeMaxLevel, Integer upgradeCost, Double upgradeCostFactor, List<String> upgradeLore) {
         name = upgradeName;
         displayName = upgradeDisplayName;
-        displayItem = upgradeDisplayItem;
+        displayMaterial = upgradeDisplayMaterial;
         maxLevel = upgradeMaxLevel;
         cost = upgradeCost;
         costFactor = upgradeCostFactor;
+        lore = upgradeLore;
     }
 }

@@ -88,7 +88,7 @@ public class BankMenu implements Listener {
             } else if (slot == event.getInventory().getSize() - 1) p.closeInventory();
             else if (slot == event.getInventory().getSize() - 9) p.openInventory(createBankMenu(p));
 
-            event.getInventory().setItem(4, helper.getItem(new ItemStack(Material.GOLD_BLOCK), "§6§lMontant", "§e" + String.valueOf(amount)));
+            event.getInventory().setItem(4, helper.getItem(new ItemStack(Material.GOLD_BLOCK), "§6§lMontant", "§e" + amount));
         }
 
     }
@@ -113,8 +113,6 @@ public class BankMenu implements Listener {
     }
 
     public Inventory createAmountMenu(Player p) {
-        amount = 0;
-        ItemStack backgroundItem = helper.getItem(new ItemStack(Material.GRAY_STAINED_GLASS_PANE), "", "");
         Inventory inventory = helper.createInventoryWithBackground(p, amountInventoryName, 27, true);
 
         inventory.setItem(4, helper.getItem(new ItemStack(Material.GOLD_BLOCK), "§6§lMontant", "§e0"));

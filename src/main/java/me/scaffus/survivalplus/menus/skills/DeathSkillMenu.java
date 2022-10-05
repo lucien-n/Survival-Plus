@@ -58,20 +58,13 @@ public class DeathSkillMenu implements Listener {
 
     public Inventory createMenu(Player p) {
         UUID uuid = p.getUniqueId();
-        ItemStack backgroundItem = helper.getItem(new ItemStack(Material.GRAY_STAINED_GLASS_PANE), "", "");
         Inventory inventory = helper.createInventoryWithBackground(p, inventoryName, 54, true);
 
         PlayerUpgrade catLife = survivalData.getUpgrade("cat_life");
         PlayerUpgrade limitedImmortality = survivalData.getUpgrade("limited_immortality");
 
-        Integer playerCatLifeUpgradeLevel = survivalData.getPlayerUpgrade(uuid, catLife.name);
-        inventory.setItem(11, helper.getItem(new ItemStack(catLife.displayItem), catLife.displayName, "§eChaque niveau t'offres un coeur",
-                "",
-                "§eNiveau: §6" + playerCatLifeUpgradeLevel,
-                skillsMenu.getUpgradePrice(p, survivalData.getUpgrade(catLife.name))));
-
-        inventory.setItem(15, helper.getItem(new ItemStack(limitedImmortality.displayItem), limitedImmortality.displayName, "§eUn ange gardien te sauvera à ta prochaine mort",
-                "", skillsMenu.getUpgradePrice(p, survivalData.getUpgrade(limitedImmortality.name))));
+        inventory.setItem(11, skillsMenu.getUpgradeMenuItem(catLife, uuid));
+        inventory.setItem(15, skillsMenu.getUpgradeMenuItem(limitedImmortality, uuid));
 
         inventory.setItem(49, helper.getHead(p, "§eJetons: §6" + survivalData.getPlayerTokens(p.getUniqueId())));
 

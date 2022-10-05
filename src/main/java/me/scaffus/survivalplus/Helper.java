@@ -1,5 +1,6 @@
 package me.scaffus.survivalplus;
 
+import me.scaffus.survivalplus.objects.PlayerUpgrade;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
@@ -18,6 +19,7 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 
 public class Helper {
     public NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.FRENCH);

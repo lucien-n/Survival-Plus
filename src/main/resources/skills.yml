@@ -137,6 +137,14 @@ points_for_level:
   - 15000
   - 21000
   - 30000
+  # ↑ lvl 10
+  - 45000
+  - 80000
+  - 140000
+  - 250000
+  - 400000
+  - 750000
+  - 1000000
 
 # DO NOT TOUCH
 upgrades:
@@ -147,12 +155,21 @@ upgrades:
     max_level: 1
     display_item: STRIPPED_OAK_LOG
     display_name: "§6§lRecorceur"
+    lore:
+      - "§eCliques droit sur une bûche écorcée"
+      - "§epour magiquement lui remetrre son écorce"
   logvity:
     cost: 2
     cost_factor: 1.5
     max_level: 3
     display_item: BEACON
     display_name: "§6§lTronvité"
+    lore:
+      - "§eLe tronc est \"soumis\" à la \"gravité\""
+      - "§eCasser une bûche casse les autres bûches"
+      - "§eau dessus. Augmente à chaque niveaux."
+      - "§eLes bûches cassées par cette amélioration"
+      - "§ene donnent que 70% de leur xp"
   # Farming
   replanter:
     cost: 2
@@ -160,18 +177,26 @@ upgrades:
     max_level: 1
     display_item: PISTON
     display_name: "§6§lReplanteur"
+    lore:
+      - "§eReplante pour toi après que tu aies récolté"
   replanter_fortune:
     cost: 2
     cost_factor: 1.5
     max_level: 3
     display_item: STICKY_PISTON
     display_name: "§6§lFortune du Replanteur"
+    lore:
+      - "§eFortune fonctionne sur les plantes"
+      - "§esans avoir à enchanté ton outil"
+      - "§eRequiert: §6Replanteur"
   wide_till:
     cost: 2
     cost_factor: 1.0
     max_level: 1
     display_item: DIAMOND_HOE
     display_name: "§6§lLarge Bêche"
+    lore:
+      - "§eBêche une zone §63x3"
   # Mining
   auto_smelt:
     cost: 1
@@ -179,18 +204,27 @@ upgrades:
     max_level: 1
     display_item: FURNACE
     display_name: "§6§lCuissont Auto"
+    lore:
+      - "§eCuit ton minerais quand tu le casses"
   vein_mine:
     cost: 2
     cost_factor: 1.0
     max_level: 1
     display_item: TNT
     display_name: "§6§lMineur de Veine"
+    lore:
+      - "§eMine tous les blocs du même type autour du"
+      - "§e bloc casser dans une zone de 3x3x3"
   magnet:
     cost: 3
     cost_factor: 1.5
     max_level: 3
     display_item: ENDER_EYE
     display_name: "§6§lAimant"
+    lore:
+      - "§eTéléporte les items à tes pieds"
+      - "§edans un rayon autour de toi"
+      - "§eLe rayon augment à chaque niveau"
   # Death
   cat_life:
     cost: 2
@@ -198,9 +232,52 @@ upgrades:
     max_level: 5
     display_item: ENCHANTED_GOLDEN_APPLE
     display_name: "§6§lVie de Chat"
+    lore:
+      - "§eGagnes un coeur à chaque niveau"
   limited_immortality:
     cost: 2
     cost_factor: 1.0
     max_level: 1
     display_item: TOTEM_OF_UNDYING
     display_name: "§6§lImmortalité à Usage Unique"
+    lore:
+      - "§eUn ange gardien te sauvera"
+      - "§elors de ta prochaine mort"
+  # Flying
+  leap:
+    cost: 1
+    cost_factor: 1.0
+    max_level: 1
+    display_item: FEATHER
+    display_name: "§6§lBond"
+    lore:
+      - "§eFais un bond pour t'envoler"
+  # Running
+  speed:
+    cost: 1
+    cost_factor: 2.0
+    max_level: 3
+    display_item: RABBIT_FOOT
+    display_name: "§6§lVitesse"
+    lore:
+      - "§eGagnes de la vitesse à chaque niveau"
+  # Swimming
+  breath:
+    cost: 1
+    cost_factor: 2.0
+    max_level: 3
+    display_item: GLASS_BOTTLE
+    display_name: "§6§lBranchies"
+    lore:
+      - "§eGagnes un niveau de respiration à chaque niveau. "
+      - "§eLe niveau max te permet de rester sous l'eau infiniment"
+  # Combat
+  damage:
+    cost: 1
+    cost_factor: 2.0
+    max_level: 3
+    display_item: IRON_SWORD
+    display_name: "§6§lDégâts"
+    lore:
+      - "§eChaque niveau inflige 10% des dégâts"
+      - "§ede ton arme en plus."

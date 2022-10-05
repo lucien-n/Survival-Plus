@@ -8,9 +8,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-
-import java.util.List;
 
 public class InfoStickCommand implements CommandExecutor {
     private SurvivalPlus plugin;
@@ -21,7 +18,7 @@ public class InfoStickCommand implements CommandExecutor {
         this.plugin = plugin;
         this.helper = plugin.helper;
         plugin.getCommand("infostick").setExecutor(this);
-        infoStick = helper.getItem(new ItemStack(Material.STICK), "§6§lInfoStick", "§eClic droit sur un bloc pour récupérer ses informations");
+        infoStick = helper.getItem(new ItemStack(Material.STICK), "§6§lInfoStick", "§eClique droit sur un bloc pour récupérer ses informations");
     }
 
     @Override
