@@ -77,7 +77,7 @@ public class BankMenu implements Listener {
                 } else if (mode.equals("deposit")) {
                     int diamondInInv = helper.getAmountOfItemInventory(p.getInventory(), Material.DIAMOND);
                     if (diamondInInv >= amount) {
-                        survivalData.incrementPlayerTokens(p.getUniqueId(), amount);
+                        survivalData.incrementPlayerBalance(p.getUniqueId(), amount);
                         helper.removeAmountOfItemFromInventory(p.getInventory(), Material.DIAMOND, amount);
                         p.sendMessage(plugin.getConfig().getString("bank.deposit.successful").replace("%amount%", String.valueOf(amount)));
                     } else {

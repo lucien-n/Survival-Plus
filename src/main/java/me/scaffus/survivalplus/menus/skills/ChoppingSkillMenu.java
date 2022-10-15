@@ -44,11 +44,16 @@ public class ChoppingSkillMenu implements Listener {
         Player p = (Player) event.getWhoClicked();
         int slot = event.getSlot();
 
+        if (!survivalData.canPlayerClick(p.getUniqueId())) return;
+
         if (slot == 11) skillsMenu.buyUpgrade(p, survivalData.getUpgrade("destrip"));
         if (slot == 15) skillsMenu.buyUpgrade(p, survivalData.getUpgrade("logvity"));
+        if (slot == 0) p.sendMessage("CLICK");
 
         if (slot == event.getInventory().getSize() - 9) p.openInventory(skillsMenu.createSkillMenu(p));
         if (slot == event.getInventory().getSize() - 1) p.closeInventory();
+
+        survivalData.setPlayerLastClicked(p.getUniqueId());
     }
 
     public Inventory createMenu(Player p) {

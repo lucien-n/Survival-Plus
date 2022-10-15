@@ -1,13 +1,13 @@
 bank:
   withdraw:
-    successful: "§eTu as récupéré §6§l%amount%§e diamants*"
+    successful: "§eTu as récupéré §6§l%amount%§e diamants"
     failed: "§cUne erreur est survenue lors de la récupération à la banque"
     not_enough: "§eTu n'as pas §6§l%amount%§e diamants dans ta banque"
   deposit:
     successful: "§eTu as déposé §6§l%amount%§e diamants à la banque"
     failed: "§cUne erreur est survenue lors du dépôt à la banque"
     not_enough: "§eTu n'as pas §6§l%amount%§e diamants dans ton inventaire"
-  balance: "§eTu as §6§l%amount%§e diamants dans ta banque*"
+  balance: "§eTu as §6§l%amount%§e diamants dans ta banque"
 
 database:
   host: "localhost"

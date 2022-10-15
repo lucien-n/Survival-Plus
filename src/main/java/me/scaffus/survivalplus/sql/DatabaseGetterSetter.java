@@ -79,7 +79,6 @@ public class DatabaseGetterSetter {
     }
 
     public Integer getPlayerBalance(UUID uuid) {
-        if (uuid == null) return 0;
         try {
             PreparedStatement pS = ps("SELECT * FROM players_bank WHERE UUID=?");
             pS.setString(1, uuid.toString());

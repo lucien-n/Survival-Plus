@@ -2,14 +2,15 @@ package me.scaffus.survivalplus;
 
 import me.scaffus.survivalplus.objects.PlayerUpgrade;
 import me.scaffus.survivalplus.sql.DatabaseGetterSetter;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import java.time.Instant;
 import java.util.*;
 
 public class SurvivalData {
-    private SurvivalPlus plugin;
     private DatabaseGetterSetter data;
     private Helper helper;
     private SkillsConfig skillsConfig;
@@ -26,8 +27,10 @@ public class SurvivalData {
     public String upgradeBought;
     public HashMap<String, PlayerUpgrade> allUpgrades = new HashMap<>();
 
+
+    public HashMap<UUID, Instant> playerLastClicked = new HashMap<>();
+
     public SurvivalData(SurvivalPlus plugin) {
-        this.plugin = plugin;
         this.data = plugin.data;
         this.helper = plugin.helper;
         this.skillsConfig = plugin.skillsConfig;
@@ -44,6 +47,8 @@ public class SurvivalData {
 
         playerTokens.put(uuid, data.getPlayerTokens(uuid));
         playerBalance.put(uuid, data.getPlayerBalance(uuid));
+
+        setPlayerLastClicked(uuid);
     }
 
     public void savePlayerData(Player p) {
@@ -72,6 +77,22 @@ public class SurvivalData {
             PlayerUpgrade playerUpgrade = new PlayerUpgrade(name, displayName, Material.getMaterial(displayItem), maxLevel, cost, costFactor, lore);
             allUpgrades.put(upgrade, playerUpgrade);
         }
+    }
+
+    public Boolean canPlayerClick(UUID uuid) {
+        Bukkit.getPlayer(uuid).sendMessage(String.valueOf(getPlayerLastClicked(uuid).compareTo(Instant.now())));
+        if (getPlayerLastClicked(uuid).compareTo(Instant.now()) > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public Instant getPlayerLastClicked(UUID uuid) {
+        return playerLastClicked.get(uuid);
+    }
+
+    public void setPlayerLastClicked(UUID uuid) {
+        playerLastClicked.put(uuid, Instant.now());
     }
 
     public PlayerUpgrade getUpgrade(String upgradeName) {
