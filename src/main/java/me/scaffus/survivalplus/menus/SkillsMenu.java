@@ -63,6 +63,7 @@ public class SkillsMenu implements Listener {
 
             Player p = (Player) event.getWhoClicked();
             int slot = event.getSlot();
+            if (!survivalData.canPlayerClick(p.getUniqueId())) return;
 
             if (slot == 10) p.openInventory(farmingSkillMenu.createMenu(p));
             if (slot == 12) p.openInventory(miningSkillMenu.createMenu(p));
@@ -77,6 +78,8 @@ public class SkillsMenu implements Listener {
 
             if (slot == event.getInventory().getSize() - 1) p.closeInventory();
         }
+
+
     }
 
     public Inventory createSkillMenu(Player p) {
@@ -127,8 +130,18 @@ public class SkillsMenu implements Listener {
         UUID uuid = p.getUniqueId();
         Integer playerUpgradeLevel = survivalData.getPlayerUpgrade(uuid, upgrade.name);
         Integer cost = (playerUpgradeLevel + 1) * upgrade.cost;
-        if (survivalData.getPlayerTokens(uuid) < cost) return false;
-        if (playerUpgradeLevel >= upgrade.maxLevel) return false;
+        if (survivalData.getPlayerTokens(uuid) < cost) {
+            plugin.getConfig().getString("skills.not_enough_tokens");
+            return false;
+        }
+        if (playerUpgradeLevel >= upgrade.maxLevel) {
+            plugin.getConfig().getString("skills.upgrade_maxed").replace("%upgrade%", upgrade.displayName);
+            return false;
+        }
+        if (playerUpgradeLevel < 0) {
+            plugin.getConfig().getString("skills.upgrade_already_bought").replace("%upgrade%", upgrade.displayName);
+            return false;
+        }
 
         survivalData.setPlayerUpgrade(uuid, upgrade.name, playerUpgradeLevel + 1);
         survivalData.incrementPlayerTokens(uuid, -cost);

@@ -28,7 +28,7 @@ public class SurvivalData {
     public HashMap<String, PlayerUpgrade> allUpgrades = new HashMap<>();
 
 
-    public HashMap<UUID, Instant> playerLastClicked = new HashMap<>();
+    public HashMap<UUID, Long> playerLastClicked = new HashMap<>();
 
     public SurvivalData(SurvivalPlus plugin) {
         this.data = plugin.data;
@@ -47,6 +47,7 @@ public class SurvivalData {
 
         playerTokens.put(uuid, data.getPlayerTokens(uuid));
         playerBalance.put(uuid, data.getPlayerBalance(uuid));
+        setPlayerLastClicked(uuid);
 
         setPlayerLastClicked(uuid);
     }
@@ -65,7 +66,7 @@ public class SurvivalData {
     public void createUpgrades() {
         FileConfiguration config = skillsConfig.get();
         Set<String> upgradesKeysSet = config.getConfigurationSection("upgrades").getKeys(false);
-        ArrayList<String> upgradeKeysList = new ArrayList<String>(upgradesKeysSet);
+        ArrayList<String> upgradeKeysList = new ArrayList<>(upgradesKeysSet);
         for (String upgrade : upgradeKeysList) {
             String name = upgrade;
             String displayName = (String) config.get("upgrades." + upgrade + ".display_name");
@@ -80,19 +81,21 @@ public class SurvivalData {
     }
 
     public Boolean canPlayerClick(UUID uuid) {
-        Bukkit.getPlayer(uuid).sendMessage(String.valueOf(getPlayerLastClicked(uuid).compareTo(Instant.now())));
-        if (getPlayerLastClicked(uuid).compareTo(Instant.now()) > 0) {
+        Bukkit.getPlayer(uuid).sendMessage(String.valueOf(getPlayerLastClicked(uuid) + " [] " + System.currentTimeMillis()));
+        if ((System.currentTimeMillis() - getPlayerLastClicked(uuid)) > 750 ) {
             return true;
+        } else {
+            helper.sendActionBar(Bukkit.getPlayer(uuid), "§cAttends §n750ms§c entre chaque action");
         }
         return false;
     }
 
-    public Instant getPlayerLastClicked(UUID uuid) {
+    public Long getPlayerLastClicked(UUID uuid) {
         return playerLastClicked.get(uuid);
     }
 
     public void setPlayerLastClicked(UUID uuid) {
-        playerLastClicked.put(uuid, Instant.now());
+        playerLastClicked.put(uuid, System.currentTimeMillis());
     }
 
     public PlayerUpgrade getUpgrade(String upgradeName) {

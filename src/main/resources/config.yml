@@ -21,6 +21,11 @@ skills:
   passed_level: "§eTu es passé niveau §6§l%level%§e"
   not_enough_tokens: "§eTu n'as pas assé de §6§njetons"
   upgrade_bought: "§eTu as acheté §6§l%upgrade%§e pour §6§n%cost%§e jeton(s)"
+  upgrade_already_bought: "§eTu as déjà §6§l%upgrade%"
+  upgrade_maxed: "§eTon amélioration §6§l%upgrade%§e est déjà maxée"
+  upgrade_disabled: "§eTu as §ndésactivé§6§l %upgrade%"
+  upgrade_enabled: "§eTu as §nactivé§6§l %upgrade%"
+  upgrade_not_possessed: "§eTu n'as pas cette amélioration"
 
 menus:
   back_item: SPECTRAL_ARROW

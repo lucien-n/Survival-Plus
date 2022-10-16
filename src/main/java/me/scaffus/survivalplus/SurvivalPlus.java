@@ -1,5 +1,6 @@
 package me.scaffus.survivalplus;
 
+import me.scaffus.survivalplus.commands.ToggleUpgradeCommand;
 import me.scaffus.survivalplus.listeners.*;
 import me.scaffus.survivalplus.commands.BankCommand;
 import me.scaffus.survivalplus.commands.InfoStickCommand;
@@ -31,6 +32,7 @@ public final class SurvivalPlus extends JavaPlugin {
 
         survivalData = new SurvivalData(this);
 
+        getServer().getPluginManager().registerEvents(new InventoryListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerJoinQuitListener(this), this);
         getServer().getPluginManager().registerEvents(new BlockBreakListener(this), this);
         getServer().getPluginManager().registerEvents(new BlockPlaceListener(this), this);
@@ -43,6 +45,7 @@ public final class SurvivalPlus extends JavaPlugin {
         new BankCommand(this);
         new SkillCommand(this);
         new InfoStickCommand(this);
+        new ToggleUpgradeCommand(this);
 
         this.magnetTask = new MagnetTask(this);
         magnetTask.runTaskTimer(this, 0L, 5L);

@@ -20,6 +20,7 @@ public class FlyingSkillMenu implements Listener {
     private Helper helper;
     private SkillsMenu skillsMenu;
     private String inventoryName = "§6§lVol";
+    private static PlayerUpgrade leapUpgrade;
 
     public FlyingSkillMenu(SurvivalPlus plugin, SkillsMenu skillsMenu) {
         this.plugin = plugin;
@@ -27,6 +28,7 @@ public class FlyingSkillMenu implements Listener {
         this.helper = plugin.helper;
         this.skillsMenu = skillsMenu;
         Bukkit.getPluginManager().registerEvents(this, plugin);
+        leapUpgrade = survivalData.getUpgrade("leap");
     }
 
     @EventHandler
@@ -36,6 +38,7 @@ public class FlyingSkillMenu implements Listener {
 
         Player p = (Player) event.getWhoClicked();
         int slot = event.getSlot();
+        if (!survivalData.canPlayerClick(p.getUniqueId())) return;
 
         if (slot == event.getInventory().getSize() - 9) p.openInventory(skillsMenu.createSkillMenu(p));
         if (slot == event.getInventory().getSize() - 1) p.closeInventory();
@@ -44,8 +47,6 @@ public class FlyingSkillMenu implements Listener {
     public Inventory createMenu(Player p) {
         UUID uuid = p.getUniqueId();
         Inventory inventory = helper.createInventoryWithBackground(p, inventoryName, 54, true);
-
-        PlayerUpgrade leapUpgrade = survivalData.getUpgrade("leap");
 
         inventory.setItem(11, skillsMenu.getUpgradeMenuItem(leapUpgrade, uuid));
 

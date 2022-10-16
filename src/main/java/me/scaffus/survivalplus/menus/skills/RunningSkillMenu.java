@@ -22,6 +22,7 @@ public class RunningSkillMenu implements Listener {
     private Helper helper;
     private SkillsMenu skillsMenu;
     private String inventoryName = "§6§lCourse";
+    private static PlayerUpgrade speedUpgrade;
 
     public RunningSkillMenu(SurvivalPlus plugin, SkillsMenu skillsMenu) {
         this.plugin = plugin;
@@ -29,6 +30,7 @@ public class RunningSkillMenu implements Listener {
         this.helper = plugin.helper;
         this.skillsMenu = skillsMenu;
         Bukkit.getPluginManager().registerEvents(this, plugin);
+        speedUpgrade = survivalData.getUpgrade("speed");
     }
 
     @EventHandler
@@ -38,6 +40,7 @@ public class RunningSkillMenu implements Listener {
 
         Player p = (Player) event.getWhoClicked();
         int slot = event.getSlot();
+        if (!survivalData.canPlayerClick(p.getUniqueId())) return;
 
         if (slot == event.getInventory().getSize() - 9) p.openInventory(skillsMenu.createSkillMenu(p));
         if (slot == event.getInventory().getSize() - 1) p.closeInventory();
@@ -46,8 +49,6 @@ public class RunningSkillMenu implements Listener {
     public Inventory createMenu(Player p) {
         UUID uuid = p.getUniqueId();
         Inventory inventory = helper.createInventoryWithBackground(p, inventoryName, 54, true);
-
-        PlayerUpgrade speedUpgrade = survivalData.getUpgrade("speed");
 
         inventory.setItem(11, skillsMenu.getUpgradeMenuItem(speedUpgrade, uuid));
 

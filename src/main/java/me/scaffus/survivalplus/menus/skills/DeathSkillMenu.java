@@ -7,14 +7,12 @@ import me.scaffus.survivalplus.SurvivalPlus;
 import me.scaffus.survivalplus.menus.SkillsMenu;
 import me.scaffus.survivalplus.objects.PlayerUpgrade;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -27,6 +25,8 @@ public class DeathSkillMenu implements Listener {
     private final SkillsConfig skillsConfig;
     private final SkillsMenu skillsMenu;
     private final String inventoryName = "§6§lMort";
+    private static PlayerUpgrade catLifeUpgrade;
+    private static PlayerUpgrade limitedImmortalityUpgrade;
 
     public DeathSkillMenu(SurvivalPlus plugin, SkillsMenu skillsMenu) {
         this.plugin = plugin;
@@ -35,6 +35,8 @@ public class DeathSkillMenu implements Listener {
         this.skillsConfig = plugin.skillsConfig;
         this.skillsMenu = skillsMenu;
         Bukkit.getPluginManager().registerEvents(this, plugin);
+        catLifeUpgrade = survivalData.getUpgrade("cat_life");
+        limitedImmortalityUpgrade = survivalData.getUpgrade("limited_immortality");
     }
 
     @EventHandler
@@ -44,6 +46,7 @@ public class DeathSkillMenu implements Listener {
 
         Player p = (Player) event.getWhoClicked();
         int slot = event.getSlot();
+        if (!survivalData.canPlayerClick(p.getUniqueId())) return;
 
         if (slot == 11) {
             if (skillsMenu.buyUpgrade(p, survivalData.getUpgrade("cat_life"))) {
@@ -60,11 +63,8 @@ public class DeathSkillMenu implements Listener {
         UUID uuid = p.getUniqueId();
         Inventory inventory = helper.createInventoryWithBackground(p, inventoryName, 54, true);
 
-        PlayerUpgrade catLife = survivalData.getUpgrade("cat_life");
-        PlayerUpgrade limitedImmortality = survivalData.getUpgrade("limited_immortality");
-
-        inventory.setItem(11, skillsMenu.getUpgradeMenuItem(catLife, uuid));
-        inventory.setItem(15, skillsMenu.getUpgradeMenuItem(limitedImmortality, uuid));
+        inventory.setItem(11, skillsMenu.getUpgradeMenuItem(catLifeUpgrade, uuid));
+        inventory.setItem(15, skillsMenu.getUpgradeMenuItem(limitedImmortalityUpgrade, uuid));
 
         inventory.setItem(49, helper.getHead(p, "§eJetons: §6" + survivalData.getPlayerTokens(p.getUniqueId())));
 

@@ -22,6 +22,7 @@ public class CombatSkillMenu implements Listener {
     private Helper helper;
     private SkillsMenu skillsMenu;
     private String inventoryName = "§6§lCombat";
+    private static PlayerUpgrade damageUpgrade;
 
     public CombatSkillMenu(SurvivalPlus plugin, SkillsMenu skillsMenu) {
         this.plugin = plugin;
@@ -29,6 +30,7 @@ public class CombatSkillMenu implements Listener {
         this.helper = plugin.helper;
         this.skillsMenu = skillsMenu;
         Bukkit.getPluginManager().registerEvents(this, plugin);
+        damageUpgrade = survivalData.getUpgrade("damage");
     }
 
     @EventHandler
@@ -38,6 +40,7 @@ public class CombatSkillMenu implements Listener {
 
         Player p = (Player) event.getWhoClicked();
         int slot = event.getSlot();
+        if (!survivalData.canPlayerClick(p.getUniqueId())) return;
 
         if (slot == event.getInventory().getSize() - 9) p.openInventory(skillsMenu.createSkillMenu(p));
         if (slot == event.getInventory().getSize() - 1) p.closeInventory();
@@ -46,8 +49,6 @@ public class CombatSkillMenu implements Listener {
     public Inventory createMenu(Player p) {
         UUID uuid = p.getUniqueId();
         Inventory inventory = helper.createInventoryWithBackground(p, inventoryName, 54, true);
-
-        PlayerUpgrade damageUpgrade = survivalData.getUpgrade("damage");
 
         inventory.setItem(11, skillsMenu.getUpgradeMenuItem(damageUpgrade, uuid));
 

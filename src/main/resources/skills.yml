@@ -146,7 +146,6 @@ points_for_level:
   - 750000
   - 1000000
 
-# DO NOT TOUCH
 upgrades:
   # Chopping
   destrip:
@@ -158,6 +157,7 @@ upgrades:
     lore:
       - "§eCliques droit sur une bûche écorcée"
       - "§epour magiquement lui remetrre son écorce"
+      - "§7Id: §ndestrip"
   logvity:
     cost: 2
     cost_factor: 1.5
@@ -170,6 +170,7 @@ upgrades:
       - "§eau dessus. Augmente à chaque niveaux."
       - "§eLes bûches cassées par cette amélioration"
       - "§ene donnent que 70% de leur xp"
+      - "§7Id: §nlogvity"
   # Farming
   replanter:
     cost: 2
@@ -179,6 +180,7 @@ upgrades:
     display_name: "§6§lReplanteur"
     lore:
       - "§eReplante pour toi après que tu aies récolté"
+      - "§7Id: §nreplanter"
   replanter_fortune:
     cost: 2
     cost_factor: 1.5
@@ -189,6 +191,7 @@ upgrades:
       - "§eFortune fonctionne sur les plantes"
       - "§esans avoir à enchanté ton outil"
       - "§eRequiert: §6Replanteur"
+      - "§7Id: §nreplanter_fortune"
   wide_till:
     cost: 2
     cost_factor: 1.0
@@ -197,6 +200,7 @@ upgrades:
     display_name: "§6§lLarge Bêche"
     lore:
       - "§eBêche une zone §63x3"
+      - "§7Id: §nwide_till"
   # Mining
   auto_smelt:
     cost: 1
@@ -206,6 +210,7 @@ upgrades:
     display_name: "§6§lCuissont Auto"
     lore:
       - "§eCuit ton minerais quand tu le casses"
+      - "§7Id: §nauto_smelt"
   vein_mine:
     cost: 2
     cost_factor: 1.0
@@ -215,6 +220,7 @@ upgrades:
     lore:
       - "§eMine tous les blocs du même type autour du"
       - "§e bloc casser dans une zone de 3x3x3"
+      - "§7Id: §nvein_mine"
   magnet:
     cost: 3
     cost_factor: 1.5
@@ -225,6 +231,7 @@ upgrades:
       - "§eTéléporte les items à tes pieds"
       - "§edans un rayon autour de toi"
       - "§eLe rayon augment à chaque niveau"
+      - "§7Id: §nmagnet"
   # Death
   cat_life:
     cost: 2
@@ -234,6 +241,7 @@ upgrades:
     display_name: "§6§lVie de Chat"
     lore:
       - "§eGagnes un coeur à chaque niveau"
+      - "§7Id: §ncatlife"
   limited_immortality:
     cost: 2
     cost_factor: 1.0
@@ -243,6 +251,7 @@ upgrades:
     lore:
       - "§eUn ange gardien te sauvera"
       - "§elors de ta prochaine mort"
+      - "§7Id: §nlimited_immortality"
   # Flying
   leap:
     cost: 1
@@ -252,6 +261,8 @@ upgrades:
     display_name: "§6§lBond"
     lore:
       - "§eFais un bond pour t'envoler"
+      - "§equand tu portes des elytres."
+      - "§7Id: §nleap"
   # Running
   speed:
     cost: 1
@@ -261,6 +272,7 @@ upgrades:
     display_name: "§6§lVitesse"
     lore:
       - "§eGagnes de la vitesse à chaque niveau"
+      - "§7Id: §nspeed"
   # Swimming
   breath:
     cost: 1
@@ -271,6 +283,7 @@ upgrades:
     lore:
       - "§eGagnes un niveau de respiration à chaque niveau. "
       - "§eLe niveau max te permet de rester sous l'eau infiniment"
+      - "§7Id: §nbreath"
   # Combat
   damage:
     cost: 1
@@ -281,3 +294,4 @@ upgrades:
     lore:
       - "§eChaque niveau inflige 10% des dégâts"
       - "§ede ton arme en plus."
+      - "§7Id: §ndamage"

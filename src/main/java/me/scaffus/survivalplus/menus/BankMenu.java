@@ -50,8 +50,10 @@ public class BankMenu implements Listener {
 
         if (event.getView().getTitle().equals(amountInventoryName)) {
             event.setCancelled(true);
+
             Player p = (Player) event.getWhoClicked();
             int slot = event.getSlot();
+            if (!survivalData.canPlayerClick(p.getUniqueId())) return;
 
             if (slot == 10) amount = amount - 64;
             else if (slot == 11) amount = amount - 8;
