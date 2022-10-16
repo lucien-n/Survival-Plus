@@ -25,7 +25,6 @@ public class PlayerJoinQuitListener implements Listener {
         Player p = event.getPlayer();
         data.createPlayer(p);
         survivalData.loadPlayerData(p);
-        p.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20 + (survivalData.getPlayerUpgrade(p.getUniqueId(), "cat_life") * 2));
         event.setJoinMessage("§6§l" + p.getDisplayName() + "§e a rejoint.");
     }
 

@@ -1,9 +1,6 @@
 package me.scaffus.survivalplus.listeners;
 
-import me.scaffus.survivalplus.Helper;
-import me.scaffus.survivalplus.SkillsConfig;
-import me.scaffus.survivalplus.SurvivalData;
-import me.scaffus.survivalplus.SurvivalPlus;
+import me.scaffus.survivalplus.*;
 import me.scaffus.survivalplus.tasks.PlaceBlockTask;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -25,8 +22,8 @@ public class BlockBreakListener implements Listener {
     private final SurvivalPlus plugin;
     private final SurvivalData survivalData;
     private final SkillsConfig skillsConfig;
+    private final SkillHelper skillHelper;
     private final Helper helper;
-    private final List pointsForLevels;
     private final Set miningOres;
     private final Map miningOrePoints;
     private final List<String> miningTools;
@@ -34,8 +31,6 @@ public class BlockBreakListener implements Listener {
     private final Map farmingCropsPoints;
     private final List<String> farmingTools;
     private final List<String> farmingReplantableCrops;
-    private final String skillsGainedXpMessage;
-    private final String skillsPassedLevelMessage;
     private PlaceBlockTask placeBlockTask;
 
     private ItemStack farminghoeFortune1;
@@ -67,8 +62,7 @@ public class BlockBreakListener implements Listener {
         this.survivalData = plugin.survivalData;
         this.skillsConfig = plugin.skillsConfig;
         this.helper = plugin.helper;
-
-        pointsForLevels = (List) skillsConfig.get().get("points_for_level");
+        this.skillHelper = plugin.skillHelper;
 
         miningOres = skillsConfig.get().getConfigurationSection("mining.blocks").getKeys(false);
         miningOrePoints = skillsConfig.get().getConfigurationSection("mining.blocks").getValues(false);
@@ -78,9 +72,6 @@ public class BlockBreakListener implements Listener {
         farmingCropsPoints = skillsConfig.get().getConfigurationSection("farming.crops").getValues(false);
         farmingTools = (List) skillsConfig.get().get("farming.tools");
         farmingReplantableCrops = (List) skillsConfig.get().get("farming.replantables");
-
-        skillsGainedXpMessage = plugin.getConfig().getString("skills.gained");
-        skillsPassedLevelMessage = plugin.getConfig().getString("skills.passed_level");
 
         farminghoeFortune1 = new ItemStack(Material.WOODEN_HOE);
         farmingHoeFortune2 = new ItemStack(Material.WOODEN_HOE);
@@ -110,13 +101,9 @@ public class BlockBreakListener implements Listener {
 
         // ? MINING
         if (miningOres.contains(block.getType().toString()) && miningTools.contains(p.getInventory().getItemInMainHand().getType().toString())) {
-            // Points
+            // Gain
             Double pointsGained = helper.round((Double) miningOrePoints.get(block.getType().toString()), 2);
-            survivalData.incrementPlayerSkillPoints(p.getUniqueId(), "mining", pointsGained);
-            helper.sendActionBar(p, skillsGainedXpMessage.replace("%amount%", String.valueOf(pointsGained)).replace("%skill%", "minage"));
-
-            // Levels
-            handlePlayerSkillLevel(p, "mining");
+            skillHelper.handleSkillGain(p, pointsGained, "mining");
 
             // * Autosmelt
             if (survivalData.getPlayerUpgrade(uuid, "auto_smelt") > 0) {
@@ -177,11 +164,7 @@ public class BlockBreakListener implements Listener {
 
             // Points
             Double pointsGained = helper.round((Double) farmingCropsPoints.getOrDefault(block.getType().toString(), 0.0), 2);
-            survivalData.incrementPlayerSkillPoints(p.getUniqueId(), "farming", pointsGained);
-            helper.sendActionBar(p, skillsGainedXpMessage.replace("%amount%", String.valueOf(pointsGained)).replace("%skill%", "agriculture"));
-
-            // Levels
-            handlePlayerSkillLevel(p, "chopping");
+            skillHelper.handleSkillGain(p, pointsGained, "farming");
 
             // * Replant
             if (p.getInventory().getItemInMainHand() != null && farmingTools.contains(p.getInventory().getItemInMainHand().getType().toString()) && survivalData.getPlayerUpgrade(uuid, "replanter") > 0 && farmingReplantableCrops.contains(block.getType().toString())) {
@@ -215,11 +198,7 @@ public class BlockBreakListener implements Listener {
         if (choppingLogs.contains(block.getType().toString())) {
             // Points
             Double pointsGained = helper.round((Double) choppingLogsPoints.getOrDefault(block.getType().toString(), 0.0), 2);
-            survivalData.incrementPlayerSkillPoints(uuid, "chopping", pointsGained);
-            helper.sendActionBar(p, skillsGainedXpMessage.replace("%amount%", String.valueOf(pointsGained)).replace("%skill%", "bûcheronnage"));
-
-            // Levels
-            handlePlayerSkillLevel(p, "chopping");
+            skillHelper.handleSkillGain(p, pointsGained, "chopping");
 
             // * LOGVITY
             Integer playerLogvityUpgradeLevel = survivalData.getPlayerUpgrade(uuid, "logvity");
@@ -233,19 +212,6 @@ public class BlockBreakListener implements Listener {
                     // 70% of gained points to avoid logvity being to op
                     survivalData.incrementPlayerSkillPoints(uuid, "chopping", pointsGained * 0.7);
                 }
-            }
-        }
-    }
-
-    public void handlePlayerSkillLevel(Player p, String skill) {
-        int playerSkillLevel = survivalData.getPlayerSkillLevel(p.getUniqueId(), skill);
-        Double playerSkillPoints = survivalData.getPlayerSkillPoints(p.getUniqueId(), skill);
-        for (int i = 0; i <= pointsForLevels.size(); i++) {
-            if (playerSkillLevel == pointsForLevels.size()) return;
-            if (playerSkillLevel == i && playerSkillPoints >= (int) pointsForLevels.get(i)) {
-                survivalData.incrementPlayerSkillLevel(p.getUniqueId(), skill, 1);
-                survivalData.incrementPlayerTokens(p.getUniqueId(), 1);
-                p.sendMessage(skillsPassedLevelMessage.replace("%level%", String.valueOf(i + 1)));
             }
         }
     }

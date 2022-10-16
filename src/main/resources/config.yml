@@ -17,7 +17,7 @@ database:
   port: 3306
 
 skills:
-  gained: "§eTu as gagné §6§l%amount%§e d'xp de §6§n%skill%"
+  gained: "§6§l%amount% / %amount_for_level%§e §e| §6§n%skill%"
   passed_level: "§eTu es passé niveau §6§l%level%§e"
   not_enough_tokens: "§eTu n'as pas assé de §6§njetons"
   upgrade_bought: "§eTu as acheté §6§l%upgrade%§e pour §6§n%cost%§e jeton(s)"

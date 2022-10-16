@@ -75,6 +75,7 @@ public class SkillsMenu implements Listener {
             if (slot == 34) p.openInventory(flyingSkillMenu.createMenu(p));
 
 //            if (slot == 45) p.openInventory(toggleSkillMenu.createMenu(p));
+            survivalData.setPlayerLastClicked(p.getUniqueId());
 
             if (slot == event.getInventory().getSize() - 1) p.closeInventory();
         }
@@ -130,7 +131,7 @@ public class SkillsMenu implements Listener {
         UUID uuid = p.getUniqueId();
         Integer playerUpgradeLevel = survivalData.getPlayerUpgrade(uuid, upgrade.name);
         Integer cost = (playerUpgradeLevel + 1) * upgrade.cost;
-        if (survivalData.getPlayerTokens(uuid) < cost) {
+        if (survivalData.getPlayerTokens(uuid) <= cost) {
             plugin.getConfig().getString("skills.not_enough_tokens");
             return false;
         }

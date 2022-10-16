@@ -40,6 +40,7 @@ public class FlyingSkillMenu implements Listener {
         int slot = event.getSlot();
         if (!survivalData.canPlayerClick(p.getUniqueId())) return;
 
+        survivalData.setPlayerLastClicked(p.getUniqueId());
         if (slot == event.getInventory().getSize() - 9) p.openInventory(skillsMenu.createSkillMenu(p));
         if (slot == event.getInventory().getSize() - 1) p.closeInventory();
     }

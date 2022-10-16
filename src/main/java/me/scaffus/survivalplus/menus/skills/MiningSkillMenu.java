@@ -63,6 +63,7 @@ public class MiningSkillMenu implements Listener {
             skillsMenu.buyUpgrade(p, autoSmeltUpgrade);
         } else if (slot == 31) skillsMenu.buyUpgrade(p, magnetUpgrade);
 
+        survivalData.setPlayerLastClicked(p.getUniqueId());
         if (slot == event.getInventory().getSize() - 9) p.openInventory(skillsMenu.createSkillMenu(p));
         if (slot == event.getInventory().getSize() - 1) p.closeInventory();
     }

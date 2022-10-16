@@ -19,6 +19,7 @@ public final class SurvivalPlus extends JavaPlugin {
     public DatabaseGetterSetter data;
     public SkillsConfig skillsConfig = new SkillsConfig();
     public Helper helper = new Helper(this);
+    public SkillHelper skillHelper;
     public SurvivalData survivalData;
     private MagnetTask magnetTask;
     @Override
@@ -31,6 +32,7 @@ public final class SurvivalPlus extends JavaPlugin {
         skillsConfig.save();
 
         survivalData = new SurvivalData(this);
+        skillHelper = new SkillHelper(this);
 
         getServer().getPluginManager().registerEvents(new InventoryListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerJoinQuitListener(this), this);

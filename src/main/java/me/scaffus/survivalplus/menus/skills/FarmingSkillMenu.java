@@ -49,6 +49,7 @@ public class FarmingSkillMenu implements Listener {
         else if (slot == 15) skillsMenu.buyUpgrade(p, survivalData.getUpgrade("replanter_fortune"));
         else if (slot == 31) skillsMenu.buyUpgrade(p, survivalData.getUpgrade("wide_till"));
 
+        survivalData.setPlayerLastClicked(p.getUniqueId());
         if (slot == event.getInventory().getSize() - 9) p.openInventory(skillsMenu.createSkillMenu(p));
         if (slot == event.getInventory().getSize() - 1) p.closeInventory();
     }

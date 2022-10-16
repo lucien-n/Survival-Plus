@@ -22,7 +22,7 @@ public class InventoryListener implements Listener {
         // If current inventory is a menu
         if (event.getView().getTitle().contains("§")) {
             Player p = (Player) event.getWhoClicked();
-            if (survivalData.canPlayerClick(p.getUniqueId())) survivalData.setPlayerLastClicked(p.getUniqueId());
+//            if (survivalData.canPlayerClick(p.getUniqueId()))
         }
     }
 }

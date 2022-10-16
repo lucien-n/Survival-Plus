@@ -4,8 +4,11 @@ import me.scaffus.survivalplus.objects.PlayerUpgrade;
 import me.scaffus.survivalplus.sql.DatabaseGetterSetter;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.boss.BossBar;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.w3c.dom.Attr;
 
 import java.time.Instant;
 import java.util.*;
@@ -23,6 +26,7 @@ public class SurvivalData {
     public HashMap<UUID, Integer> playerBalance = new HashMap<>();
 
     public HashMap<UUID, HashMap<String, Integer>> playersUpgrades = new HashMap<>();
+    public HashMap<UUID, BossBar> playerSkillBar = new HashMap<>();
 
     public String upgradeBought;
     public HashMap<String, PlayerUpgrade> allUpgrades = new HashMap<>();
@@ -47,9 +51,10 @@ public class SurvivalData {
 
         playerTokens.put(uuid, data.getPlayerTokens(uuid));
         playerBalance.put(uuid, data.getPlayerBalance(uuid));
-        setPlayerLastClicked(uuid);
 
         setPlayerLastClicked(uuid);
+
+        p.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20 + (getPlayerUpgrade(uuid, "cat_life") * 2));
     }
 
     public void savePlayerData(Player p) {
@@ -80,13 +85,17 @@ public class SurvivalData {
         }
     }
 
+    public void setPlayerSkillBar(UUID uuid, BossBar bar) {
+        playerSkillBar.put(uuid, bar);
+    }
+
+    public BossBar getPlayerSkillBar(UUID uuid) {
+        return playerSkillBar.get(uuid);
+    }
+
     public Boolean canPlayerClick(UUID uuid) {
-        Bukkit.getPlayer(uuid).sendMessage(String.valueOf(getPlayerLastClicked(uuid) + " [] " + System.currentTimeMillis()));
-        if ((System.currentTimeMillis() - getPlayerLastClicked(uuid)) > 750 ) {
-            return true;
-        } else {
-            helper.sendActionBar(Bukkit.getPlayer(uuid), "§cAttends §n750ms§c entre chaque action");
-        }
+        if ((System.currentTimeMillis() - getPlayerLastClicked(uuid)) > 500) return true;
+        else helper.sendActionBar(Bukkit.getPlayer(uuid), "§cAttends §n500ms§c entre chaque action");
         return false;
     }
 

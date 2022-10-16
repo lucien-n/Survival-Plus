@@ -45,6 +45,8 @@ public class BankMenu implements Listener {
                 p.openInventory(createAmountMenu(p));
                 mode = "deposit";
             }
+
+            survivalData.setPlayerLastClicked(p.getUniqueId());
             if (slot == event.getInventory().getSize() - 1) p.closeInventory();
         }
 

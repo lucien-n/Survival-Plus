@@ -7,6 +7,7 @@ import me.scaffus.survivalplus.menus.SkillsMenu;
 import me.scaffus.survivalplus.objects.PlayerUpgrade;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -39,9 +40,15 @@ public class CombatSkillMenu implements Listener {
         event.setCancelled(true);
 
         Player p = (Player) event.getWhoClicked();
+        UUID uuid = p.getUniqueId();
         int slot = event.getSlot();
         if (!survivalData.canPlayerClick(p.getUniqueId())) return;
 
+        if (slot == 11) {
+            skillsMenu.buyUpgrade(p, damageUpgrade);
+        }
+
+        survivalData.setPlayerLastClicked(p.getUniqueId());
         if (slot == event.getInventory().getSize() - 9) p.openInventory(skillsMenu.createSkillMenu(p));
         if (slot == event.getInventory().getSize() - 1) p.closeInventory();
     }

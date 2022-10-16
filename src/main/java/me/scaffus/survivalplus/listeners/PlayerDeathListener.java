@@ -1,5 +1,6 @@
 package me.scaffus.survivalplus.listeners;
 
+import me.scaffus.survivalplus.SkillHelper;
 import me.scaffus.survivalplus.SurvivalData;
 import me.scaffus.survivalplus.SurvivalPlus;
 import org.bukkit.entity.Player;
@@ -12,10 +13,12 @@ import java.util.UUID;
 public class PlayerDeathListener implements Listener {
     private final SurvivalPlus plugin;
     private final SurvivalData survivalData;
+    private final SkillHelper skillHelper;
 
     public PlayerDeathListener(SurvivalPlus plugin) {
         this.plugin = plugin;
         this.survivalData = plugin.survivalData;
+        this.skillHelper = plugin.skillHelper;
     }
 
     @EventHandler
@@ -23,6 +26,6 @@ public class PlayerDeathListener implements Listener {
         Player p = event.getEntity();
         UUID uuid = p.getUniqueId();
 
-        survivalData.incrementPlayerSkillPoints(p.getUniqueId(), "death", 200.0);
+        skillHelper.handleSkillGain(p, 200.0, "death");
     }
 }

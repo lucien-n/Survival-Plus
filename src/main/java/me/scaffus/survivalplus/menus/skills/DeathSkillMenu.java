@@ -55,6 +55,7 @@ public class DeathSkillMenu implements Listener {
             }
         } else if (slot == 15) skillsMenu.buyUpgrade(p, survivalData.getUpgrade("limited_immortality"));
 
+        survivalData.setPlayerLastClicked(p.getUniqueId());
         if (slot == event.getInventory().getSize() - 9) p.openInventory(skillsMenu.createSkillMenu(p));
         if (slot == event.getInventory().getSize() - 1) p.closeInventory();
     }

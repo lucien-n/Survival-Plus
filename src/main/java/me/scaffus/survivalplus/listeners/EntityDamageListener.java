@@ -3,10 +3,14 @@ package me.scaffus.survivalplus.listeners;
 import me.scaffus.survivalplus.SurvivalData;
 import me.scaffus.survivalplus.SurvivalPlus;
 import org.bukkit.EntityEffect;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.material.MaterialData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -29,7 +33,6 @@ public class EntityDamageListener implements Listener {
         UUID uuid = p.getUniqueId();
 
         if (survivalData.getPlayerUpgrade(uuid, "limited_immortality") > 0) {
-
             if ((p.getHealth() - event.getFinalDamage()) < 0.0) {
                 event.setCancelled(true);
                 p.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 30 * 20, 2));
@@ -40,5 +43,17 @@ public class EntityDamageListener implements Listener {
                 survivalData.setPlayerUpgrade(uuid, "limited_immortality", 0);
             }
         }
+    }
+
+    @EventHandler
+    public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+        if (!(event.getDamager() instanceof Player)) return;
+
+        Player p = (Player) event.getDamager();
+        UUID uuid = p.getUniqueId();
+
+        double eventDamage = event.getDamage();
+        double supplementaryDamage = (eventDamage * (survivalData.getPlayerUpgrade(uuid, "damage") * 10)) / 100;
+        event.setDamage(eventDamage + supplementaryDamage);
     }
 }
