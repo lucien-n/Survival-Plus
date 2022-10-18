@@ -9,6 +9,9 @@ bank:
     not_enough: "§eTu n'as pas §6§l%amount%§e diamants dans ton inventaire"
   balance: "§eTu as §6§l%amount%§e diamants dans ta banque"
 
+messages:
+  no_permission: "§cTu n'as pas la permission d'éxecuter cette commande!"
+
 database:
   host: "localhost"
   user: "survival-plus"
@@ -18,7 +21,7 @@ database:
 
 skills:
   gained: "§6§l%amount% / %amount_for_level%§e §e| §6§n%skill%"
-  passed_level: "§eTu es passé niveau §6§l%level%§e"
+  passed_level: "§eTu es passé niveau §6§l%level%§e en §6§n%skill%"
   not_enough_tokens: "§eTu n'as pas assé de §6§njetons"
   upgrade_bought: "§eTu as acheté §6§l%upgrade%§e pour §6§n%cost%§e jeton(s)"
   upgrade_already_bought: "§eTu as déjà §6§l%upgrade%"

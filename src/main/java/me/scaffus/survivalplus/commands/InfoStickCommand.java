@@ -26,6 +26,11 @@ public class InfoStickCommand implements CommandExecutor {
         if (!(sender instanceof Player)) return false;
 
         Player p = (Player) sender;
+        if (!p.hasPermission("survplus.infostick")) {
+            helper.getMessage("no_permission");
+            return true;
+        }
+
         p.getInventory().addItem(infoStick);
 
         return false;

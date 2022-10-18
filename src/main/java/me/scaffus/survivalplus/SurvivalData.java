@@ -3,14 +3,15 @@ package me.scaffus.survivalplus;
 import me.scaffus.survivalplus.objects.PlayerUpgrade;
 import me.scaffus.survivalplus.sql.DatabaseGetterSetter;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.w3c.dom.Attr;
 
-import java.time.Instant;
 import java.util.*;
 
 public class SurvivalData {
@@ -27,12 +28,12 @@ public class SurvivalData {
 
     public HashMap<UUID, HashMap<String, Integer>> playersUpgrades = new HashMap<>();
     public HashMap<UUID, BossBar> playerSkillBar = new HashMap<>();
+    public HashMap<UUID, Location> playerLastLocation = new HashMap<>();
+    public HashMap<String, PlayerUpgrade> allUpgrades = new HashMap<>();
+    public HashMap<UUID, Long> playerLastClicked = new HashMap<>();
 
     public String upgradeBought;
-    public HashMap<String, PlayerUpgrade> allUpgrades = new HashMap<>();
 
-
-    public HashMap<UUID, Long> playerLastClicked = new HashMap<>();
 
     public SurvivalData(SurvivalPlus plugin) {
         this.data = plugin.data;
@@ -48,6 +49,7 @@ public class SurvivalData {
         loadPlayerPoints(uuid);
         loadPlayerLevels(uuid);
         loadPlayerUpgrades(uuid);
+        createPlayerBossBar(uuid);
 
         playerTokens.put(uuid, data.getPlayerTokens(uuid));
         playerBalance.put(uuid, data.getPlayerBalance(uuid));
@@ -66,6 +68,21 @@ public class SurvivalData {
 
         data.setPlayerTokens(uuid, playerTokens.get(uuid));
         data.setPlayerBalance(uuid, playerBalance.get(uuid));
+    }
+
+    public void setPlayerLastLocation(UUID uuid, Location pos) {
+        playerLastLocation.put(uuid, pos);
+    }
+
+    public Location getPlayerLastLocation(UUID uuid) {
+        return playerLastLocation.get(uuid);
+    }
+
+    public void createPlayerBossBar(UUID uuid) {
+        BossBar bar = Bukkit.createBossBar("", BarColor.YELLOW, BarStyle.SOLID);
+        bar.setVisible(false);
+        bar.addPlayer(Bukkit.getPlayer(uuid));
+        setPlayerSkillBar(uuid, bar);
     }
 
     public void createUpgrades() {
@@ -175,10 +192,6 @@ public class SurvivalData {
         return playerTokens.get(uuid);
     }
 
-    public void setPlayerTokens(UUID uuid, Integer amount) {
-        playerTokens.put(uuid, amount);
-    }
-
     public void incrementPlayerTokens(UUID uuid, Integer amount) {
         playerTokens.put(uuid, playerTokens.get(uuid) + amount);
     }
@@ -187,25 +200,12 @@ public class SurvivalData {
         return playerBalance.get(uuid);
     }
 
-    public void setPlayerBalance(UUID uuid, Integer amount) {
-        playerBalance.put(uuid, amount);
-    }
-
     public void incrementPlayerBalance(UUID uuid, Integer amount) {
         playerBalance.put(uuid, playerBalance.get(uuid) + amount);
     }
 
-    public void setPlayerUpgrade(UUID uuid, String upgrade, Integer status, HashMap playerUpgrade) {
-        data.setPlayerUpgrade(uuid, upgrade, status);
-        playerUpgrade.put(uuid, status);
-    }
-
     public Double getPlayerSkillPoints(UUID uuid, String skill) {
         return helper.round(playersPoints.get(uuid).get(skill), 2);
-    }
-
-    public void setPlayerSkillPoints(UUID uuid, String skill, Double amount) {
-        playersPoints.get(uuid).put(skill, amount);
     }
 
     public void incrementPlayerSkillPoints(UUID uuid, String skill, Double amount) {
@@ -214,10 +214,6 @@ public class SurvivalData {
 
     public Integer getPlayerSkillLevel(UUID uuid, String skill) {
         return playersLevels.get(uuid).get(skill);
-    }
-
-    public void setPlayerSkillLevel(UUID uuid, String skill, Integer amount) {
-        playersLevels.get(uuid).put(skill, amount);
     }
 
     public void incrementPlayerSkillLevel(UUID uuid, String skill, Integer amount) {

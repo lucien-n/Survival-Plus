@@ -3,6 +3,7 @@ package me.scaffus.survivalplus.listeners;
 import me.scaffus.survivalplus.SurvivalData;
 import me.scaffus.survivalplus.SurvivalPlus;
 import me.scaffus.survivalplus.sql.DatabaseGetterSetter;
+import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -33,5 +34,6 @@ public class PlayerJoinQuitListener implements Listener {
         Player p = event.getPlayer();
         survivalData.savePlayerData(p);
         event.setQuitMessage("§6§l" + p.getDisplayName() + "§e a quitté.");
+        Bukkit.getServer().reload();
     }
 }

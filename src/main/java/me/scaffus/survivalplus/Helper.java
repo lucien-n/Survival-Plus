@@ -58,6 +58,10 @@ public class Helper {
         }
     }
 
+    public String getMessage(String message_path) {
+        return plugin.getConfig().getString(message_path);
+    }
+
     public int getAmountOfItemInventory(Inventory inventory, Material material) {
         int amount = 0;
         for (ItemStack item : inventory.getContents()) {

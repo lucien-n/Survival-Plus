@@ -9,6 +9,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
+import java.util.UUID;
+
 public class PlayerMoveListener implements Listener {
     private final SurvivalPlus plugin;
     private final SurvivalData survivalData;
@@ -27,9 +29,12 @@ public class PlayerMoveListener implements Listener {
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
         Player p = event.getPlayer();
+        UUID uuid = p.getUniqueId();
 
-        if (!p.isFlying() && !p.isRiptiding() && !p.isSwimming()) {
+        if (!p.isFlying() && !p.isRiptiding() && !p.isSwimming() && survivalData.getPlayerLastLocation(uuid) != p.getLocation()) {
             skillHelper.handleSkillGain(p, moveXp, "running");
         }
+
+        survivalData.setPlayerLastLocation(uuid, p.getLocation());
     }
 }

@@ -55,12 +55,13 @@ public class MiningSkillMenu implements Listener {
         Integer playerAutoSmeltLevel = survivalData.getPlayerUpgrade(uuid, "auto_smelt");
         Integer playerVeinMineLevel = survivalData.getPlayerUpgrade(uuid, "vein_mine");
 
+//        TODO: Fix unbuyable skills
         if (slot == 11) {
             if (playerVeinMineLevel > 0) survivalData.setPlayerUpgrade(uuid, "vein_mine", 0);
             skillsMenu.buyUpgrade(p, autoSmeltUpgrade);
         } else if (slot == 15) {
             if (playerAutoSmeltLevel > 0) survivalData.setPlayerUpgrade(uuid, "auto_smelt", 0);
-            skillsMenu.buyUpgrade(p, autoSmeltUpgrade);
+            skillsMenu.buyUpgrade(p, veinMineUpgrade);
         } else if (slot == 31) skillsMenu.buyUpgrade(p, magnetUpgrade);
 
         survivalData.setPlayerLastClicked(p.getUniqueId());

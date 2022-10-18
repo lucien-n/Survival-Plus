@@ -1,9 +1,5 @@
 package me.scaffus.survivalplus;
 
-import me.scaffus.survivalplus.tasks.HidePlayerSkillBarTask;
-import org.bukkit.Bukkit;
-import org.bukkit.boss.BarColor;
-import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 
@@ -28,41 +24,60 @@ public class SkillHelper {
         skillsPassedLevelMessage = plugin.getConfig().getString("skills.passed_level");
     }
 
-    public void handlePlayerSkillLevel(Player p, String skill) {
-        int playerSkillLevel = survivalData.getPlayerSkillLevel(p.getUniqueId(), skill);
-        Double playerSkillPoints = survivalData.getPlayerSkillPoints(p.getUniqueId(), skill);
-        for (int i = 0; i <= pointsForLevels.size(); i++) {
-            if (playerSkillLevel == pointsForLevels.size()) return;
-            if (playerSkillLevel == i && playerSkillPoints >= (int) pointsForLevels.get(i)) {
-                survivalData.incrementPlayerSkillLevel(p.getUniqueId(), skill, 1);
-                survivalData.incrementPlayerTokens(p.getUniqueId(), 1);
-                p.sendMessage(skillsPassedLevelMessage.replace("%level%", String.valueOf(i + 1)));
-            }
+    public void handlePlayerSkillLevel(Player p, String skill, Integer skillLevel, Double skillPoints, Integer pointsForNextLevel) {
+        UUID uuid = p.getUniqueId();
+        if (skillLevel == pointsForLevels.size()) return;
+        if (skillPoints >= pointsForNextLevel) {
+            survivalData.incrementPlayerSkillLevel(uuid, skill, 1);
+            survivalData.incrementPlayerTokens(uuid, 1);
+            p.sendMessage(skillsPassedLevelMessage.replace("%level%", String.valueOf(skillLevel + 1)).replace("%skill%", skill));
         }
+//        for (int i = 0; i <= pointsForLevels.size(); i++) {
+//            if (playerSkillLevel == pointsForLevels.size()) return;
+//            if (playerSkillLevel == i && playerSkillPoints >= (int) pointsForLevels.get(i)) {
+//                survivalData.incrementPlayerSkillLevel(p.getUniqueId(), skill, 1);
+//                survivalData.incrementPlayerTokens(p.getUniqueId(), 1);
+//                p.sendMessage(skillsPassedLevelMessage.replace("%level%", String.valueOf(i + 1)).replace("%skill%", skill));
+//            }
+//        }
     }
 
     public void handleSkillGain(Player p, Double pointsGained, String skill) {
         UUID uuid = p.getUniqueId();
+
         Integer playerSkillLevel = survivalData.getPlayerSkillLevel(uuid, skill);
         Double playerSkillPoints = survivalData.getPlayerSkillPoints(uuid, skill);
+        Integer pointsForNextLevel = (Integer) pointsForLevels.get(playerSkillLevel);
         Double totalPlayerSkillPoints = playerSkillPoints + pointsGained;
 
-        Integer pointsForNextLevel = (Integer) pointsForLevels.get(playerSkillLevel + 1);
-        BossBar bar = Bukkit.createBossBar(
-                plugin.getConfig().getString("skills.gained")
-                        .replace("%skill%", skill)
-                        .replace("%amount%", String.valueOf(totalPlayerSkillPoints))
-                        .replace("%amount_for_level%", String.valueOf(pointsForNextLevel)),
-                BarColor.GREEN, BarStyle.SOLID);
-        bar.setProgress(totalPlayerSkillPoints / pointsForNextLevel);
-        bar.addPlayer(p);
-        bar.setVisible(true);
-        survivalData.setPlayerSkillBar(uuid, bar);
+        survivalData.incrementPlayerSkillPoints(uuid, skill, pointsGained);
+        handlePlayerSkillLevel(p, skill, playerSkillLevel, totalPlayerSkillPoints, pointsForNextLevel);
 
-        HidePlayerSkillBarTask hide = new HidePlayerSkillBarTask(survivalData.getPlayerSkillBar(uuid));
-        hide.runTaskLater(plugin, 60L);
+        // Running skill spams the bar
+        if (skill.equalsIgnoreCase("running")) return;
 
-        survivalData.incrementPlayerSkillPoints(p.getUniqueId(), "mining", pointsGained);
-        handlePlayerSkillLevel(p, skill);
+        // Display skill xp bar
+        BossBar playerSkillBar = survivalData.getPlayerSkillBar(uuid);
+        playerSkillBar.setTitle(plugin.getConfig().getString("skills.gained")
+                .replace("%skill%", skill).replace("%amount%", String.valueOf(totalPlayerSkillPoints))
+                .replace("%amount_for_level%", String.valueOf(pointsForNextLevel)));
+
+        int factor = (Integer) pointsForLevels.get(playerSkillLevel - (playerSkillLevel == 0 ? 0 : 1));
+        double progress = (totalPlayerSkillPoints - (playerSkillLevel == 0 ? 0 : factor)) / (pointsForNextLevel - (playerSkillLevel == 0 ? 0 : factor));
+
+        plugin.getLogger().info("\n\n===[ Player Skill Progress ]===\n"
+                + " Level: " + playerSkillLevel + "\n"
+                + " TotalPoints: " + totalPlayerSkillPoints + "\n"
+                + " Points4Next: " + pointsForNextLevel + "\n"
+                + " Factor: " + factor + "\n"
+                + " Points4Current: " + pointsForLevels.get(playerSkillLevel - (playerSkillLevel == 0 ? 0 : 1)) + "\n"
+                + " Progress: " + progress + "\n");
+
+        playerSkillBar.setProgress(totalPlayerSkillPoints + pointsGained >= pointsForNextLevel ? 1.0 : progress);
+        playerSkillBar.addPlayer(p);
+        playerSkillBar.setVisible(true);
+
+//        HidePlayerSkillBarTask hide = new HidePlayerSkillBarTask(survivalData.getPlayerSkillBar(uuid));
+//        hide.runTaskLater(plugin, 140L);
     }
 }
