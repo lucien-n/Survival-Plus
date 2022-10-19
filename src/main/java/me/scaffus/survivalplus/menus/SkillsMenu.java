@@ -4,6 +4,7 @@ import me.scaffus.survivalplus.Helper;
 import me.scaffus.survivalplus.SurvivalData;
 import me.scaffus.survivalplus.SurvivalPlus;
 import me.scaffus.survivalplus.menus.skills.*;
+import me.scaffus.survivalplus.objects.PlayerSkill;
 import me.scaffus.survivalplus.objects.PlayerUpgrade;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -86,39 +87,32 @@ public class SkillsMenu implements Listener {
     public Inventory createSkillMenu(Player p) {
         Inventory inventory = helper.createInventoryWithBackground(p, skillInventoryName, 54, false);
 
+        PlayerSkill farmingSkill = survivalData.getSkill("farming");
+        PlayerSkill miningSkill = survivalData.getSkill("mining");
+        PlayerSkill combatSkill = survivalData.getSkill("combat");
+        PlayerSkill runningSkill = survivalData.getSkill("running");
+        PlayerSkill deathSkill = survivalData.getSkill("death");
+        PlayerSkill choppingSkill = survivalData.getSkill("chopping");
+        PlayerSkill swimmingSkill = survivalData.getSkill("swimming");
+        PlayerSkill flyingSkill = survivalData.getSkill("flying");
+
         inventory.setItem(10, helper.getItem(
-                new ItemStack(Material.GOLDEN_HOE), "§6§lAgriculture", "§eXp: §6" +
-                        helper.numberFormat.format(survivalData.getPlayerSkillPoints(p.getUniqueId(), "farming")).replace(" ", " "),
-                "§eNiveau: §6" + survivalData.getPlayerSkillLevel(p.getUniqueId(), "farming")));
+                new ItemStack(farmingSkill.displayMaterial), farmingSkill.displayName, getSkillLore(p, farmingSkill.id, "xp"), getSkillLore(p, farmingSkill.id, "level")));
         inventory.setItem(12, helper.getItem(
-                new ItemStack(Material.DIAMOND_PICKAXE), "§6§lMinage", "§eXp: §6" +
-                        helper.numberFormat.format(survivalData.getPlayerSkillPoints(p.getUniqueId(), "mining")).replace(" ", " "),
-                "§eNiveau: §6" + survivalData.getPlayerSkillLevel(p.getUniqueId(), "mining")));
+                new ItemStack(miningSkill.displayMaterial), miningSkill.displayName, getSkillLore(p, miningSkill.id, "xp"), getSkillLore(p, farmingSkill.id, "level")));
         inventory.setItem(14, helper.getItem(
-                new ItemStack(Material.NETHERITE_SWORD), "§6§lCombat", "§eXp: §6" +
-                        helper.numberFormat.format(survivalData.getPlayerSkillPoints(p.getUniqueId(), "combat")).replace(" ", " "),
-                "§eNiveau: §6" + survivalData.getPlayerSkillLevel(p.getUniqueId(), "combat")));
+                new ItemStack(combatSkill.displayMaterial), combatSkill.displayName, getSkillLore(p, combatSkill.id, "xp"), getSkillLore(p, farmingSkill.id, "level")));
         inventory.setItem(16, helper.getItem(
-                new ItemStack(Material.LEATHER_BOOTS), "§6§lCourse", "§eXp: §6" +
-                        helper.numberFormat.format(survivalData.getPlayerSkillPoints(p.getUniqueId(), "running")).replace(" ", " "),
-                "§eNiveau: §6" + survivalData.getPlayerSkillLevel(p.getUniqueId(), "running")));
+                new ItemStack(runningSkill.displayMaterial), runningSkill.displayName, getSkillLore(p, runningSkill.id, "xp"), getSkillLore(p, farmingSkill.id, "level")));
 
         inventory.setItem(28, helper.getItem(
-                new ItemStack(Material.SKELETON_SKULL), "§6§lMort", "§eXp: §6" +
-                        helper.numberFormat.format(survivalData.getPlayerSkillPoints(p.getUniqueId(), "death")).replace(" ", " "),
-                "§eNiveau: §6" + survivalData.getPlayerSkillLevel(p.getUniqueId(), "death")));
+                new ItemStack(deathSkill.displayMaterial), deathSkill.displayName, getSkillLore(p, deathSkill.id, "xp"), getSkillLore(p, farmingSkill.id, "level")));
         inventory.setItem(30, helper.getItem(
-                new ItemStack(Material.STONE_AXE), "§6§lBûcheronnage", "§eXp: §6" +
-                        helper.numberFormat.format(survivalData.getPlayerSkillPoints(p.getUniqueId(), "chopping")).replace(" ", " "),
-                "§eNiveau: §6" + survivalData.getPlayerSkillLevel(p.getUniqueId(), "chopping")));
+                new ItemStack(choppingSkill.displayMaterial), choppingSkill.displayName, getSkillLore(p, choppingSkill.id, "xp"), getSkillLore(p, farmingSkill.id, "level")));
         inventory.setItem(32, helper.getItem(
-                new ItemStack(Material.CONDUIT), "§6§lNage", "§eXp: §6" +
-                        helper.numberFormat.format(survivalData.getPlayerSkillPoints(p.getUniqueId(), "swimming")).replace(" ", " "),
-                "§eNiveau: §6" + survivalData.getPlayerSkillLevel(p.getUniqueId(), "swimming")));
+                new ItemStack(swimmingSkill.displayMaterial), swimmingSkill.displayName, getSkillLore(p, swimmingSkill.id, "xp"), getSkillLore(p, farmingSkill.id, "level")));
         inventory.setItem(34, helper.getItem(
-                new ItemStack(Material.ELYTRA), "§6§lVol", "§eXp: §6" +
-                        helper.numberFormat.format(survivalData.getPlayerSkillPoints(p.getUniqueId(), "flying")).replace(" ", " "),
-                "§eNiveau: §6" + survivalData.getPlayerSkillLevel(p.getUniqueId(), "flying")));
+                new ItemStack(flyingSkill.displayMaterial), flyingSkill.displayName, getSkillLore(p, flyingSkill.id, "xp"), getSkillLore(p, farmingSkill.id, "level")));
 
 //        inventory.setItem(45, helper.getItem(new ItemStack(Material.REDSTONE_TORCH), "§6§lSkills", "§eActiver/Désactiver un de tes skill"));
 
@@ -127,24 +121,32 @@ public class SkillsMenu implements Listener {
         return inventory;
     }
 
+    public String getSkillLore(Player p, String skill, String lore) {
+        if (lore.equalsIgnoreCase("xp"))
+            return "§eXp: §6" + helper.numberFormat.format(survivalData.getPlayerSkillPoints(p.getUniqueId(), skill)).replace(" ", " ");
+        else if (lore.equalsIgnoreCase("level"))
+            return "§eNiveau: §6" + survivalData.getPlayerSkillLevel(p.getUniqueId(), skill);
+        return "§cError";
+    }
+
     public Boolean buyUpgrade(Player p, PlayerUpgrade upgrade) {
         UUID uuid = p.getUniqueId();
-        Integer playerUpgradeLevel = survivalData.getPlayerUpgrade(uuid, upgrade.name);
+        Integer playerUpgradeLevel = survivalData.getPlayerUpgrade(uuid, upgrade.id);
         Integer cost = (playerUpgradeLevel + 1) * upgrade.cost;
-        if (survivalData.getPlayerTokens(uuid) <= cost) {
-            plugin.getConfig().getString("skills.not_enough_tokens");
+        if (survivalData.getPlayerTokens(uuid) < cost) {
+            p.sendMessage(plugin.getConfig().getString("skills.not_enough_tokens"));
             return false;
         }
         if (playerUpgradeLevel >= upgrade.maxLevel) {
-            plugin.getConfig().getString("skills.upgrade_maxed").replace("%upgrade%", upgrade.displayName);
+            p.sendMessage(plugin.getConfig().getString("skills.upgrade_maxed").replace("%upgrade%", upgrade.displayName));
             return false;
         }
         if (playerUpgradeLevel < 0) {
-            plugin.getConfig().getString("skills.upgrade_already_bought").replace("%upgrade%", upgrade.displayName);
+            p.sendMessage(plugin.getConfig().getString("skills.upgrade_already_bought").replace("%upgrade%", upgrade.displayName));
             return false;
         }
 
-        survivalData.setPlayerUpgrade(uuid, upgrade.name, playerUpgradeLevel + 1);
+        survivalData.setPlayerUpgrade(uuid, upgrade.id, playerUpgradeLevel + 1);
         survivalData.incrementPlayerTokens(uuid, -cost);
         p.sendMessage(helper.upgradeBoughtMessage(survivalData.upgradeBought,
                 "§6§n" + upgrade.displayName + "§6 niveau " + (playerUpgradeLevel + 1), cost));
@@ -163,8 +165,8 @@ public class SkillsMenu implements Listener {
             lores.add(ChatColor.translateAlternateColorCodes('&', s));
         }
         lores.add("");
-        lores.add("§eNiveau: §6" + survivalData.getPlayerUpgrade(uuid, upgrade.name) + "/" + upgrade.maxLevel );
-        lores.add(getUpgradePriceText(upgrade, survivalData.getPlayerUpgrade(uuid, upgrade.name)));
+        lores.add("§eNiveau: §6" + survivalData.getPlayerUpgrade(uuid, upgrade.id) + "/" + upgrade.maxLevel);
+        lores.add(getUpgradePriceText(upgrade, survivalData.getPlayerUpgrade(uuid, upgrade.id)));
 
         meta.setLore(lores);
         item.setItemMeta(meta);

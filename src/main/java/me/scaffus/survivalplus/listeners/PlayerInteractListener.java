@@ -28,15 +28,16 @@ public class PlayerInteractListener implements Listener {
 
     private List<String> choppingDestrippables;
     private Set choppingLogs;
+
     public PlayerInteractListener(SurvivalPlus plugin) {
         this.plugin = plugin;
         this.survivalData = plugin.survivalData;
         this.skillsConfig = plugin.skillsConfig;
-        farmingHoes = (List<String>) skillsConfig.get().get("farming.tools");
+        farmingHoes = (List<String>) skillsConfig.get().get("tools.farming");
         farmingTillables = (List<String>) skillsConfig.get().get("farming.tillables");
 
         choppingDestrippables = (List<String>) skillsConfig.get().get("chopping.destrippables");
-        choppingLogs = skillsConfig.get().getConfigurationSection("chopping.logs").getKeys(false);
+        choppingLogs = skillsConfig.get().getConfigurationSection("blocks.chopping").getKeys(false);
     }
 
     @EventHandler

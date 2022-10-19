@@ -1,5 +1,6 @@
 package me.scaffus.survivalplus;
 
+import me.scaffus.survivalplus.objects.PlayerSkill;
 import me.scaffus.survivalplus.objects.PlayerUpgrade;
 import me.scaffus.survivalplus.sql.DatabaseGetterSetter;
 import org.bukkit.Bukkit;
@@ -12,27 +13,30 @@ import org.bukkit.boss.BossBar;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import java.io.File;
 import java.util.*;
 
 public class SurvivalData {
-    private DatabaseGetterSetter data;
-    private Helper helper;
-    private SkillsConfig skillsConfig;
-
     public List<String> skills = Arrays.asList("farming", "mining", "combat", "running", "death", "chopping", "swimming", "flying");
+
+    // ? Player specific data
     public HashMap<UUID, HashMap<String, Integer>> playersLevels = new HashMap<UUID, HashMap<String, Integer>>();
     public HashMap<UUID, HashMap<String, Double>> playersPoints = new HashMap<UUID, HashMap<String, Double>>();
-
     public HashMap<UUID, Integer> playerTokens = new HashMap<>();
     public HashMap<UUID, Integer> playerBalance = new HashMap<>();
-
     public HashMap<UUID, HashMap<String, Integer>> playersUpgrades = new HashMap<>();
     public HashMap<UUID, BossBar> playerSkillBar = new HashMap<>();
     public HashMap<UUID, Location> playerLastLocation = new HashMap<>();
-    public HashMap<String, PlayerUpgrade> allUpgrades = new HashMap<>();
     public HashMap<UUID, Long> playerLastClicked = new HashMap<>();
 
+    // ? Instantiate all upgrades and skills
+    public HashMap<String, PlayerUpgrade> allUpgrades = new HashMap<>();
+    public HashMap<String, PlayerSkill> allSkills = new HashMap<>();
+
     public String upgradeBought;
+    private DatabaseGetterSetter data;
+    private Helper helper;
+    private SkillsConfig skillsConfig;
 
 
     public SurvivalData(SurvivalPlus plugin) {
@@ -40,6 +44,7 @@ public class SurvivalData {
         this.helper = plugin.helper;
         this.skillsConfig = plugin.skillsConfig;
         this.upgradeBought = plugin.getConfig().getString("skills.upgrade_bought");
+        createSkills();
         createUpgrades();
     }
 
@@ -70,13 +75,6 @@ public class SurvivalData {
         data.setPlayerBalance(uuid, playerBalance.get(uuid));
     }
 
-    public void setPlayerLastLocation(UUID uuid, Location pos) {
-        playerLastLocation.put(uuid, pos);
-    }
-
-    public Location getPlayerLastLocation(UUID uuid) {
-        return playerLastLocation.get(uuid);
-    }
 
     public void createPlayerBossBar(UUID uuid) {
         BossBar bar = Bukkit.createBossBar("", BarColor.YELLOW, BarStyle.SOLID);
@@ -85,21 +83,48 @@ public class SurvivalData {
         setPlayerSkillBar(uuid, bar);
     }
 
+    public void createSkills() {
+        FileConfiguration config = skillsConfig.get();
+        Set<String> skillsKeySet = config.getConfigurationSection("skills").getKeys(false);
+        ArrayList<String> skillsKeysList = new ArrayList<>(skillsKeySet);
+        for (String skill : skillsKeysList) {
+            String id = config.getString("skills." + skill + ".id");
+            String displayName = config.getString("skills." + skill + ".display_name");
+            String displayItem = config.getString("skills." + skill + ".display_item");
+            PlayerSkill playerSkill = new PlayerSkill(id, displayName, Material.getMaterial(displayItem));
+            allSkills.put(skill, playerSkill);
+        }
+    }
+
     public void createUpgrades() {
         FileConfiguration config = skillsConfig.get();
-        Set<String> upgradesKeysSet = config.getConfigurationSection("upgrades").getKeys(false);
-        ArrayList<String> upgradeKeysList = new ArrayList<>(upgradesKeysSet);
-        for (String upgrade : upgradeKeysList) {
-            String name = upgrade;
-            String displayName = (String) config.get("upgrades." + upgrade + ".display_name");
-            String displayItem = (String) config.get("upgrades." + upgrade + ".display_item");
-            Integer maxLevel = (Integer) config.get("upgrades." + upgrade + ".max_level");
-            Integer cost = (Integer) config.get("upgrades." + upgrade + ".cost");
-            Double costFactor = (Double) config.get("upgrades." + upgrade + ".cost_factor");
-            List<String> lore = (List<String>) config.get("upgrades." + upgrade + ".lore");
-            PlayerUpgrade playerUpgrade = new PlayerUpgrade(name, displayName, Material.getMaterial(displayItem), maxLevel, cost, costFactor, lore);
+        Set<String> upgradesKeySet = config.getConfigurationSection("upgrades").getKeys(false);
+        ArrayList<String> upgradesKeysList = new ArrayList<>(upgradesKeySet);
+        for (String upgrade : upgradesKeysList) {
+            String id = upgrade;
+            String displayName = config.getString("upgrades." + upgrade + ".display_name");
+            String displayItem = config.getString("upgrades." + upgrade + ".display_item");
+            Integer maxLevel = config.getInt("upgrades." + upgrade + ".max_level");
+            Integer cost = config.getInt("upgrades." + upgrade + ".cost");
+            Double costFactor = config.getDouble("upgrades." + upgrade + ".cost_factor");
+            List<String> lore = config.getStringList("upgrades." + upgrade + ".lore");
+
+            List<Integer> ranges = new ArrayList<>();
+            if (config.get("upgrades." + upgrade + ".ranges") != null) {
+                ranges = config.getIntegerList("upgrades." + upgrade + ".ranges");
+            }
+
+            PlayerUpgrade playerUpgrade = new PlayerUpgrade(id, displayName, Material.getMaterial(displayItem), maxLevel, cost, costFactor, lore, ranges);
             allUpgrades.put(upgrade, playerUpgrade);
         }
+    }
+
+    public PlayerSkill getSkill(String skillName) {
+        return allSkills.get(skillName);
+    }
+
+    public PlayerUpgrade getUpgrade(String upgradeName) {
+        return allUpgrades.get(upgradeName);
     }
 
     public void setPlayerSkillBar(UUID uuid, BossBar bar) {
@@ -111,8 +136,8 @@ public class SurvivalData {
     }
 
     public Boolean canPlayerClick(UUID uuid) {
-        if ((System.currentTimeMillis() - getPlayerLastClicked(uuid)) > 500) return true;
-        else helper.sendActionBar(Bukkit.getPlayer(uuid), "§cAttends §n500ms§c entre chaque action");
+        if ((System.currentTimeMillis() - getPlayerLastClicked(uuid)) > 200) return true;
+        else helper.sendActionBar(Bukkit.getPlayer(uuid), "§cAttends §n200ms§c entre chaque action");
         return false;
     }
 
@@ -122,10 +147,6 @@ public class SurvivalData {
 
     public void setPlayerLastClicked(UUID uuid) {
         playerLastClicked.put(uuid, System.currentTimeMillis());
-    }
-
-    public PlayerUpgrade getUpgrade(String upgradeName) {
-        return allUpgrades.get(upgradeName);
     }
 
     public void loadPlayerPoints(UUID uuid) {

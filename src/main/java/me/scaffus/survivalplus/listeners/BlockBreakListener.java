@@ -1,6 +1,7 @@
 package me.scaffus.survivalplus.listeners;
 
 import me.scaffus.survivalplus.*;
+import me.scaffus.survivalplus.objects.PlayerUpgrade;
 import me.scaffus.survivalplus.tasks.PlaceBlockTask;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -31,18 +32,8 @@ public class BlockBreakListener implements Listener {
     private final Map farmingCropsPoints;
     private final List<String> farmingTools;
     private final List<String> farmingReplantableCrops;
-    private PlaceBlockTask placeBlockTask;
-
-    private ItemStack farminghoeFortune1;
-    private ItemStack farmingHoeFortune2;
-    private ItemStack farminghoeFortune3;
-
     private final Set choppingLogs;
     private final Map choppingLogsPoints;
-    private final Set choppingSaplings;
-    private final Map choppingSaplingsPoints;
-    private final List<Integer> choppingLogvityRange;
-
     private final int[][] veinMinerArea = {
             {-1, -1, -1}, {0, -1, -1}, {1, -1, -1},
             {-1, -1, 0}, {0, -1, 0}, {1, -1, 0},
@@ -56,6 +47,10 @@ public class BlockBreakListener implements Listener {
             {-1, 1, 0}, {0, 1, 0}, {1, 1, 0},
             {-1, 1, 1}, {0, 1, 1}, {1, 1, 1},
     };
+    private PlaceBlockTask placeBlockTask;
+    private ItemStack farminghoeFortune1;
+    private ItemStack farmingHoeFortune2;
+    private ItemStack farminghoeFortune3;
 
     public BlockBreakListener(SurvivalPlus plugin) {
         this.plugin = plugin;
@@ -64,13 +59,13 @@ public class BlockBreakListener implements Listener {
         this.helper = plugin.helper;
         this.skillHelper = plugin.skillHelper;
 
-        miningOres = skillsConfig.get().getConfigurationSection("mining.blocks").getKeys(false);
-        miningOrePoints = skillsConfig.get().getConfigurationSection("mining.blocks").getValues(false);
-        miningTools = (List) skillsConfig.get().get("mining.tools");
+        miningOres = skillsConfig.get().getConfigurationSection("blocks.mining").getKeys(false);
+        miningOrePoints = skillsConfig.get().getConfigurationSection("blocks.mining").getValues(false);
+        miningTools = (List) skillsConfig.get().get("tools.mining");
 
-        farmingCrops = skillsConfig.get().getConfigurationSection("farming.crops").getKeys(false);
-        farmingCropsPoints = skillsConfig.get().getConfigurationSection("farming.crops").getValues(false);
-        farmingTools = (List) skillsConfig.get().get("farming.tools");
+        farmingCrops = skillsConfig.get().getConfigurationSection("blocks.farming").getKeys(false);
+        farmingCropsPoints = skillsConfig.get().getConfigurationSection("blocks.farming").getValues(false);
+        farmingTools = (List) skillsConfig.get().get("tools.farming");
         farmingReplantableCrops = (List) skillsConfig.get().get("farming.replantables");
 
         farminghoeFortune1 = new ItemStack(Material.WOODEN_HOE);
@@ -85,11 +80,8 @@ public class BlockBreakListener implements Listener {
         hoe.addEnchant(Enchantment.LOOT_BONUS_BLOCKS, 3, false);
         farminghoeFortune3.setItemMeta(hoe);
 
-        choppingLogs = skillsConfig.get().getConfigurationSection("chopping.logs").getKeys(false);
-        choppingLogsPoints = skillsConfig.get().getConfigurationSection("chopping.logs").getValues(false);
-        choppingSaplings = skillsConfig.get().getConfigurationSection("chopping.saplings").getKeys(false);
-        choppingSaplingsPoints = skillsConfig.get().getConfigurationSection("chopping.saplings").getValues(false);
-        choppingLogvityRange = (List<Integer>) skillsConfig.get().get("chopping.logvity_ranges");
+        choppingLogs = skillsConfig.get().getConfigurationSection("blocks.chopping").getKeys(false);
+        choppingLogsPoints = skillsConfig.get().getConfigurationSection("blocks.chopping").getValues(false);
     }
 
     @EventHandler
@@ -204,7 +196,7 @@ public class BlockBreakListener implements Listener {
             Integer playerLogvityUpgradeLevel = survivalData.getPlayerUpgrade(uuid, "logvity");
             ItemStack tool = p.getInventory().getItemInMainHand();
             if (playerLogvityUpgradeLevel > 0) {
-                for (int y = 1; y <= choppingLogvityRange.get(playerLogvityUpgradeLevel - 1); y++) {
+                for (int y = 1; y <= survivalData.getUpgrade("logvity").ranges.get(playerLogvityUpgradeLevel - 1); y++) {
                     Block toChopp = block.getWorld().getBlockAt(block.getX(), block.getY() + y, block.getZ());
                     if (toChopp.getType() != block.getType()) return;
                     toChopp.breakNaturally(tool);

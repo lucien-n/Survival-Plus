@@ -16,14 +16,12 @@ public class PlayerMoveListener implements Listener {
     private final SurvivalData survivalData;
     private final SkillsConfig skillsConfig;
     private final SkillHelper skillHelper;
-    private final Double moveXp;
 
     public PlayerMoveListener(SurvivalPlus plugin) {
         this.plugin = plugin;
         this.survivalData = plugin.survivalData;
         this.skillsConfig = plugin.skillsConfig;
         this.skillHelper = plugin.skillHelper;
-        moveXp = skillsConfig.get().getDouble("running.xp");
     }
 
     @EventHandler
@@ -31,10 +29,9 @@ public class PlayerMoveListener implements Listener {
         Player p = event.getPlayer();
         UUID uuid = p.getUniqueId();
 
-        if (!p.isFlying() && !p.isRiptiding() && !p.isSwimming() && survivalData.getPlayerLastLocation(uuid) != p.getLocation()) {
-            skillHelper.handleSkillGain(p, moveXp, "running");
+        if (!p.isFlying() && !p.isRiptiding() && !p.isSwimming()
+                && (event.getFrom().getX() + event.getFrom().getY() + event.getFrom().getZ()) != (event.getTo().getX() + event.getTo().getY() + event.getTo().getZ())) {
+            skillHelper.handleSkillGain(p, 0.2, "running");
         }
-
-        survivalData.setPlayerLastLocation(uuid, p.getLocation());
     }
 }

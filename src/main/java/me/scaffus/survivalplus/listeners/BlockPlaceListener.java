@@ -1,11 +1,6 @@
 package me.scaffus.survivalplus.listeners;
 
-import me.scaffus.survivalplus.Helper;
-import me.scaffus.survivalplus.SkillsConfig;
-import me.scaffus.survivalplus.SurvivalData;
-import me.scaffus.survivalplus.SurvivalPlus;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
+import me.scaffus.survivalplus.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -16,9 +11,12 @@ import java.util.Map;
 import java.util.Set;
 
 public class BlockPlaceListener implements Listener {
+    private final Set choppingSaplings;
+    private final Map choppingSaplingsPoints;
     private SurvivalPlus plugin;
     private SkillsConfig skillsConfig;
     private SurvivalData survivalData;
+    private SkillHelper skillHelper;
     private Helper helper;
     private Set<String> miningOres;
     private Map miningPoints;
@@ -29,11 +27,16 @@ public class BlockPlaceListener implements Listener {
         this.plugin = plugin;
         this.skillsConfig = plugin.skillsConfig;
         this.survivalData = plugin.survivalData;
+        this.skillHelper = plugin.skillHelper;
         this.helper = plugin.helper;
-        miningOres = skillsConfig.get().getConfigurationSection("mining.blocks").getKeys(false);
-        miningPoints = skillsConfig.get().getConfigurationSection("mining.blocks").getValues(false);
-        choppingLogs = skillsConfig.get().getConfigurationSection("chopping.logs").getKeys(false);
-        choppingPoints = skillsConfig.get().getConfigurationSection("chopping.logs").getValues(false);
+        miningOres = skillsConfig.get().getConfigurationSection("blocks.mining").getKeys(false);
+        miningPoints = skillsConfig.get().getConfigurationSection("blocks.mining").getValues(false);
+
+        choppingLogs = skillsConfig.get().getConfigurationSection("blocks.chopping").getKeys(false);
+        choppingPoints = skillsConfig.get().getConfigurationSection("blocks.chopping").getValues(false);
+
+        choppingSaplings = skillsConfig.get().getConfigurationSection("chopping.saplings").getKeys(false);
+        choppingSaplingsPoints = skillsConfig.get().getConfigurationSection("chopping.saplings").getValues(false);
     }
 
     @EventHandler
@@ -43,16 +46,10 @@ public class BlockPlaceListener implements Listener {
 
         if (miningOres.contains(block.getType().toString())) {
             Double pointsLost = -helper.round((Double) miningPoints.get(block.getType().toString()), 2);
-            survivalData.incrementPlayerSkillPoints(p.getUniqueId(), "mining", pointsLost);
-            p.spigot().sendMessage(
-                    ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(plugin.getConfig().getString("skills.gained")
-                            .replace("%amount%", String.valueOf(pointsLost)).replace("%skill%", "minage")));
+            skillHelper.handleSkillGain(p, pointsLost, "mining");
         } else if (choppingLogs.contains(block.getType().toString())) {
             Double pointsLost = -helper.round((Double) choppingPoints.get(block.getType().toString()), 2);
-            survivalData.incrementPlayerSkillPoints(p.getUniqueId(), "chopping", pointsLost);
-            p.spigot().sendMessage(
-                    ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(plugin.getConfig().getString("skills.gained")
-                            .replace("%amount%", String.valueOf(pointsLost)).replace("%skill%", "bûcheronnage")));
+            skillHelper.handleSkillGain(p, pointsLost, "chopping");
         }
     }
 }

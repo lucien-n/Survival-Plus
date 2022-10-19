@@ -1,8 +1,8 @@
 package me.scaffus.survivalplus.menus.skills;
 
 import me.scaffus.survivalplus.Helper;
-import me.scaffus.survivalplus.SurvivalData;
 import me.scaffus.survivalplus.SkillsConfig;
+import me.scaffus.survivalplus.SurvivalData;
 import me.scaffus.survivalplus.SurvivalPlus;
 import me.scaffus.survivalplus.menus.SkillsMenu;
 import me.scaffus.survivalplus.objects.PlayerUpgrade;
@@ -17,16 +17,15 @@ import java.util.List;
 import java.util.UUID;
 
 public class MiningSkillMenu implements Listener {
+    private static PlayerUpgrade autoSmeltUpgrade;
+    private static PlayerUpgrade veinMineUpgrade;
+    private static PlayerUpgrade magnetUpgrade;
     private final SurvivalPlus plugin;
     private final SurvivalData survivalData;
     private final SkillsConfig skillsConfig;
     private final Helper helper;
     private final SkillsMenu skillsMenu;
     private final String inventoryName = "§6§lMinage";
-    private final List<Double> magnetRanges;
-    private static PlayerUpgrade autoSmeltUpgrade;
-    private static PlayerUpgrade veinMineUpgrade;
-    private static PlayerUpgrade magnetUpgrade;
 
     public MiningSkillMenu(SurvivalPlus plugin, SkillsMenu skillsMenu) {
         this.plugin = plugin;
@@ -35,7 +34,6 @@ public class MiningSkillMenu implements Listener {
         this.skillsConfig = plugin.skillsConfig;
         this.skillsMenu = skillsMenu;
         Bukkit.getPluginManager().registerEvents(this, plugin);
-        magnetRanges = (List<Double>) skillsConfig.get().get("mining.magnet_ranges");
 
         autoSmeltUpgrade = survivalData.getUpgrade("auto_smelt");
         veinMineUpgrade = survivalData.getUpgrade("vein_mine");
@@ -55,7 +53,6 @@ public class MiningSkillMenu implements Listener {
         Integer playerAutoSmeltLevel = survivalData.getPlayerUpgrade(uuid, "auto_smelt");
         Integer playerVeinMineLevel = survivalData.getPlayerUpgrade(uuid, "vein_mine");
 
-//        TODO: Fix unbuyable skills
         if (slot == 11) {
             if (playerVeinMineLevel > 0) survivalData.setPlayerUpgrade(uuid, "vein_mine", 0);
             skillsMenu.buyUpgrade(p, autoSmeltUpgrade);

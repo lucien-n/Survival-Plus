@@ -1,5 +1,39 @@
-mining:
-  blocks:
+skills:
+  farming:
+    id: "farming"
+    display_name: "§6§lAgriculture"
+    display_item: GOLDEN_HOE
+  mining:
+    id: "mining"
+    display_name: "§6§lMinage"
+    display_item: DIAMOND_PICKAXE
+  combat:
+    id: "mining"
+    display_name: "§6§lMinage"
+    display_item: NETHERITE_SWORD
+  running:
+    id: "running"
+    display_name: "§6§lCourse"
+    display_item: LEATHER_BOOTS
+  death:
+    id: "death"
+    display_name: "§6§lMort"
+    display_item: SKELETON_SKULL
+  chopping:
+    id: "chopping"
+    display_name: "§6§lBûcheronnage"
+    display_item: STONE_AXE
+  swimming:
+    id: "swimming"
+    display_name: "§6§lNage"
+    display_item: CONDUIT
+  flying:
+    id: "flying"
+    display_name: "§6§lVol"
+    display_item: ELYTRA
+
+blocks:
+  mining:
     COAL_ORE: 0.7
     DEEPSLATE_COAL_ORE: 1.3
     IRON_ORE: 1.4
@@ -18,17 +52,40 @@ mining:
     DIAMOND_ORE: 7.0
     DEEPSLATE_DIAMOND_ORE: 4.0
     ANCIENT_DEBRIS: 35.0
-  tools:
+  farming:
+    WHEAT: 1.0
+    POTATOES: 1.4
+    CARROTS: 1.3
+    PUMPKIN: 1.8
+    MELON: 1.8
+    CHORUS_PLANT: 6.0
+    NETHER_WART: 2.1
+    SWEET_BERRY_BUSH: 1.3
+    BEETROOTS: 1.6
+  chopping:
+    OAK_LOG: 3.0
+    BIRCH_LOG: 3.0
+    SPRUCE_LOG: 2.0
+    JUNGLE_LOG: 2.0
+    ACACIA_LOG: 4.0
+    DARK_OAK_LOG: 2.2
+    MANGROVE_LOG: 3.4
+
+tools:
+  mining:
     - NETHERITE_PICKAXE
     - DIAMOND_PICKAXE
     - GOLDEN_PICKAXE
     - IRON_PICKAXE
     - STONE_PICKAXE
     - WOODEN_PICKAXE
-  magnet_ranges:
-    - 1.8
-    - 2.5
-    - 3.8
+  farming:
+    - NETHERITE_HOE
+    - DIAMOND_HOE
+    - GOLDEN_HOE
+    - IRON_HOE
+    - STONE_HOE
+    - WOODEN_HOE
 
 combat:
   mobs:
@@ -65,43 +122,18 @@ combat:
     EnderDragon: 40.0
 
 farming:
-  crops:
-    WHEAT: 1.0
-    POTATOES: 1.4
-    CARROTS: 1.3
-    PUMPKIN: 1.8
-    MELON: 1.8
-    CHORUS_PLANT: 6.0
-    NETHER_WART: 2.1
-    SWEET_BERRY_BUSH: 1.3
-    BEETROOTS: 1.6
   replantables:
     - WHEAT
     - POTATOES
     - CARROTS
     - NETHER_WART
     - BEETROOTS
-  tools:
-    - NETHERITE_HOE
-    - DIAMOND_HOE
-    - GOLDEN_HOE
-    - IRON_HOE
-    - STONE_HOE
-    - WOODEN_HOE
   tillables:
     - DIRT
     - GRASS_BLOCK
     - DIRT_PATH
 
 chopping:
-  logs:
-    OAK_LOG: 3.0
-    BIRCH_LOG: 3.0
-    SPRUCE_LOG: 2.0
-    JUNGLE_LOG: 2.0
-    ACACIA_LOG: 4.0
-    DARK_OAK_LOG: 2.2
-    MANGROVE_LOG: 3.4
   destrippables:
     - STRIPPED_OAK_LOG
     - STRIPPED_BIRCH_LOG
@@ -118,14 +150,11 @@ chopping:
     JUNGLE_SAPLING: 1.0
     SPRUCE_SAPLING: 1.0
     ACACIA_SAPLING: 1.0
-  logvity_ranges:
-    - 2
-    - 5
-    - 10
 
-running:
-  xp: 0.2
 
+#####################
+#   Points4Levels   #
+#####################
 points_for_level:
   - 500
   - 1500
@@ -146,6 +175,21 @@ points_for_level:
   - 750000
   - 1000000
 
+################
+#   Xp Factor  #
+################
+# Multiplies each way to gain xp for a skill by the defined factor
+# For example: if a log gives 2.0xp and the xp factor is 3.0, the final xp gain will be: 2.0 * 3.0 = 6.0xp
+xp_factor:
+  running: 0.2
+  chopping: 3.0
+  mining: 1.0
+  death: 2.0
+  combat: 2.0
+
+################
+#   Upgrades   #
+################
 upgrades:
   # Chopping
   destrip:
@@ -171,6 +215,10 @@ upgrades:
       - "§eLes bûches cassées par cette amélioration"
       - "§ene donnent que 70% de leur xp"
       - "§7Id: §nlogvity"
+    ranges:
+      - 2
+      - 5
+      - 10
   # Farming
   replanter:
     cost: 2
@@ -232,6 +280,10 @@ upgrades:
       - "§edans un rayon autour de toi"
       - "§eLe rayon augment à chaque niveau"
       - "§7Id: §nmagnet"
+    ranges:
+      - 2.0
+      - 2.75
+      - 3.5
   # Death
   cat_life:
     cost: 2
