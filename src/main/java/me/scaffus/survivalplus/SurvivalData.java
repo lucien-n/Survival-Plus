@@ -17,7 +17,7 @@ import java.io.File;
 import java.util.*;
 
 public class SurvivalData {
-    public List<String> skills = Arrays.asList("farming", "mining", "combat", "running", "death", "chopping", "swimming", "flying");
+    public List<String> skills = Arrays.asList("farming", "mining", "combat", "explorer", "death", "chopping", "flying");
 
     // ? Player specific data
     public HashMap<UUID, HashMap<String, Integer>> playersLevels = new HashMap<UUID, HashMap<String, Integer>>();
@@ -26,7 +26,6 @@ public class SurvivalData {
     public HashMap<UUID, Integer> playerBalance = new HashMap<>();
     public HashMap<UUID, HashMap<String, Integer>> playersUpgrades = new HashMap<>();
     public HashMap<UUID, BossBar> playerSkillBar = new HashMap<>();
-    public HashMap<UUID, Location> playerLastLocation = new HashMap<>();
     public HashMap<UUID, Long> playerLastClicked = new HashMap<>();
 
     // ? Instantiate all upgrades and skills

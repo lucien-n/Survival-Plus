@@ -44,16 +44,4 @@ public class EntityDamageListener implements Listener {
             }
         }
     }
-
-    @EventHandler
-    public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-        if (!(event.getDamager() instanceof Player)) return;
-
-        Player p = (Player) event.getDamager();
-        UUID uuid = p.getUniqueId();
-
-        double eventDamage = event.getDamage();
-        double supplementaryDamage = (eventDamage * (survivalData.getPlayerUpgrade(uuid, "damage") * 10)) / 100;
-        event.setDamage(eventDamage + supplementaryDamage);
-    }
 }

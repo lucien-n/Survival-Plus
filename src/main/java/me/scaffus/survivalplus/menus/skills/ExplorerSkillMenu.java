@@ -6,17 +6,15 @@ import me.scaffus.survivalplus.SurvivalPlus;
 import me.scaffus.survivalplus.menus.SkillsMenu;
 import me.scaffus.survivalplus.objects.PlayerUpgrade;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.UUID;
 
-public class RunningSkillMenu implements Listener {
+public class ExplorerSkillMenu implements Listener {
     private SurvivalPlus plugin;
     private SurvivalData survivalData;
     private Helper helper;
@@ -24,7 +22,7 @@ public class RunningSkillMenu implements Listener {
     private String inventoryName = "§6§lCourse";
     private static PlayerUpgrade speedUpgrade;
 
-    public RunningSkillMenu(SurvivalPlus plugin, SkillsMenu skillsMenu) {
+    public ExplorerSkillMenu(SurvivalPlus plugin, SkillsMenu skillsMenu) {
         this.plugin = plugin;
         this.survivalData = plugin.survivalData;
         this.helper = plugin.helper;

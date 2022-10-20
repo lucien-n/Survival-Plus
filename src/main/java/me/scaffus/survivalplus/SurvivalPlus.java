@@ -5,6 +5,7 @@ import me.scaffus.survivalplus.listeners.*;
 import me.scaffus.survivalplus.commands.BankCommand;
 import me.scaffus.survivalplus.commands.InfoStickCommand;
 import me.scaffus.survivalplus.commands.SkillCommand;
+import me.scaffus.survivalplus.listeners.skills.*;
 import me.scaffus.survivalplus.sql.DatabaseGetterSetter;
 import me.scaffus.survivalplus.sql.DatabaseManager;
 import me.scaffus.survivalplus.tasks.MagnetTask;
@@ -34,15 +35,17 @@ public final class SurvivalPlus extends JavaPlugin {
         survivalData = new SurvivalData(this);
         skillHelper = new SkillHelper(this);
 
-        getServer().getPluginManager().registerEvents(new InventoryListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerJoinQuitListener(this), this);
-        getServer().getPluginManager().registerEvents(new BlockBreakListener(this), this);
-        getServer().getPluginManager().registerEvents(new BlockPlaceListener(this), this);
-        getServer().getPluginManager().registerEvents(new EntityDeathListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerInteractListener(this), this);
-        getServer().getPluginManager().registerEvents(new PlayerDeathListener(this), this);
         getServer().getPluginManager().registerEvents(new EntityDamageListener(this), this);
-        getServer().getPluginManager().registerEvents(new PlayerMoveListener(this), this);
+
+        getServer().getPluginManager().registerEvents(new FarmingListener(this), this);
+        getServer().getPluginManager().registerEvents(new MiningListener(this), this);
+        getServer().getPluginManager().registerEvents(new CombatListener(this), this);
+        getServer().getPluginManager().registerEvents(new ExplorerListener(this), this);
+        getServer().getPluginManager().registerEvents(new DeathListener(this), this);
+        getServer().getPluginManager().registerEvents(new ChoppingListener(this), this);
+        getServer().getPluginManager().registerEvents(new FlyingListener(this), this);
 
         new BankCommand(this);
         new SkillCommand(this);

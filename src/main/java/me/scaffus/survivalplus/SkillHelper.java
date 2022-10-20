@@ -45,7 +45,7 @@ public class SkillHelper {
         handlePlayerSkillLevel(p, skill, playerSkillLevel, totalPlayerSkillPoints, pointsForNextLevel);
 
         // Running skill spams the bar
-        if (skill.equalsIgnoreCase("running")) return;
+        if (skill.equalsIgnoreCase("explorer")) return;
 
         // Display skill xp bar
         BossBar playerSkillBar = survivalData.getPlayerSkillBar(uuid);

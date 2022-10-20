@@ -1,31 +1,36 @@
-package me.scaffus.survivalplus.listeners;
+package me.scaffus.survivalplus.listeners.skills;
 
-import me.scaffus.survivalplus.*;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
+import me.scaffus.survivalplus.SkillHelper;
+import me.scaffus.survivalplus.SkillsConfig;
+import me.scaffus.survivalplus.SurvivalData;
+import me.scaffus.survivalplus.SurvivalPlus;
+import me.scaffus.survivalplus.tasks.PlaceBlockTask;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.inventory.ItemStack;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
-public class EntityDeathListener implements Listener {
+public class CombatListener implements Listener {
     private final SurvivalPlus plugin;
-    private final SurvivalData survivalData;
+    private final SkillHelper skillHelper;
     private final SkillsConfig skillsConfig;
-    private SkillHelper skillHelper;
-    private final Helper helper;
-    private final Set<String> mobs;
+
+    private final Set mobs;
     private final Map points;
 
-    public EntityDeathListener(SurvivalPlus plugin) {
+    public CombatListener(SurvivalPlus plugin) {
         this.plugin = plugin;
-        this.survivalData = plugin.survivalData;
-        this.skillsConfig = plugin.skillsConfig;
-        this.helper = plugin.helper;
         this.skillHelper = plugin.skillHelper;
+        this.skillsConfig = plugin.skillsConfig;
+
         mobs = skillsConfig.get().getConfigurationSection("combat.mobs").getKeys(false);
         points = skillsConfig.get().getConfigurationSection("combat.mobs").getValues(false);
     }
@@ -36,7 +41,7 @@ public class EntityDeathListener implements Listener {
             return;
 
         Player p = event.getEntity().getKiller();
-        Double pointsGained = helper.round((Double) points.get(event.getEntity().toString().replace("Craft", "")), 2);
+        Double pointsGained = (Double) points.get(event.getEntity().toString().replace("Craft", ""));
         skillHelper.handleSkillGain(p, pointsGained, "combat");
     }
 }

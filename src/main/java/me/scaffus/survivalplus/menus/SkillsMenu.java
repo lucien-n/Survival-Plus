@@ -8,7 +8,6 @@ import me.scaffus.survivalplus.objects.PlayerSkill;
 import me.scaffus.survivalplus.objects.PlayerUpgrade;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -30,12 +29,10 @@ public class SkillsMenu implements Listener {
     private FarmingSkillMenu farmingSkillMenu;
     private MiningSkillMenu miningSkillMenu;
     private CombatSkillMenu combatSkillMenu;
-    private RunningSkillMenu runningSkillMenu;
+    private ExplorerSkillMenu explorerSkillMenu;
     private DeathSkillMenu deathSkillMenu;
     private ChoppingSkillMenu choppingSkillMenu;
-    private SwimmingSkillMenu swimmingSkillMenu;
     private FlyingSkillMenu flyingSkillMenu;
-//    private ToggleSkillMenu toggleSkillMenu;
 
     public SkillsMenu(SurvivalPlus plugin) {
         this.plugin = plugin;
@@ -45,13 +42,10 @@ public class SkillsMenu implements Listener {
         this.farmingSkillMenu = new FarmingSkillMenu(plugin, this);
         this.miningSkillMenu = new MiningSkillMenu(plugin, this);
         this.combatSkillMenu = new CombatSkillMenu(plugin, this);
-        this.runningSkillMenu = new RunningSkillMenu(plugin, this);
+        this.explorerSkillMenu = new ExplorerSkillMenu(plugin, this);
         this.deathSkillMenu = new DeathSkillMenu(plugin, this);
         this.choppingSkillMenu = new ChoppingSkillMenu(plugin, this);
-        this.swimmingSkillMenu = new SwimmingSkillMenu(plugin, this);
         this.flyingSkillMenu = new FlyingSkillMenu(plugin, this);
-
-//        this.toggleSkillMenu = new ToggleSkillMenu(plugin, this);
 
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
@@ -69,13 +63,11 @@ public class SkillsMenu implements Listener {
             if (slot == 10) p.openInventory(farmingSkillMenu.createMenu(p));
             if (slot == 12) p.openInventory(miningSkillMenu.createMenu(p));
             if (slot == 14) p.openInventory(combatSkillMenu.createMenu(p));
-            if (slot == 16) p.openInventory(runningSkillMenu.createMenu(p));
+            if (slot == 16) p.openInventory(explorerSkillMenu.createMenu(p));
             if (slot == 28) p.openInventory(deathSkillMenu.createMenu(p));
             if (slot == 30) p.openInventory(choppingSkillMenu.createMenu(p));
-            if (slot == 32) p.openInventory(swimmingSkillMenu.createMenu(p));
             if (slot == 34) p.openInventory(flyingSkillMenu.createMenu(p));
 
-//            if (slot == 45) p.openInventory(toggleSkillMenu.createMenu(p));
             survivalData.setPlayerLastClicked(p.getUniqueId());
 
             if (slot == event.getInventory().getSize() - 1) p.closeInventory();
@@ -90,10 +82,9 @@ public class SkillsMenu implements Listener {
         PlayerSkill farmingSkill = survivalData.getSkill("farming");
         PlayerSkill miningSkill = survivalData.getSkill("mining");
         PlayerSkill combatSkill = survivalData.getSkill("combat");
-        PlayerSkill runningSkill = survivalData.getSkill("running");
+        PlayerSkill explorerSkill = survivalData.getSkill("explorer");
         PlayerSkill deathSkill = survivalData.getSkill("death");
         PlayerSkill choppingSkill = survivalData.getSkill("chopping");
-        PlayerSkill swimmingSkill = survivalData.getSkill("swimming");
         PlayerSkill flyingSkill = survivalData.getSkill("flying");
 
         inventory.setItem(10, helper.getItem(
@@ -103,14 +94,12 @@ public class SkillsMenu implements Listener {
         inventory.setItem(14, helper.getItem(
                 new ItemStack(combatSkill.displayMaterial), combatSkill.displayName, getSkillLore(p, combatSkill.id, "xp"), getSkillLore(p, farmingSkill.id, "level")));
         inventory.setItem(16, helper.getItem(
-                new ItemStack(runningSkill.displayMaterial), runningSkill.displayName, getSkillLore(p, runningSkill.id, "xp"), getSkillLore(p, farmingSkill.id, "level")));
+                new ItemStack(explorerSkill.displayMaterial), explorerSkill.displayName, getSkillLore(p, explorerSkill.id, "xp"), getSkillLore(p, farmingSkill.id, "level")));
 
         inventory.setItem(28, helper.getItem(
                 new ItemStack(deathSkill.displayMaterial), deathSkill.displayName, getSkillLore(p, deathSkill.id, "xp"), getSkillLore(p, farmingSkill.id, "level")));
         inventory.setItem(30, helper.getItem(
                 new ItemStack(choppingSkill.displayMaterial), choppingSkill.displayName, getSkillLore(p, choppingSkill.id, "xp"), getSkillLore(p, farmingSkill.id, "level")));
-        inventory.setItem(32, helper.getItem(
-                new ItemStack(swimmingSkill.displayMaterial), swimmingSkill.displayName, getSkillLore(p, swimmingSkill.id, "xp"), getSkillLore(p, farmingSkill.id, "level")));
         inventory.setItem(34, helper.getItem(
                 new ItemStack(flyingSkill.displayMaterial), flyingSkill.displayName, getSkillLore(p, flyingSkill.id, "xp"), getSkillLore(p, farmingSkill.id, "level")));
 

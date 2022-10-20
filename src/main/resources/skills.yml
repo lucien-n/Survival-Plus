@@ -11,10 +11,10 @@ skills:
     id: "mining"
     display_name: "§6§lMinage"
     display_item: NETHERITE_SWORD
-  running:
-    id: "running"
-    display_name: "§6§lCourse"
-    display_item: LEATHER_BOOTS
+  explorer:
+    id: "explorer"
+    display_name: "§6§lExplorateur"
+    display_item: SPYGLASS
   death:
     id: "death"
     display_name: "§6§lMort"
@@ -23,10 +23,6 @@ skills:
     id: "chopping"
     display_name: "§6§lBûcheronnage"
     display_item: STONE_AXE
-  swimming:
-    id: "swimming"
-    display_name: "§6§lNage"
-    display_item: CONDUIT
   flying:
     id: "flying"
     display_name: "§6§lVol"
@@ -181,7 +177,7 @@ points_for_level:
 # Multiplies each way to gain xp for a skill by the defined factor
 # For example: if a log gives 2.0xp and the xp factor is 3.0, the final xp gain will be: 2.0 * 3.0 = 6.0xp
 xp_factor:
-  running: 0.2
+  explorer: 0.2
   chopping: 3.0
   mining: 1.0
   death: 2.0
