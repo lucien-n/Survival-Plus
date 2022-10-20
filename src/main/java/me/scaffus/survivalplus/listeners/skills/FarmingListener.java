@@ -5,6 +5,7 @@ import me.scaffus.survivalplus.SkillsConfig;
 import me.scaffus.survivalplus.SurvivalData;
 import me.scaffus.survivalplus.SurvivalPlus;
 import me.scaffus.survivalplus.tasks.PlaceBlockTask;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Ageable;
@@ -12,8 +13,10 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -102,5 +105,56 @@ public class FarmingListener implements Listener {
             placeBlockTask.runTaskLater(plugin, 20L);
         }
         return;
+    }
+
+    @EventHandler
+    public void onPlayerInteract(PlayerInteractEvent event) {
+        Player p = event.getPlayer();
+        UUID uuid = p.getUniqueId();
+        Block block = event.getClickedBlock();
+
+        // ? WIDE TILL
+        if (survivalData.getPlayerUpgrade(uuid, "wide_till") > 0 && event.getAction() == Action.RIGHT_CLICK_BLOCK
+                && tools.contains(p.getInventory().getItemInMainHand().getType()) && tillables.contains(block.getType())) {
+            Location blockLoc = block.getLocation();
+
+            // * 8 1 2
+            // * 7 0 3
+            // * 6 5 4
+
+            // 0 => Original block
+            // 1
+            blockLoc.add(1, 0, 0);
+            if (tillables.contains(blockLoc.getBlock().getType()))
+                block.setType(Material.FARMLAND);
+            // 2
+            blockLoc.add(0, 0, 1);
+            if (tillables.contains(block.getType()))
+                block.setType(Material.FARMLAND);
+            // 3
+            blockLoc.add(-1, 0, 0);
+            if (tillables.contains(block.getType()))
+                block.setType(Material.FARMLAND);
+            // 4
+            blockLoc.add(-1, 0, 0);
+            if (tillables.contains(block.getType()))
+                block.setType(Material.FARMLAND);
+            // 5
+            blockLoc.add(0, 0, -1);
+            if (tillables.contains(block.getType()))
+                block.setType(Material.FARMLAND);
+            // 6
+            blockLoc.add(0, 0, -1);
+            if (tillables.contains(block.getType()))
+                block.setType(Material.FARMLAND);
+            // 7
+            blockLoc.add(1, 0, 0);
+            if (tillables.contains(block.getType()))
+                block.setType(Material.FARMLAND);
+            // 8
+            blockLoc.add(1, 0, 0);
+            if (tillables.contains(block.getType()))
+                block.setType(Material.FARMLAND);
+        }
     }
 }

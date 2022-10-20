@@ -21,23 +21,9 @@ import java.util.UUID;
 
 public class PlayerInteractListener implements Listener {
     private SurvivalPlus plugin;
-    private SurvivalData survivalData;
-    private SkillsConfig skillsConfig;
-    private List<String> farmingHoes;
-    private List<String> farmingTillables;
-
-    private List<String> choppingDestrippables;
-    private Set choppingLogs;
 
     public PlayerInteractListener(SurvivalPlus plugin) {
         this.plugin = plugin;
-        this.survivalData = plugin.survivalData;
-        this.skillsConfig = plugin.skillsConfig;
-        farmingHoes = (List<String>) skillsConfig.get().get("tools.farming");
-        farmingTillables = (List<String>) skillsConfig.get().get("farming.tillables");
-
-        choppingDestrippables = (List<String>) skillsConfig.get().get("chopping.destrippables");
-        choppingLogs = skillsConfig.get().getConfigurationSection("blocks.chopping").getKeys(false);
     }
 
     @EventHandler
@@ -45,80 +31,6 @@ public class PlayerInteractListener implements Listener {
         Player p = event.getPlayer();
         UUID uuid = p.getUniqueId();
         Block block = event.getClickedBlock();
-
-        // ? WIDE TILL
-        if (survivalData.getPlayerUpgrade(uuid, "wide_till") > 0 && event.getAction() == Action.RIGHT_CLICK_BLOCK
-                && farmingHoes.contains(p.getInventory().getItemInMainHand().getType().toString()) && farmingTillables.contains(event.getClickedBlock().getType().toString())) {
-            Location blockLoc = event.getClickedBlock().getLocation();
-
-            // * 8 1 2
-            // * 7 0 3
-            // * 6 5 4
-
-            // 0 => Original block
-            // 1
-            blockLoc.add(1, 0, 0);
-            if (farmingTillables.contains(blockLoc.getBlock().getType().toString()))
-                blockLoc.getBlock().setType(Material.FARMLAND);
-            // 2
-            blockLoc.add(0, 0, 1);
-            if (farmingTillables.contains(blockLoc.getBlock().getType().toString()))
-                blockLoc.getBlock().setType(Material.FARMLAND);
-            // 3
-            blockLoc.add(-1, 0, 0);
-            if (farmingTillables.contains(blockLoc.getBlock().getType().toString()))
-                blockLoc.getBlock().setType(Material.FARMLAND);
-            // 4
-            blockLoc.add(-1, 0, 0);
-            if (farmingTillables.contains(blockLoc.getBlock().getType().toString()))
-                blockLoc.getBlock().setType(Material.FARMLAND);
-            // 5
-            blockLoc.add(0, 0, -1);
-            if (farmingTillables.contains(blockLoc.getBlock().getType().toString()))
-                blockLoc.getBlock().setType(Material.FARMLAND);
-            // 6
-            blockLoc.add(0, 0, -1);
-            if (farmingTillables.contains(blockLoc.getBlock().getType().toString()))
-                blockLoc.getBlock().setType(Material.FARMLAND);
-            // 7
-            blockLoc.add(1, 0, 0);
-            if (farmingTillables.contains(blockLoc.getBlock().getType().toString()))
-                blockLoc.getBlock().setType(Material.FARMLAND);
-            // 8
-            blockLoc.add(1, 0, 0);
-            if (farmingTillables.contains(blockLoc.getBlock().getType().toString()))
-                blockLoc.getBlock().setType(Material.FARMLAND);
-        }
-
-        // ? DESTRIP
-        if (survivalData.getPlayerUpgrade(uuid, "destrip") > 0 && event.getAction() == Action.RIGHT_CLICK_BLOCK && choppingDestrippables.contains(block.getType().toString())) {
-            Material type = Material.AIR;
-            switch (block.getType()) {
-                case STRIPPED_OAK_LOG:
-                    type = Material.OAK_LOG;
-                    break;
-                case STRIPPED_DARK_OAK_LOG:
-                    type = Material.DARK_OAK_LOG;
-                    break;
-                case STRIPPED_SPRUCE_LOG:
-                    type = Material.SPRUCE_LOG;
-                    break;
-                case STRIPPED_ACACIA_LOG:
-                    type = Material.ACACIA_LOG;
-                    break;
-                case STRIPPED_JUNGLE_LOG:
-                    type = Material.JUNGLE_LOG;
-                    break;
-                case STRIPPED_BIRCH_LOG:
-                    type = Material.BIRCH_LOG;
-                    break;
-                case STRIPPED_MANGROVE_LOG:
-                    type = Material.MANGROVE_LOG;
-                    break;
-            }
-            block.setType(type);
-            p.playSound(p.getLocation(), Sound.ITEM_AXE_STRIP, 1.0F, 1.0F);
-        }
 
         // ? INFO STICK
         if (p.getInventory().getItemInOffHand().getItemMeta() == null) return;
