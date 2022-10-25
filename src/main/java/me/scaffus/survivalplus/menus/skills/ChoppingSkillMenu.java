@@ -26,6 +26,9 @@ public class ChoppingSkillMenu implements Listener {
     private final String inventoryName = "§6§lBûcheronnage";
     private final List<Double> logvityRanges;
 
+    private final PlayerUpgrade destripUpgrade;
+    private final PlayerUpgrade logvityUpgrade;
+
     public ChoppingSkillMenu(SurvivalPlus plugin, SkillsMenu skillsMenu) {
         this.plugin = plugin;
         this.survivalData = plugin.survivalData;
@@ -34,6 +37,8 @@ public class ChoppingSkillMenu implements Listener {
         this.skillsMenu = skillsMenu;
         Bukkit.getPluginManager().registerEvents(this, plugin);
         logvityRanges = (List) skillsConfig.get().get("chopping.logvity_ranges");
+        destripUpgrade = survivalData.getUpgrade("destrip");
+        logvityUpgrade = survivalData.getUpgrade("logvity");
     }
 
     @EventHandler
@@ -45,8 +50,8 @@ public class ChoppingSkillMenu implements Listener {
         int slot = event.getSlot();
         if (!survivalData.canPlayerClick(p.getUniqueId())) return;
 
-        if (slot == 11) skillsMenu.buyUpgrade(p, survivalData.getUpgrade("destrip"));
-        if (slot == 15) skillsMenu.buyUpgrade(p, survivalData.getUpgrade("logvity"));
+        if (slot == 20) skillsMenu.buyUpgrade(p, destripUpgrade);
+        if (slot == 24) skillsMenu.buyUpgrade(p, logvityUpgrade);
 
         survivalData.setPlayerLastClicked(p.getUniqueId());
         if (slot == event.getInventory().getSize() - 9) p.openInventory(skillsMenu.createSkillMenu(p));
@@ -57,11 +62,10 @@ public class ChoppingSkillMenu implements Listener {
         UUID uuid = p.getUniqueId();
         Inventory inventory = helper.createInventoryWithBackground(p, inventoryName, 54, true);
 
-        PlayerUpgrade destrip = survivalData.getUpgrade("destrip");
-        PlayerUpgrade logvity = survivalData.getUpgrade("logvity");
 
-        inventory.setItem(11, skillsMenu.getUpgradeMenuItem(destrip, uuid));
-        inventory.setItem(15, skillsMenu.getUpgradeMenuItem(logvity, uuid));
+
+        inventory.setItem(20, skillsMenu.getUpgradeMenuItem(destripUpgrade, uuid));
+        inventory.setItem(24, skillsMenu.getUpgradeMenuItem(logvityUpgrade, uuid));
 
         inventory.setItem(49, helper.getHead(p, "§eJetons: §6" + survivalData.getPlayerTokens(p.getUniqueId())));
 

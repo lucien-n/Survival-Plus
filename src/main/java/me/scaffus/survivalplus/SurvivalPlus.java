@@ -8,11 +8,11 @@ import me.scaffus.survivalplus.commands.SkillCommand;
 import me.scaffus.survivalplus.listeners.skills.*;
 import me.scaffus.survivalplus.sql.DatabaseGetterSetter;
 import me.scaffus.survivalplus.sql.DatabaseManager;
+import me.scaffus.survivalplus.tasks.KeepDbAliveTask;
 import me.scaffus.survivalplus.tasks.MagnetTask;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.SQLException;
-import java.util.logging.Logger;
 
 public final class SurvivalPlus extends JavaPlugin {
 
@@ -23,6 +23,8 @@ public final class SurvivalPlus extends JavaPlugin {
     public SkillHelper skillHelper;
     public SurvivalData survivalData;
     private MagnetTask magnetTask;
+    private KeepDbAliveTask keepDbAliveTask;
+
     @Override
     public void onEnable() {
         this.data = new DatabaseGetterSetter(databaseManager.playerConnection.getConnection(), this);
@@ -35,10 +37,6 @@ public final class SurvivalPlus extends JavaPlugin {
         survivalData = new SurvivalData(this);
         skillHelper = new SkillHelper(this);
 
-        getServer().getPluginManager().registerEvents(new PlayerJoinQuitListener(this), this);
-        getServer().getPluginManager().registerEvents(new PlayerInteractListener(this), this);
-        getServer().getPluginManager().registerEvents(new EntityDamageListener(this), this);
-
         getServer().getPluginManager().registerEvents(new FarmingListener(this), this);
         getServer().getPluginManager().registerEvents(new MiningListener(this), this);
         getServer().getPluginManager().registerEvents(new CombatListener(this), this);
@@ -47,6 +45,10 @@ public final class SurvivalPlus extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ChoppingListener(this), this);
         getServer().getPluginManager().registerEvents(new FlyingListener(this), this);
 
+        getServer().getPluginManager().registerEvents(new PlayerJoinQuitListener(this), this);
+        getServer().getPluginManager().registerEvents(new PlayerInteractListener(this), this);
+        getServer().getPluginManager().registerEvents(new SilkSpawnerListener(this), this);
+
         new BankCommand(this);
         new SkillCommand(this);
         new InfoStickCommand(this);
@@ -54,8 +56,10 @@ public final class SurvivalPlus extends JavaPlugin {
 
         this.magnetTask = new MagnetTask(this);
         magnetTask.runTaskTimer(this, 0L, 5L);
+        this.keepDbAliveTask = new KeepDbAliveTask(this);
+        keepDbAliveTask.runTaskTimer(this, 0L, 3600L);
 
-        Logger.getLogger("Minecraft").info("[SURV+] Plugin ON");
+        this.getLogger().info("Plugin ON");
     }
 
     @Override
@@ -66,7 +70,7 @@ public final class SurvivalPlus extends JavaPlugin {
             throw new RuntimeException(e);
         }
 
-        Logger.getLogger("Minecraft").info("[SURV+] Plugin OFF");
+        this.getLogger().info("Plugin OFF");
     }
 
     public DatabaseManager getDatabaseManager() {

@@ -21,6 +21,7 @@ import java.util.UUID;
 public class CombatListener implements Listener {
     private final SurvivalPlus plugin;
     private final SkillHelper skillHelper;
+    private final SurvivalData survivalData;
     private final SkillsConfig skillsConfig;
 
     private final Set mobs;
@@ -29,6 +30,7 @@ public class CombatListener implements Listener {
     public CombatListener(SurvivalPlus plugin) {
         this.plugin = plugin;
         this.skillHelper = plugin.skillHelper;
+        this.survivalData = plugin.survivalData;
         this.skillsConfig = plugin.skillsConfig;
 
         mobs = skillsConfig.get().getConfigurationSection("combat.mobs").getKeys(false);
@@ -43,5 +45,17 @@ public class CombatListener implements Listener {
         Player p = event.getEntity().getKiller();
         Double pointsGained = (Double) points.get(event.getEntity().toString().replace("Craft", ""));
         skillHelper.handleSkillGain(p, pointsGained, "combat");
+    }
+
+    @EventHandler
+    public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+        if (!(event.getDamager() instanceof Player)) return;
+
+        Player p = (Player) event.getDamager();
+        UUID uuid = p.getUniqueId();
+
+        double eventDamage = event.getDamage();
+        double supplementaryDamage = (eventDamage * (survivalData.getPlayerUpgrade(uuid, "damage") * 10)) / 100;
+        event.setDamage(eventDamage + supplementaryDamage);
     }
 }

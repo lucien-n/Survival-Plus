@@ -63,10 +63,11 @@ public class SkillsMenu implements Listener {
             if (slot == 10) p.openInventory(farmingSkillMenu.createMenu(p));
             if (slot == 12) p.openInventory(miningSkillMenu.createMenu(p));
             if (slot == 14) p.openInventory(combatSkillMenu.createMenu(p));
-            if (slot == 16) p.openInventory(explorerSkillMenu.createMenu(p));
-            if (slot == 28) p.openInventory(deathSkillMenu.createMenu(p));
-            if (slot == 30) p.openInventory(choppingSkillMenu.createMenu(p));
-            if (slot == 34) p.openInventory(flyingSkillMenu.createMenu(p));
+            if (slot == 16) p.openInventory(choppingSkillMenu.createMenu(p));
+
+            if (slot == 29) p.openInventory(deathSkillMenu.createMenu(p));
+            if (slot == 31) p.openInventory(explorerSkillMenu.createMenu(p));
+            if (slot == 33) p.openInventory(flyingSkillMenu.createMenu(p));
 
             survivalData.setPlayerLastClicked(p.getUniqueId());
 
@@ -94,13 +95,13 @@ public class SkillsMenu implements Listener {
         inventory.setItem(14, helper.getItem(
                 new ItemStack(combatSkill.displayMaterial), combatSkill.displayName, getSkillLore(p, combatSkill.id, "xp"), getSkillLore(p, farmingSkill.id, "level")));
         inventory.setItem(16, helper.getItem(
-                new ItemStack(explorerSkill.displayMaterial), explorerSkill.displayName, getSkillLore(p, explorerSkill.id, "xp"), getSkillLore(p, farmingSkill.id, "level")));
-
-        inventory.setItem(28, helper.getItem(
-                new ItemStack(deathSkill.displayMaterial), deathSkill.displayName, getSkillLore(p, deathSkill.id, "xp"), getSkillLore(p, farmingSkill.id, "level")));
-        inventory.setItem(30, helper.getItem(
                 new ItemStack(choppingSkill.displayMaterial), choppingSkill.displayName, getSkillLore(p, choppingSkill.id, "xp"), getSkillLore(p, farmingSkill.id, "level")));
-        inventory.setItem(34, helper.getItem(
+
+        inventory.setItem(29, helper.getItem(
+                new ItemStack(deathSkill.displayMaterial), deathSkill.displayName, getSkillLore(p, deathSkill.id, "xp"), getSkillLore(p, farmingSkill.id, "level")));
+        inventory.setItem(31, helper.getItem(
+                new ItemStack(explorerSkill.displayMaterial), explorerSkill.displayName, getSkillLore(p, explorerSkill.id, "xp"), getSkillLore(p, farmingSkill.id, "level")));
+        inventory.setItem(33, helper.getItem(
                 new ItemStack(flyingSkill.displayMaterial), flyingSkill.displayName, getSkillLore(p, flyingSkill.id, "xp"), getSkillLore(p, farmingSkill.id, "level")));
 
 //        inventory.setItem(45, helper.getItem(new ItemStack(Material.REDSTONE_TORCH), "§6§lSkills", "§eActiver/Désactiver un de tes skill"));

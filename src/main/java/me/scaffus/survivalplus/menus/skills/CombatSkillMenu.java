@@ -24,6 +24,7 @@ public class CombatSkillMenu implements Listener {
     private SkillsMenu skillsMenu;
     private String inventoryName = "§6§lCombat";
     private static PlayerUpgrade damageUpgrade;
+    private static PlayerUpgrade fastAttackUpgrade;
 
     public CombatSkillMenu(SurvivalPlus plugin, SkillsMenu skillsMenu) {
         this.plugin = plugin;
@@ -32,6 +33,7 @@ public class CombatSkillMenu implements Listener {
         this.skillsMenu = skillsMenu;
         Bukkit.getPluginManager().registerEvents(this, plugin);
         damageUpgrade = survivalData.getUpgrade("damage");
+        fastAttackUpgrade = survivalData.getUpgrade("fast_attack");
     }
 
     @EventHandler
@@ -44,9 +46,8 @@ public class CombatSkillMenu implements Listener {
         int slot = event.getSlot();
         if (!survivalData.canPlayerClick(p.getUniqueId())) return;
 
-        if (slot == 11) {
-            skillsMenu.buyUpgrade(p, damageUpgrade);
-        }
+        if (slot == 20) skillsMenu.buyUpgrade(p, damageUpgrade);
+        if (slot == 24) skillsMenu.buyUpgrade(p, fastAttackUpgrade);
 
         survivalData.setPlayerLastClicked(p.getUniqueId());
         if (slot == event.getInventory().getSize() - 9) p.openInventory(skillsMenu.createSkillMenu(p));
@@ -57,7 +58,8 @@ public class CombatSkillMenu implements Listener {
         UUID uuid = p.getUniqueId();
         Inventory inventory = helper.createInventoryWithBackground(p, inventoryName, 54, true);
 
-        inventory.setItem(11, skillsMenu.getUpgradeMenuItem(damageUpgrade, uuid));
+        inventory.setItem(20, skillsMenu.getUpgradeMenuItem(damageUpgrade, uuid));
+        inventory.setItem(24, skillsMenu.getUpgradeMenuItem(fastAttackUpgrade, uuid));
 
         inventory.setItem(49, helper.getHead(p, "§eJetons: §6" + survivalData.getPlayerTokens(p.getUniqueId())));
 

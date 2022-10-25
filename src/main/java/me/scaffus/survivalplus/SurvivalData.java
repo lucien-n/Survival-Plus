@@ -32,6 +32,8 @@ public class SurvivalData {
     public HashMap<String, PlayerUpgrade> allUpgrades = new HashMap<>();
     public HashMap<String, PlayerSkill> allSkills = new HashMap<>();
 
+//    public HashMap<Location, String> allMobSpawners = new HashMap<>();
+
     public String upgradeBought;
     private DatabaseGetterSetter data;
     private Helper helper;
@@ -47,6 +49,14 @@ public class SurvivalData {
         createUpgrades();
     }
 
+//    public void loadWorldData() {
+//        allMobSpawners = data.getAllMobSpawners();
+//    }
+//
+//    public void saveWorldData() {
+//        data.setAllMobSpawners(allMobSpawners);
+//    }
+
     public void loadPlayerData(Player p) {
         UUID uuid = p.getUniqueId();
 
@@ -60,7 +70,11 @@ public class SurvivalData {
 
         setPlayerLastClicked(uuid);
 
-        p.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20 + (getPlayerUpgrade(uuid, "cat_life") * 2));
+        if (getPlayerUpgrade(uuid, "double_jump") > 0) p.setAllowFlight(true);
+
+        if (getPlayerUpgrade(uuid, "fast_attack" ) > 0) p.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(4.0 + getPlayerUpgrade(uuid, "fast_attack"));
+        if (getPlayerUpgrade(uuid, "cat_life") > 0) p.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20 + (getPlayerUpgrade(uuid, "cat_life") * 2));
+        if (getPlayerUpgrade(uuid, "speed") > 0) p.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(0.1 + (getPlayerUpgrade(uuid, "speed") * 0.035));
     }
 
     public void savePlayerData(Player p) {
@@ -73,7 +87,6 @@ public class SurvivalData {
         data.setPlayerTokens(uuid, playerTokens.get(uuid));
         data.setPlayerBalance(uuid, playerBalance.get(uuid));
     }
-
 
     public void createPlayerBossBar(UUID uuid) {
         BossBar bar = Bukkit.createBossBar("", BarColor.YELLOW, BarStyle.SOLID);

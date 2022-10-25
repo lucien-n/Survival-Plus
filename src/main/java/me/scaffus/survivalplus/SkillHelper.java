@@ -12,12 +12,14 @@ public class SkillHelper {
     private final SkillsConfig skillsConfig;
     private final String skillsGainedXpMessage;
     private final String skillsPassedLevelMessage;
+    private final Helper helper;
     private final List<Integer> pointsForLevels;
 
     public SkillHelper(SurvivalPlus plugin) {
         this.plugin = plugin;
         this.survivalData = plugin.survivalData;
         this.skillsConfig = plugin.skillsConfig;
+        this.helper = plugin.helper;
 
         pointsForLevels = (List<Integer>) skillsConfig.get().get("points_for_level");
         skillsGainedXpMessage = plugin.getConfig().getString("skills.gained");
@@ -36,10 +38,11 @@ public class SkillHelper {
 
     public void handleSkillGain(Player p, Double pointsGained, String skill) {
         UUID uuid = p.getUniqueId();
+        pointsGained = helper.round(pointsGained, 2);
         Integer playerSkillLevel = survivalData.getPlayerSkillLevel(uuid, skill);
         Double playerSkillPoints = survivalData.getPlayerSkillPoints(uuid, skill);
         Integer pointsForNextLevel = pointsForLevels.get(playerSkillLevel);
-        Double totalPlayerSkillPoints = playerSkillPoints + pointsGained;
+        Double totalPlayerSkillPoints = helper.round(playerSkillPoints + pointsGained, 2);
 
         survivalData.incrementPlayerSkillPoints(uuid, skill, pointsGained);
         handlePlayerSkillLevel(p, skill, playerSkillLevel, totalPlayerSkillPoints, pointsForNextLevel);
@@ -55,13 +58,11 @@ public class SkillHelper {
                 .replace("%amount_for_level%", String.valueOf(pointsForNextLevel)));
 
         int factor = pointsForLevels.get(playerSkillLevel - (playerSkillLevel == 0 ? 0 : 1));
-        double progress = (totalPlayerSkillPoints - (playerSkillLevel == 0 ? 0 : factor)) / (pointsForNextLevel - (playerSkillLevel == 0 ? 0 : factor));
+        double progress = helper.round((totalPlayerSkillPoints - (playerSkillLevel == 0 ? 0 : factor)) / (pointsForNextLevel - (playerSkillLevel == 0 ? 0 : factor)), 2);
+        if (progress < 0) progress = 0.0;
 
         playerSkillBar.setProgress(totalPlayerSkillPoints + pointsGained >= pointsForNextLevel ? 1.0 : progress);
         playerSkillBar.addPlayer(p);
         playerSkillBar.setVisible(true);
-
-//        HidePlayerSkillBarTask hide = new HidePlayerSkillBarTask(survivalData.getPlayerSkillBar(uuid));
-//        hide.runTaskLater(plugin, 140L);
     }
 }

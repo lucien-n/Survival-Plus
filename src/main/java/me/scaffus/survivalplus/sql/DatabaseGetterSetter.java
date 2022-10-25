@@ -21,6 +21,9 @@ public class DatabaseGetterSetter {
         this.helper = plugin.helper;
     }
 
+    /**
+     * Generic function for less clutter
+     */
     private PreparedStatement ps(String statement) {
         PreparedStatement pS = null;
         try {
@@ -31,6 +34,22 @@ public class DatabaseGetterSetter {
         return pS;
     }
 
+    public ResultSet query(String query) {
+        try {
+            PreparedStatement psQuery = ps(query);
+            ResultSet queryResult = psQuery.executeQuery();
+            if (queryResult.next()) {
+                return queryResult;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
+
+    /**
+     * Creates player in db
+     */
     public void createPlayer(Player p) {
         try {
             UUID uuid = p.getUniqueId();
@@ -67,6 +86,9 @@ public class DatabaseGetterSetter {
 
     }
 
+    /**
+     * Returns true if player exists in db
+     */
     public Boolean playerExists(UUID uuid) {
         try {
             PreparedStatement pS = ps("SELECT * FROM players WHERE UUID=?");
@@ -78,6 +100,9 @@ public class DatabaseGetterSetter {
         }
     }
 
+    /**
+     * Returns player balance
+     */
     public Integer getPlayerBalance(UUID uuid) {
         try {
             PreparedStatement pS = ps("SELECT * FROM players_bank WHERE UUID=?");
@@ -93,7 +118,10 @@ public class DatabaseGetterSetter {
         return 0;
     }
 
-    public Boolean addPlayerBalance(UUID uuid, Integer amount) {
+    /**
+     * Increments player balance by amount
+     */
+    public Boolean incrementPlayerBalance(UUID uuid, Integer amount) {
         if (uuid == null || amount == null) return false;
         try {
             PreparedStatement pS = ps("UPDATE players_bank SET balance = balance + ? WHERE UUID=?");
@@ -106,6 +134,9 @@ public class DatabaseGetterSetter {
         }
     }
 
+    /**
+     * Sets player balance
+     */
     public void setPlayerBalance(UUID uuid, Integer amount) {
         if (uuid == null || amount == null) return;
         try {
@@ -118,6 +149,9 @@ public class DatabaseGetterSetter {
         }
     }
 
+    /**
+     * Increments player skill points by amount
+     */
     public void incrementPlayerSkillPoints(UUID uuid, String skill, Double amount) {
         if (uuid == null || skill == null || amount == null) return;
         try {
@@ -130,6 +164,9 @@ public class DatabaseGetterSetter {
         }
     }
 
+    /**
+     * Sets player skill points
+     */
     public void setPlayerSkillPoints(UUID uuid, String skill, Double amount) {
         if (uuid == null || skill == null || amount == null) return;
         try {
@@ -144,6 +181,9 @@ public class DatabaseGetterSetter {
         }
     }
 
+    /**
+     * Returns player skill points
+     */
     public Double getPlayerSkillPoints(UUID uuid, String skill) {
         if (uuid == null || skill == null) return 0.0;
         try {
@@ -159,6 +199,9 @@ public class DatabaseGetterSetter {
         return 0.0;
     }
 
+    /**
+     * Increments player skill level
+     */
     public void incrementPlayerSkillLevel(UUID uuid, String skill, Integer amount) {
         if (uuid == null || skill == null || amount == null) return;
         try {
@@ -171,6 +214,9 @@ public class DatabaseGetterSetter {
         }
     }
 
+    /**
+     * Sets player skill level
+     */
     public void setPlayerSkillLevel(UUID uuid, String skill, Integer amount) {
         if (uuid == null || skill == null || amount == null) return;
         try {
@@ -185,6 +231,9 @@ public class DatabaseGetterSetter {
         }
     }
 
+    /**
+     * Returns player skill level
+     */
     public Integer getPlayerSkillLevel(UUID uuid, String skill) {
         if (uuid == null || skill == null) return 0;
         try {
@@ -200,6 +249,9 @@ public class DatabaseGetterSetter {
         return 0;
     }
 
+    /**
+     * Increments player tokens by amount
+     */
     public void incrementPlayerTokens(UUID uuid, Integer amount) {
         if (uuid == null || amount == null) return;
         try {
@@ -212,6 +264,9 @@ public class DatabaseGetterSetter {
         }
     }
 
+    /**
+     * Sets player tokens amount
+     */
     public void setPlayerTokens(UUID uuid, Integer amount) {
         if (uuid == null || amount == null) return;
         try {
@@ -224,6 +279,9 @@ public class DatabaseGetterSetter {
         }
     }
 
+    /**
+     * Returns player tokens amount
+     */
     public Integer getPlayerTokens(UUID uuid) {
         if (uuid == null) return 0;
         try {
@@ -239,6 +297,9 @@ public class DatabaseGetterSetter {
         return 0;
     }
 
+    /**
+     * Sets player upgrade level
+     */
     public void setPlayerUpgrade(UUID uuid, Object upgradeName, Integer status) {
         if (uuid == null || upgradeName == null || status == null) return;
         try {
@@ -251,6 +312,9 @@ public class DatabaseGetterSetter {
         }
     }
 
+    /**
+     * Returns player upgrade level
+     */
     public Integer getPlayerUpgrade(UUID uuid, String upgradeName) {
         if (uuid == null || upgradeName == null) return 0;
         try {

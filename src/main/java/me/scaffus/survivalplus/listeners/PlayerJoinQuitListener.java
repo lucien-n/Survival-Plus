@@ -34,6 +34,7 @@ public class PlayerJoinQuitListener implements Listener {
         Player p = event.getPlayer();
         survivalData.savePlayerData(p);
         event.setQuitMessage("§6§l" + p.getDisplayName() + "§e a quitté.");
+        p.setAllowFlight(false);
         Bukkit.getServer().reload();
     }
 }

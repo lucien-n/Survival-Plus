@@ -8,8 +8,8 @@ skills:
     display_name: "§6§lMinage"
     display_item: DIAMOND_PICKAXE
   combat:
-    id: "mining"
-    display_name: "§6§lMinage"
+    id: "combat"
+    display_name: "§6§lCombat"
     display_item: NETHERITE_SWORD
   explorer:
     id: "explorer"
@@ -85,37 +85,74 @@ tools:
 
 combat:
   mobs:
-    Zombie: 1.0
-    Skeleton: 1.3
-    Creeper: 1.6
-    Spider: 1.2
-    CaveSpider: 1.6
-    Blaze: 2.0
-    Drowned: 0.9
-    ElderGuardian: 7.5
-    Endermite: 2.5
-    MagmaCube: 2.0
-    Piglin: 1.4
-    PiglinBrute: 3.2
-    Ghast: 1.8
-    Phantom: 2.3
-    Pillager: 0.8
-    Ravager: 4.1
-    Shulker: 3.2
-    Stray: 1.5
-    Slime: 1.3
-    WitherSkeleton: 2.3
-    ZombifiedPiglin: 0.0
-    Zoglin: 3.6
-    Hoglin: 3.1
-    Husk: 1.2
-    Witch: 2.0
-    Enderman: 0.1
-    Vindicator: 3.0
-    Evoker: 5.0
-    Vex: 7.0
-    Wither: 25.0
-    EnderDragon: 40.0
+    Zombie: 4.0
+    Skeleton: 4.5
+    Creeper: 5.6
+    Spider: 4.2
+    CaveSpider: 4.8
+    Blaze: 7.0
+    Drowned: 2.9
+    ElderGuardian: 15.5
+    Endermite: 5.5
+    MagmaCube: 7.0
+    Piglin: 4.0
+    PiglinBrute: 7.2
+    Ghast: 4.8
+    Phantom: 6.3
+    Pillager: 3.8
+    Ravager: 21.1
+    Shulker: 12.2
+    Stray: 4.5
+    Slime: 4.3
+    WitherSkeleton: 8.3
+    ZombifiedPiglin: 0.02
+    Zoglin: 16.1
+    Hoglin: 8.1
+    Husk: 4.2
+    Witch: 8.0
+    Enderman: 0.02
+    Vindicator: 10.0
+    Evoker: 12.0
+    Vex: 20.0
+    Wither: 100.0
+    EnderDragon: 160.0
+    # Passive mobs
+    Pig: 3.0
+    Sheep: 3.0
+    Cow: 3.0
+    Chicken: 2.0
+    Ocelot: 4.0
+    Rabbit: 5.6
+    Cod: 3.6
+    Salmon: 3.6
+    Tropicalfish: 4.4
+    Pufferfish: 5.0
+    Tadpole: 3.0
+    Axolotl: 4.0
+    GlowSquid: 3.6
+    Squid: 3.6
+    Allay: 3.0
+    Horse: 3.6
+    Donkey: 3.6
+    Dolphin: 4.0
+    Bee: 4.0
+    Cat: 5.0
+    Bat: 6.0
+    Frog: 3.8
+    Fox: 5.0
+    Goat: 3.6
+    Llama: 3.6
+    Parrot: 4.4
+    Panda: 4.0
+    Mooshroom: 3.6
+    Mule: 3.6
+    PolarBear: 5.0
+    TraderLlama: 30.0
+    Strider: 4.0
+    WanderingTrader: 35.0
+    Villager: 10.0
+    Turtle: 4.0
+    Wolf: 3.0
 
 farming:
   replantables:
@@ -289,17 +326,18 @@ upgrades:
     display_name: "§6§lVie de Chat"
     lore:
       - "§eGagnes un coeur à chaque niveau"
-      - "§7Id: §ncatlife"
-  limited_immortality:
+      - "§e(déco/reco toi)"
+      - "§7Id: §ncat_life"
+  guardian_angel:
     cost: 2
     cost_factor: 1.0
     max_level: 1
     display_item: TOTEM_OF_UNDYING
-    display_name: "§6§lImmortalité à Usage Unique"
+    display_name: "§6§lAnge Gardien"
     lore:
       - "§eUn ange gardien te sauvera"
       - "§elors de ta prochaine mort"
-      - "§7Id: §nlimited_immortality"
+      - "§7Id: §nguardian_angel"
   # Flying
   leap:
     cost: 1
@@ -308,38 +346,69 @@ upgrades:
     display_item: FEATHER
     display_name: "§6§lBond"
     lore:
-      - "§eFais un bond pour t'envoler"
-      - "§equand tu portes des elytres."
+      - "§eFais un bond pour t'envoler quand tu portes des"
+      - "§eelytres. (accroupi + saut)"
       - "§7Id: §nleap"
-  # Running
+  double_jump:
+    cost: 2
+    costs_factor: 1.0
+    max_level: 1
+    display_item: RABBIT_FOOT
+    display_name: "§6§lDouble Saut"
+    lore:
+      - "§eTu peux sauter une deuxième fois"
+      - "§een étant dans les airs."
+      - "§7Id: double_jump"
+  # Explorer
   speed:
     cost: 1
     cost_factor: 2.0
     max_level: 3
-    display_item: RABBIT_FOOT
+    display_item: NETHERITE_BOOTS
     display_name: "§6§lVitesse"
     lore:
       - "§eGagnes de la vitesse à chaque niveau"
       - "§7Id: §nspeed"
-  # Swimming
   breath:
-    cost: 1
-    cost_factor: 2.0
-    max_level: 3
+    cost: 3
+    cost_factor: 1.0
+    max_level: 1
     display_item: GLASS_BOTTLE
     display_name: "§6§lBranchies"
     lore:
-      - "§eGagnes un niveau de respiration à chaque niveau. "
-      - "§eLe niveau max te permet de rester sous l'eau infiniment"
+      - "§eComme un poisson dans l'eau"
       - "§7Id: §nbreath"
+  dolphin:
+    cost: 3
+    cost_factor: 1.0
+    max_level: 1
+    display_item: TRIDENT
+    display_name: "§6§lDauphin"
+    lore:
+      - "§eComme un dauphin sous l'eau"
+      - "§7Id: dolhpin"
   # Combat
   damage:
     cost: 1
     cost_factor: 2.0
     max_level: 3
-    display_item: IRON_SWORD
+    display_item: DIAMOND_SWORD
     display_name: "§6§lDégâts"
     lore:
       - "§eChaque niveau inflige 10% des dégâts"
       - "§ede ton arme en plus."
       - "§7Id: §ndamage"
+  fast_attack:
+    cost: 1
+    cost_factor: 2.0
+    max_level: 3
+    display_item: WOODEN_SWORD
+    display_name: "§6§lAttaque Rapide"
+    lore:
+      - "§eAttaques plus rapidement à chaque"
+      - "§eniveau. (déco/reco toi)"
+      - "§7Id: §nfast_attack"
+
+misc:
+  silk_spawner:
+    level_required: 3

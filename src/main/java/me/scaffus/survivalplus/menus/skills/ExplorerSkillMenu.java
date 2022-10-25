@@ -15,12 +15,15 @@ import org.bukkit.inventory.Inventory;
 import java.util.UUID;
 
 public class ExplorerSkillMenu implements Listener {
-    private SurvivalPlus plugin;
-    private SurvivalData survivalData;
-    private Helper helper;
-    private SkillsMenu skillsMenu;
-    private String inventoryName = "§6§lCourse";
+    private final SurvivalPlus plugin;
+    private final SurvivalData survivalData;
+    private final Helper helper;
+    private final SkillsMenu skillsMenu;
+    private final String inventoryName = "§6§lCourse";
+
     private static PlayerUpgrade speedUpgrade;
+    private static PlayerUpgrade breathUpgrade;
+    private static PlayerUpgrade dolphinUpgrade;
 
     public ExplorerSkillMenu(SurvivalPlus plugin, SkillsMenu skillsMenu) {
         this.plugin = plugin;
@@ -29,6 +32,8 @@ public class ExplorerSkillMenu implements Listener {
         this.skillsMenu = skillsMenu;
         Bukkit.getPluginManager().registerEvents(this, plugin);
         speedUpgrade = survivalData.getUpgrade("speed");
+        breathUpgrade = survivalData.getUpgrade("breath");
+        dolphinUpgrade = survivalData.getUpgrade("dolphin");
     }
 
     @EventHandler
@@ -40,6 +45,10 @@ public class ExplorerSkillMenu implements Listener {
         int slot = event.getSlot();
         if (!survivalData.canPlayerClick(p.getUniqueId())) return;
 
+        if (slot == 11) skillsMenu.buyUpgrade(p, speedUpgrade);
+        if (slot == 15) skillsMenu.buyUpgrade(p, breathUpgrade);
+        if (slot == 31) skillsMenu.buyUpgrade(p, dolphinUpgrade);
+
         survivalData.setPlayerLastClicked(p.getUniqueId());
         if (slot == event.getInventory().getSize() - 9) p.openInventory(skillsMenu.createSkillMenu(p));
         if (slot == event.getInventory().getSize() - 1) p.closeInventory();
@@ -50,6 +59,8 @@ public class ExplorerSkillMenu implements Listener {
         Inventory inventory = helper.createInventoryWithBackground(p, inventoryName, 54, true);
 
         inventory.setItem(11, skillsMenu.getUpgradeMenuItem(speedUpgrade, uuid));
+        inventory.setItem(15, skillsMenu.getUpgradeMenuItem(breathUpgrade, uuid));
+        inventory.setItem(31, skillsMenu.getUpgradeMenuItem(dolphinUpgrade, uuid));
 
         inventory.setItem(49, helper.getHead(p, "§eJetons: §6" + survivalData.getPlayerTokens(p.getUniqueId())));
 

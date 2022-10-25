@@ -58,7 +58,7 @@ public class MiningListener implements Listener {
         Block block = event.getBlock();
         if (!(ores.contains(block.getType().toString()))) return;
         ItemStack tool = p.getInventory().getItemInMainHand();
-        if (!(tools.contains(tool.getType()))) return;
+        if (!(tools.contains(tool.getType().toString()))) return;
         UUID uuid = p.getUniqueId();
 
         Double pointsGained = (Double) points.get(block.getType().toString());
