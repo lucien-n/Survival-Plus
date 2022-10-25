@@ -5,6 +5,7 @@ import me.scaffus.survivalplus.SkillsConfig;
 import me.scaffus.survivalplus.SurvivalData;
 import me.scaffus.survivalplus.SurvivalPlus;
 import me.scaffus.survivalplus.tasks.PlaceBlockTask;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -32,6 +33,8 @@ public class CombatListener implements Listener {
         this.skillHelper = plugin.skillHelper;
         this.survivalData = plugin.survivalData;
         this.skillsConfig = plugin.skillsConfig;
+
+        Bukkit.getPluginManager().registerEvents(this, plugin);
 
         mobs = skillsConfig.get().getConfigurationSection("combat.mobs").getKeys(false);
         points = skillsConfig.get().getConfigurationSection("combat.mobs").getValues(false);

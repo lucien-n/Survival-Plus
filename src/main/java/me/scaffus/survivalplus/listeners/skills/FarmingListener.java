@@ -5,6 +5,7 @@ import me.scaffus.survivalplus.SkillsConfig;
 import me.scaffus.survivalplus.SurvivalData;
 import me.scaffus.survivalplus.SurvivalPlus;
 import me.scaffus.survivalplus.tasks.PlaceBlockTask;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -47,6 +48,8 @@ public class FarmingListener implements Listener {
         this.survivalData = plugin.survivalData;
         this.skillHelper = plugin.skillHelper;
         this.skillsConfig = plugin.skillsConfig;
+
+        Bukkit.getPluginManager().registerEvents(this, plugin);
 
         crops = skillsConfig.get().getConfigurationSection("blocks.farming").getKeys(false);
         points = skillsConfig.get().getConfigurationSection("blocks.farming").getValues(false);

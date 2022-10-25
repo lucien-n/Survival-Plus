@@ -1,6 +1,7 @@
 package me.scaffus.survivalplus.listeners.skills;
 
 import me.scaffus.survivalplus.*;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -21,6 +22,9 @@ public class ExplorerListener implements Listener {
         this.plugin = plugin;
         this.skillHelper = plugin.skillHelper;
         this.survivalData = plugin.survivalData;
+
+        Bukkit.getPluginManager().registerEvents(this, plugin);
+
         waterBreathingEffect = new PotionEffect(PotionEffectType.WATER_BREATHING, 1 * 20, 0);
         dolphinGraceEffect = new PotionEffect(PotionEffectType.DOLPHINS_GRACE, 1 * 20, 0);
     }

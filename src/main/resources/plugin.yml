@@ -9,15 +9,18 @@ website: https://www.github.com/scaffus
 
 commands:
   banque:
-    aliases: [bal, bank]
+    aliases: [ bal, bank ]
     description: Accéder à la banque
     usage: /banque
   skills:
-    aliases: [skill]
+    aliases: [ skill ]
     description: Renvois le niveau du joueurs des différents savoirs-faires
   infostick:
-    aliases: [istick]
+    aliases: [ istick ]
     description: Donnes l'InfoStick au joueur
   toggle_upgrade:
-    aliases: [toggleupgrade]
+    aliases: [ toggleupgrade ]
     description: Active/Désactive une amélioration
+  menu:
+    aliases: [ m ]
+    description: Menu principal

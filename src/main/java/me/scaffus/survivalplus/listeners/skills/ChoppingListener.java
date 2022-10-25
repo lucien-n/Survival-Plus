@@ -1,6 +1,7 @@
 package me.scaffus.survivalplus.listeners.skills;
 
 import me.scaffus.survivalplus.*;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
@@ -27,7 +28,7 @@ public class ChoppingListener implements Listener {
 
     private final Set logs;
     private final Map points;
-    private List<String> destrippables;
+    private final List<String> destrippables;
 
     public ChoppingListener(SurvivalPlus plugin) {
         this.plugin = plugin;
@@ -35,6 +36,8 @@ public class ChoppingListener implements Listener {
         this.skillHelper = plugin.skillHelper;
         this.skillsConfig = plugin.skillsConfig;
         this.helper = plugin.helper;
+
+        Bukkit.getPluginManager().registerEvents(this, plugin);
 
         logs = skillsConfig.get().getConfigurationSection("blocks.chopping").getKeys(false);
         points = skillsConfig.get().getConfigurationSection("blocks.chopping").getValues(false);

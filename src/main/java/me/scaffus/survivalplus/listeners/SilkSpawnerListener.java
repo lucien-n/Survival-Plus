@@ -3,6 +3,7 @@ package me.scaffus.survivalplus.listeners;
 import me.scaffus.survivalplus.SkillsConfig;
 import me.scaffus.survivalplus.SurvivalData;
 import me.scaffus.survivalplus.SurvivalPlus;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.CreatureSpawner;
@@ -12,7 +13,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -32,6 +32,9 @@ public class SilkSpawnerListener implements Listener {
         this.plugin = plugin;
         this.survivalData = plugin.survivalData;
         this.skillsConfig = plugin.skillsConfig;
+
+        Bukkit.getPluginManager().registerEvents(this, plugin);
+
         levelRequired = skillsConfig.get().getInt("misc.silk_spawner.level_required");
         random = new Random();
     }

@@ -19,6 +19,8 @@ public class PlayerJoinQuitListener implements Listener {
         this.plugin = plugin;
         this.data = plugin.data;
         this.survivalData = plugin.survivalData;
+
+        Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
     @EventHandler

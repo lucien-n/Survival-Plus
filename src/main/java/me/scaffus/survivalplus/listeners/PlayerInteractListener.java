@@ -24,6 +24,8 @@ public class PlayerInteractListener implements Listener {
 
     public PlayerInteractListener(SurvivalPlus plugin) {
         this.plugin = plugin;
+
+        Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
     @EventHandler

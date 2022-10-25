@@ -1,13 +1,11 @@
 package me.scaffus.survivalplus;
 
-import me.scaffus.survivalplus.commands.ToggleUpgradeCommand;
+import me.scaffus.survivalplus.commands.*;
 import me.scaffus.survivalplus.listeners.*;
-import me.scaffus.survivalplus.commands.BankCommand;
-import me.scaffus.survivalplus.commands.InfoStickCommand;
-import me.scaffus.survivalplus.commands.SkillCommand;
 import me.scaffus.survivalplus.listeners.skills.*;
 import me.scaffus.survivalplus.sql.DatabaseGetterSetter;
 import me.scaffus.survivalplus.sql.DatabaseManager;
+import me.scaffus.survivalplus.tasks.DayCountTask;
 import me.scaffus.survivalplus.tasks.KeepDbAliveTask;
 import me.scaffus.survivalplus.tasks.MagnetTask;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -24,6 +22,7 @@ public final class SurvivalPlus extends JavaPlugin {
     public SurvivalData survivalData;
     private MagnetTask magnetTask;
     private KeepDbAliveTask keepDbAliveTask;
+    public DayCountTask dayCountTask;
 
     @Override
     public void onEnable() {
@@ -37,27 +36,37 @@ public final class SurvivalPlus extends JavaPlugin {
         survivalData = new SurvivalData(this);
         skillHelper = new SkillHelper(this);
 
-        getServer().getPluginManager().registerEvents(new FarmingListener(this), this);
-        getServer().getPluginManager().registerEvents(new MiningListener(this), this);
-        getServer().getPluginManager().registerEvents(new CombatListener(this), this);
-        getServer().getPluginManager().registerEvents(new ExplorerListener(this), this);
-        getServer().getPluginManager().registerEvents(new DeathListener(this), this);
-        getServer().getPluginManager().registerEvents(new ChoppingListener(this), this);
-        getServer().getPluginManager().registerEvents(new FlyingListener(this), this);
+        // Listeners
+        new FarmingListener(this);
+        new MiningListener(this);
+        new CombatListener(this);
+        new ExplorerListener(this);
+        new DeathListener(this);
+        new ChoppingListener(this);
+        new FlyingListener(this);
 
-        getServer().getPluginManager().registerEvents(new PlayerJoinQuitListener(this), this);
-        getServer().getPluginManager().registerEvents(new PlayerInteractListener(this), this);
-        getServer().getPluginManager().registerEvents(new SilkSpawnerListener(this), this);
+        new CreatureSpawnListener(this);
 
+        new PlayerJoinQuitListener(this);
+        new PlayerInteractListener(this);
+        new SilkSpawnerListener(this);
+
+        // Commands
         new BankCommand(this);
         new SkillCommand(this);
         new InfoStickCommand(this);
         new ToggleUpgradeCommand(this);
+        new MenuCommand(this);
 
+        // Tasks
         this.magnetTask = new MagnetTask(this);
         magnetTask.runTaskTimer(this, 0L, 5L);
+
         this.keepDbAliveTask = new KeepDbAliveTask(this);
-        keepDbAliveTask.runTaskTimer(this, 0L, 3600L);
+        keepDbAliveTask.runTaskTimer(this, 0L, 3_600L);
+
+        this.dayCountTask = new DayCountTask(this);
+        dayCountTask.runTaskTimer(this, 0L, 6_000L);
 
         this.getLogger().info("Plugin ON");
     }

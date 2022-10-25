@@ -1,6 +1,7 @@
 package me.scaffus.survivalplus.listeners.skills;
 
 import me.scaffus.survivalplus.*;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -35,6 +36,7 @@ public class FlyingListener implements Listener {
         this.skillHelper = plugin.skillHelper;
         this.skillsConfig = plugin.skillsConfig;
         this.helper = plugin.helper;
+        Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
     @EventHandler

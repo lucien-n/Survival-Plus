@@ -4,6 +4,7 @@ import me.scaffus.survivalplus.SkillHelper;
 import me.scaffus.survivalplus.SkillsConfig;
 import me.scaffus.survivalplus.SurvivalData;
 import me.scaffus.survivalplus.SurvivalPlus;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -46,7 +47,7 @@ public class MiningListener implements Listener {
         this.survivalData = plugin.survivalData;
         this.skillHelper = plugin.skillHelper;
         this.skillsConfig = plugin.skillsConfig;
-
+        Bukkit.getPluginManager().registerEvents(this, plugin);
         ores = skillsConfig.get().getConfigurationSection("blocks.mining").getKeys(false);
         points = skillsConfig.get().getConfigurationSection("blocks.mining").getValues(false);
         tools = (List<Material>) skillsConfig.get().get("tools.mining");

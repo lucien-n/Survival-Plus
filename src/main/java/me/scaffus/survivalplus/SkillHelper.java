@@ -28,7 +28,7 @@ public class SkillHelper {
 
     public void handlePlayerSkillLevel(Player p, String skill, Integer skillLevel, Double skillPoints, Integer pointsForNextLevel) {
         UUID uuid = p.getUniqueId();
-        if (skillLevel >= pointsForLevels.size()) return;
+        if (skillLevel >= pointsForLevels.size() - 1) return;
         if (skillPoints >= pointsForNextLevel) {
             survivalData.incrementPlayerSkillLevel(uuid, skill, 1);
             survivalData.incrementPlayerTokens(uuid, 1);
