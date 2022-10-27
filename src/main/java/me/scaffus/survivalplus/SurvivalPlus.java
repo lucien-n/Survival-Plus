@@ -20,9 +20,9 @@ public final class SurvivalPlus extends JavaPlugin {
     public Helper helper = new Helper(this);
     public SkillHelper skillHelper;
     public SurvivalData survivalData;
+    public DayCountTask dayCountTask;
     private MagnetTask magnetTask;
     private KeepDbAliveTask keepDbAliveTask;
-    public DayCountTask dayCountTask;
 
     @Override
     public void onEnable() {
@@ -45,7 +45,9 @@ public final class SurvivalPlus extends JavaPlugin {
         new ChoppingListener(this);
         new FlyingListener(this);
 
-        new CreatureSpawnListener(this);
+        new CustomMobsListener(this);
+        // ? Doesn't work quite much and might be a performance eater
+        // new EntityDamageByEntityListener(this);
 
         new PlayerJoinQuitListener(this);
         new PlayerInteractListener(this);

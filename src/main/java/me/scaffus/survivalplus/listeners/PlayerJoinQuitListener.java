@@ -1,5 +1,6 @@
 package me.scaffus.survivalplus.listeners;
 
+import me.scaffus.survivalplus.Helper;
 import me.scaffus.survivalplus.SurvivalData;
 import me.scaffus.survivalplus.SurvivalPlus;
 import me.scaffus.survivalplus.sql.DatabaseGetterSetter;
@@ -12,9 +13,9 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 public class PlayerJoinQuitListener implements Listener {
-    private SurvivalPlus plugin;
-    private DatabaseGetterSetter data;
-    private SurvivalData survivalData;
+    private final SurvivalPlus plugin;
+    private final DatabaseGetterSetter data;
+    private final SurvivalData survivalData;
     public PlayerJoinQuitListener(SurvivalPlus plugin) {
         this.plugin = plugin;
         this.data = plugin.data;
@@ -29,6 +30,7 @@ public class PlayerJoinQuitListener implements Listener {
         data.createPlayer(p);
         survivalData.loadPlayerData(p);
         event.setJoinMessage("§6§l" + p.getDisplayName() + "§e a rejoint.");
+        p.sendMessage("§6§n/menu§e est la pour toi ❤");
     }
 
     @EventHandler
